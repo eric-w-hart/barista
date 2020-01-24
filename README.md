@@ -29,7 +29,7 @@ Barista allows a developer to set up their project for scanning from any Git com
 
   ## Join our growing community!
 
-  Start with our [developer documentation](./doc/README.md).
+  Start with our [developer documentation](./doc/local-dev-environment.md).
 
   ## Project Credits
 

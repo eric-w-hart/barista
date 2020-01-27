@@ -23,8 +23,11 @@ This set of files are used to build the application with docker and to deploy th
     rm -fr barista-scan/src/{models,services,shared}  ;
     cp -r barista-api/src/{models,services,shared} barista-scan/src;`
 - check the settings in the file barista-compose.env .  Make modifications as necessary.  (Things like SMTP server, usernames and passwords for internal Git servers, personal access token for public github server if private repos are in play)
-- Start the program using docker-compose
+- Start the program using docker-compose, wait 6 minutes, then seed with basic data if you wish..
 
- `docker-compose up`
-- log into the barista service at http://servername/signin (default username is Admin, password is $barista@admin)
-- Add a project and initiate a scan.
+      - docker-compose -d  up ;
+      - sleep 360 ;
+      - docker-compose exec barista-api yarn db:reset:seed;
+- You can watch logs using "docker logs" command
+- log into the barista service at http://your_servername/signin (default username is Admin, password is $barista@admin, all case sensitive)
+- Add a project and initiate a scan.  There should be some projects already defined under "Organization"

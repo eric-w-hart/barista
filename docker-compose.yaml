@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-base
-      
+
   barista-scanbase:
     image: barista-scanbase:compose
     build:
@@ -28,7 +28,7 @@ services:
     networks:
       - baristanetwork
     ports:
-      - 8080:8080
+      - 80:8080
     depends_on:
       - barista-api
 

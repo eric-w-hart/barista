@@ -11,8 +11,6 @@ ARG BARISTA_API_BASE_PATH=/api/v1
 RUN apt-get -y install nginx
 RUN cd /usr/src/app
 COPY . .
-ENV BARISTA_API_BASE_PATH=$BARISTA_API_BASE_PATH
-RUN echo  BARISTA_API_BASE_PATH=$BARISTA_API_BASE_PATH
 RUN   yarn install   && yarn run build:prod
 
 RUN chmod g+rw . *

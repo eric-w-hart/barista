@@ -67,6 +67,4 @@ ENTRYPOINT ["/docker-entrypoint.ksh"]
 CMD [ "yarn", "start:prod" ]
 
 #Manual build
-# docker build -f barista-scan/Dockerfile-scanbase --tag docker.repo1.uhc.com/barista/barista-scanbase:feature barista-scan
-# for i in  dev master; do docker tag docker.repo1.uhc.com/barista/barista-scanbase:feature docker.repo1.uhc.com/barista/barista-scanbase:$i ; done
-# for i in feature dev master; do  docker push docker.repo1.uhc.com/barista/barista-scanbase:${i} ; done
+# docker build -f barista-scan/Dockerfile-scanbase --tag <repo-path>/barista-scanbase:feature barista-scan

@@ -2,6 +2,7 @@ import { Entity } from 'typeorm';
 import { OptionValueModelBase } from './OptionValueModelBase';
 
 export enum PackageManagerEnum {
+  GOLANG = 'golang',
   MAVEN = 'maven',
   NONE = 'none',
   NPM = 'npm',

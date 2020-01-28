@@ -16,7 +16,7 @@ describe('DefaultScanWorkerService', () => {
         { provide: 'LicenseMavenService', useClass: jest.fn() },
         { provide: 'LicenseNugetService', useClass: jest.fn() },
         { provide: 'MavenService', useClass: jest.fn() },
-        { provide: 'NpmService', useClass: jest.fn() },
+        { provide: 'GolangService', useClass: jest.fn() },
         { provide: 'NugetService', useClass: jest.fn() },
         { provide: 'Python3PipService', useClass: jest.fn() },
         { provide: 'Python3PipLicensesService', useClass: jest.fn() },

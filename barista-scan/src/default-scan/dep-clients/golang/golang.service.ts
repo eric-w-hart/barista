@@ -19,7 +19,7 @@ export class GolangService extends DepClientBaseService {
 
     const goPath = `${workingDir}/.go`;
 
-    const command = `mkdir -p ${goPath} && $GOPATH=${goPath} go install`;
+    const command = `mkdir -p ${goPath} && GOPATH=${goPath} go install`;
 
     return command;
   }

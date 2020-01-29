@@ -18,7 +18,7 @@ export const ProjectSeed: Array<Partial<Project>> = [
     developmentType: { code: 'organization' } as ProjectDevelopmentType,
   },
   {
-    name: 'barista-webx',
+    name: 'barista-web',
     gitUrl: 'https://github.com/Optum/barista',
     customPackageManagerPath: 'barista-web/',
     packageManager: { code: 'npm' } as PackageManager,

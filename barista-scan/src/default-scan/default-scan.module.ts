@@ -13,6 +13,7 @@ import { ScanCodeService } from '@app/default-scan/scanners/scan-code/scan-code.
 import { ServicesModule } from '@app/services/services.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
 
 @Module({
   imports: [TypeOrmModule.forRoot(), ServicesModule],
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     LicenseMavenService,
     LicenseCheckerService,
     LicenseNugetService,
+    GolangService,
     MavenService,
     NpmService,
     NugetService,

@@ -27,6 +27,7 @@ import * as path from 'path';
 import { join } from 'path';
 import * as Git from 'simple-git';
 import * as tmp from 'tmp';
+import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
 
 @Injectable()
 export class DefaultScanWorkerService {
@@ -54,12 +55,14 @@ export class DefaultScanWorkerService {
     private readonly dependencyCheckService: DependencyCheckService,
     @Inject(forwardRef(() => NvdCheckService))
     private readonly nvdCheckService: NvdCheckService,
+    private readonly golangService: GolangService,
     private readonly mavenService: MavenService,
     private readonly npmService: NpmService,
     private readonly nugetService: NugetService,
     private readonly python3Service: Python3PipService,
     private readonly python3PipLicensesService: Python3PipLicensesService,
-  ) {}
+  ) {
+  }
 
   cleanup(info: DefaultScanWorkerJobInfo, error: Error = null, resolve, reject) {
     try {
@@ -95,6 +98,10 @@ export class DefaultScanWorkerService {
     let client: DepClient;
 
     switch (packageManager.code) {
+      case 'golang-modules': {
+        client = this.golangService;
+        break;
+      }
       case 'maven': {
         client = this.mavenService;
         break;
@@ -120,7 +127,10 @@ export class DefaultScanWorkerService {
         // Let's check for a .sln file in case this might be a nuGet project
         const slnFiles = fs.readdirSync(workingDirectory).filter(fn => fn.endsWith('.sln'));
 
-        if (fs.existsSync(join(workingDirectory, 'package.json'))) {
+        if (fs.existsSync(join(workingDirectory, 'go.mod'))) {
+          this.logger.log('Detected a go.mod - Assigning Golang as a dependency client');
+          client = this.golangService;
+        } else if (fs.existsSync(join(workingDirectory, 'package.json'))) {
           this.logger.log('Detected a package.json - Assigning NPM as a dependency client');
           client = this.npmService;
         } else if (fs.existsSync(join(workingDirectory, 'pom.xml'))) {

@@ -16,9 +16,10 @@ export class GolangService extends DepClientBaseService {
   async command(workingDir: string, options?: any): Promise<string> {
 
     // Create a GOPATH directory .go under the cloned git repository
-    // GOPATH=$(pwd)/.go go install
 
-    const command = 'GOPATH=$(pwd)/.go go install';
+    const goPath = `${workingDir}/.go`;
+
+    const command = `mkdir -p ${goPath} && $GOPATH=${goPath} go install`;
 
     return command;
   }

@@ -14,6 +14,7 @@ import { ServicesModule } from '@app/services/services.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
+import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 
 @Module({
   imports: [TypeOrmModule.forRoot(), ServicesModule],
@@ -32,6 +33,7 @@ import { GolangService } from '@app/default-scan/dep-clients/golang/golang.servi
     Python3PipService,
     Python3PipLicensesService,
     ScanCodeService,
+    GoLicensesService,
   ],
 })
 export class DefaultScanModule {}

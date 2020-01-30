@@ -28,6 +28,7 @@ import { join } from 'path';
 import * as Git from 'simple-git';
 import * as tmp from 'tmp';
 import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
+import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 
 @Injectable()
 export class DefaultScanWorkerService {
@@ -61,6 +62,7 @@ export class DefaultScanWorkerService {
     private readonly nugetService: NugetService,
     private readonly python3Service: Python3PipService,
     private readonly python3PipLicensesService: Python3PipLicensesService,
+    private readonly goLicenseService: GoLicensesService,
   ) {
   }
 
@@ -251,6 +253,10 @@ export class DefaultScanWorkerService {
             if (depClient) {
               // Let's decide which license services to user based on the package manager.
               switch (depClient.packageManagerCode) {
+                case PackageManagerEnum.GOLANG: {
+                  scanners.push(this.goLicenseService);
+                  break;
+                }
                 case PackageManagerEnum.MAVEN: {
                   scanners.push(this.licenseMavenService);
                   break;

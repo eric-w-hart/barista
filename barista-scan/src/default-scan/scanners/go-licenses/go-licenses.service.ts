@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as pit from 'p-iteration';
 import * as path from 'path';
+import parse = require('csv-parse/lib/sync');
 
 @Injectable()
 export class GoLicensesService extends ScannerBaseService {
@@ -37,8 +38,14 @@ export class GoLicensesService extends ScannerBaseService {
       targetDir = path.join(jobInfo.tmpDir, scan.project.customPackageManagerPath);
     }
 
+    let binary = 'go-licenses';
+    // Get the platfrom specific go-licenses binary
+    if (process.platform === 'darwin') {
+      binary = 'mac-go-licenses';
+    }
+
     // tslint:disable-next-line:max-line-length
-    const command = `node ${this.toolsDir}/license-checker/node_modules/license-checker/bin/license-checker --json --out ${jobInfo.dataDir}/license-checker-results.json --start ${targetDir}`;
+    const command = `cd ${targetDir}; ${this.toolsDir}/go-licenses/${binary} csv > ${jobInfo.dataDir}/go-licenses.csv`;
     return command;
   }
 
@@ -64,11 +71,21 @@ export class GoLicensesService extends ScannerBaseService {
   public async postExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
     return new Promise<DefaultScanWorkerJobInfo>(async (resolve, reject) => {
       try {
-        const jsonFile = `${jobInfo.dataDir}/license-checker-results.json`;
-        let json = null;
-        if (fs.existsSync(jsonFile)) {
-          json = fs.readFileSync(jsonFile, 'utf8');
+        const csvFile = `${jobInfo.dataDir}/go-licenses.csv`;
+
+        let csvText = null;
+        if (fs.existsSync(csvFile)) {
+          csvText = fs.readFileSync(csvFile, 'utf8');
         }
+
+        const json = parse(csvText, {
+          columns: true,
+          skip_empty_lines: true,
+          delimiter: ',',
+          trim: true,
+          skip_lines_with_error: false,
+          quote: null,
+        });
 
         // Update scan object with a scan result object here...
         const scan: Scan = await this.scanService.findOne(jobInfo.scanId);

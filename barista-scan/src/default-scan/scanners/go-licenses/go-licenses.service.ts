@@ -49,14 +49,13 @@ export class GoLicensesService extends ScannerBaseService {
     return command;
   }
 
-  public async licenseScanResultItemFromJson(key: string, value: any) {
+  public async licenseScanResultItemFromJson(value: any) {
     const result: LicenseScanResultItem = new LicenseScanResultItem();
-    result.displayIdentifier = key;
-    result.path = value.path;
+    result.displayIdentifier = value[0];
+    result.path = value[0];
     result.rawResults = value;
-    result.publisherName = value.publisher;
-    result.publisherEmail = value.email;
-    result.publisherUrl = value.repository;
+    result.publisherName = value[0];
+    result.publisherUrl = value[1];
 
     return result;
   }
@@ -68,6 +67,21 @@ export class GoLicensesService extends ScannerBaseService {
     } as Partial<License>;
   }
 
+  public convertCsvResultsToJson(csvText: string) {
+
+    const json = parse(csvText, {
+      // columns: true,
+      skip_empty_lines: true,
+      delimiter: ',',
+      trim: true,
+      skip_lines_with_error: false,
+      quote: null,
+    });
+
+    return json;
+
+  }
+
   public async postExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
     return new Promise<DefaultScanWorkerJobInfo>(async (resolve, reject) => {
       try {
@@ -76,23 +90,19 @@ export class GoLicensesService extends ScannerBaseService {
         let csvText = null;
         if (fs.existsSync(csvFile)) {
           csvText = fs.readFileSync(csvFile, 'utf8');
+        } else {
+          reject(new Error(`${jobInfo.dataDir}/go-licenses.csv not found!`));
+          return;
         }
 
-        const json = parse(csvText, {
-          columns: true,
-          skip_empty_lines: true,
-          delimiter: ',',
-          trim: true,
-          skip_lines_with_error: false,
-          quote: null,
-        });
+        const json = this.convertCsvResultsToJson(csvText);
 
         // Update scan object with a scan result object here...
         const scan: Scan = await this.scanService.findOne(jobInfo.scanId);
 
         const rawLicenseScan = {
-          jsonResults: JSON.parse(json),
-          scanTool: 'license-checker',
+          jsonResults: json,
+          scanTool: 'go-licenses',
           startedAt: this.startedAt,
           completedAt: this.completedAt,
         };
@@ -115,9 +125,26 @@ export class GoLicensesService extends ScannerBaseService {
   }
 
   public async postProcess(licenseScanResult: LicenseScanResult): Promise<void> {
+
+    // Iterate all results
+    // For each result create a LicenseScanResultItem
+    // Object at index[0] is the name of the library
+    // Object at index[2] is the license SPDX code
+
+    const rawResults = licenseScanResult.jsonResults as string[][];
+
+    while (rawResults.length > 0) {
+
+      const rawResult = rawResults.shift(); // ["Library Name", "Licenses Location", "SPDX License Code"]
+
+      await this.upsertLicense(rawResult, licenseScanResult);
+
+    }
+
+    /*
     const keys = Object.keys(licenseScanResult.jsonResults);
 
-    // For each library returned
+    // For each library returneda
     await pit.forEachSeries(keys, async (key: string) => {
       try {
         if (key) {
@@ -152,6 +179,7 @@ export class GoLicensesService extends ScannerBaseService {
         this.logger.error(`postProcess[${JSON.stringify(licenseScanResult, null, 4)}]: ${e}`);
       }
     });
+    */
 
     return;
   }
@@ -160,12 +188,12 @@ export class GoLicensesService extends ScannerBaseService {
     return Promise.resolve(jobInfo);
   }
 
-  public async upsertLicense(key: string, value: any, licenseString: string, licenseScanResult: LicenseScanResult) {
-    const licenseScanResultItem = await this.licenseScanResultItemFromJson(key, value);
+  public async upsertLicense(value: any, licenseScanResult: LicenseScanResult) {
+    const licenseScanResultItem = await this.licenseScanResultItemFromJson(value);
     // Upsert license
-    const partialLicense = this.partialLicense(licenseString);
+    const partialLicense = this.partialLicense(value[2]);
 
-    const license = await this.licenseService.upsertLicense(licenseString, partialLicense);
+    const license = await this.licenseService.upsertLicense(value[2], partialLicense);
 
     await this.licenseScanResultItemService.insertResultItem(licenseScanResultItem, license, licenseScanResult);
 

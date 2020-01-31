@@ -1,9 +1,11 @@
 import { DefaultScanWorkerService } from '@app/default-scan/default-scan-worker/default-scan-worker.service';
+import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
 import { MavenService } from '@app/default-scan/dep-clients/maven/maven.service';
 import { NpmService } from '@app/default-scan/dep-clients/npm/npm.service';
 import { NugetService } from '@app/default-scan/dep-clients/nuget/nuget.service';
 import { Python3PipService } from '@app/default-scan/dep-clients/python/python3-pip.service';
 import { DependencyCheckService } from '@app/default-scan/scanners/dependency-check/dependency-check.service';
+import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 import { LicenseCheckerService } from '@app/default-scan/scanners/license-checker/license-checker.service';
 import { LicenseMavenService } from '@app/default-scan/scanners/license-maven/license-maven.service';
 import { LicenseNugetService } from '@app/default-scan/scanners/license-nuget/license-nuget.service';
@@ -13,8 +15,6 @@ import { ScanCodeService } from '@app/default-scan/scanners/scan-code/scan-code.
 import { ServicesModule } from '@app/services/services.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
-import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 
 @Module({
   imports: [TypeOrmModule.forRoot(), ServicesModule],

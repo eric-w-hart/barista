@@ -6,11 +6,9 @@ import { LicenseScanResultService } from '@app/services/license-scan-result/lice
 import { LicenseService } from '@app/services/license/license.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { Injectable, Logger } from '@nestjs/common';
-import * as fs from 'fs';
-import * as _ from 'lodash';
-import * as pit from 'p-iteration';
-import * as path from 'path';
 import parse = require('csv-parse/lib/sync');
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class GoLicensesService extends ScannerBaseService {
@@ -49,6 +47,19 @@ export class GoLicensesService extends ScannerBaseService {
     return command;
   }
 
+  public convertCsvResultsToJson(csvText: string) {
+    const json = parse(csvText, {
+      // columns: true,
+      skip_empty_lines: true,
+      delimiter: ',',
+      trim: true,
+      skip_lines_with_error: false,
+      quote: null,
+    });
+
+    return json;
+  }
+
   public async licenseScanResultItemFromJson(value: any) {
     const result: LicenseScanResultItem = new LicenseScanResultItem();
     result.displayIdentifier = value[0];
@@ -65,21 +76,6 @@ export class GoLicensesService extends ScannerBaseService {
       name: licenseKey,
       code: licenseKey,
     } as Partial<License>;
-  }
-
-  public convertCsvResultsToJson(csvText: string) {
-
-    const json = parse(csvText, {
-      // columns: true,
-      skip_empty_lines: true,
-      delimiter: ',',
-      trim: true,
-      skip_lines_with_error: false,
-      quote: null,
-    });
-
-    return json;
-
   }
 
   public async postExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
@@ -125,7 +121,6 @@ export class GoLicensesService extends ScannerBaseService {
   }
 
   public async postProcess(licenseScanResult: LicenseScanResult): Promise<void> {
-
     // Iterate all results
     // For each result create a LicenseScanResultItem
     // Object at index[0] is the name of the library
@@ -134,52 +129,10 @@ export class GoLicensesService extends ScannerBaseService {
     const rawResults = licenseScanResult.jsonResults as string[][];
 
     while (rawResults.length > 0) {
-
       const rawResult = rawResults.shift(); // ["Library Name", "Licenses Location", "SPDX License Code"]
 
       await this.upsertLicense(rawResult, licenseScanResult);
-
     }
-
-    /*
-    const keys = Object.keys(licenseScanResult.jsonResults);
-
-    // For each library returneda
-    await pit.forEachSeries(keys, async (key: string) => {
-      try {
-        if (key) {
-          // Extract license
-          const value = licenseScanResult.jsonResults[key];
-
-          this.logger.log(`license: ${JSON.stringify(value, null, 4)}`);
-
-          if (_.isString(value.licenses)) {
-            await this.upsertLicense(key, value, value.licenses, licenseScanResult);
-          } else if (_.isArray(value.licenses)) {
-            // There are some instances where licenses may be reported in an array, in this case we need to iterate them
-
-            await pit.forEachSeries(value.licenses, async (item: string) => {
-              await this.upsertLicense(key, value, item, licenseScanResult);
-            });
-          } else {
-            this.logger.error(
-              `value.licenses was not a string or an array! it was ${value.licenses}\n stringified:\n${JSON.stringify(
-                value.licenses,
-                null,
-                4,
-              )}`,
-            );
-          }
-        } else {
-          this.logger.error(
-            `postProcess[${JSON.stringify(licenseScanResult, null, 4)}]: A key was not found in: ${keys}`,
-          );
-        }
-      } catch (e) {
-        this.logger.error(`postProcess[${JSON.stringify(licenseScanResult, null, 4)}]: ${e}`);
-      }
-    });
-    */
 
     return;
   }

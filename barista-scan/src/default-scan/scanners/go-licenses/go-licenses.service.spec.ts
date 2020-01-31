@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import * as LicenseCheckerOutputMock from './go-licenses-output.mock';
-import { GoLicensesService } from './go-licenses.service';
 import { goLicensesSimpleMockOutput } from './go-licenses-output.mock';
+import { GoLicensesService } from './go-licenses.service';
 
 describe('LicenseCheckerService', () => {
   let service: GoLicensesService;
@@ -26,17 +25,11 @@ describe('LicenseCheckerService', () => {
   });
 
   it('should convert CsvResults to Json', async () => {
-
     const actual = service.convertCsvResultsToJson(goLicensesSimpleMockOutput);
     const expected = [
-      [
-        'github.com/vsurge/hello-insecure-go',
-        'https://github.com/vsurge/hello-insecure-go/blob/master/LICENSE',
-        'MIT',
-      ],
+      ['github.com/vsurge/hello-insecure-go', 'https://github.com/vsurge/hello-insecure-go/blob/master/LICENSE', 'MIT'],
     ];
 
     expect(actual).toEqual(expected);
-
   });
 });

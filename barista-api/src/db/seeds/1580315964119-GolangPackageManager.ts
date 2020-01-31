@@ -2,7 +2,6 @@ import { getConnection, MigrationInterface, QueryRunner, Repository } from 'type
 import { PackageManager } from '../../models';
 
 export class GolangPackageManager1580315964119 implements MigrationInterface {
-
   connection = getConnection('seed');
 
   public async down(queryRunner: QueryRunner): Promise<any> {
@@ -19,5 +18,4 @@ export class GolangPackageManager1580315964119 implements MigrationInterface {
     };
     await this.connection.getRepository(PackageManager).save(packageManager);
   }
-
 }

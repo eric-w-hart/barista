@@ -1,6 +1,8 @@
-export const goLicensesSimpleMockOutput = 'github.com/vsurge/hello-insecure-go,https://github.com/vsurge/hello-insecure-go/blob/master/LICENSE,MIT';
+export const goLicensesSimpleMockOutput =
+  'github.com/vsurge/hello-insecure-go,https://github.com/vsurge/hello-insecure-go/blob/master/LICENSE,MIT';
 
-export const goLicensesLongerMockOutput = 'gopkg.in/src-d/go-git.v4,Unknown,Apache-2.0\n' +
+export const goLicensesLongerMockOutput =
+  'gopkg.in/src-d/go-git.v4,Unknown,Apache-2.0\n' +
   'golang.org/x/sys/unix,https://go.googlesource.com/sys/+/refs/heads/master/LICENSE,BSD-3-Clause\n' +
   'github.com/src-d/gcfg,https://github.com/src-d/gcfg/blob/master/LICENSE,BSD-3-Clause\n' +
   'github.com/spf13/pflag,https://github.com/spf13/pflag/blob/master/LICENSE,BSD-3-Clause\n' +

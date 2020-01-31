@@ -1,11 +1,13 @@
 import { DefaultScanWorkerJobInfo } from '@app/default-scan/default-scan-worker/default-scan-worker-job-info.interface';
 import { DepClient } from '@app/default-scan/dep-clients/common/dep-client.interface';
+import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
 import { MavenService } from '@app/default-scan/dep-clients/maven/maven.service';
 import { NpmService } from '@app/default-scan/dep-clients/npm/npm.service';
 import { NugetService } from '@app/default-scan/dep-clients/nuget/nuget.service';
 import { Python3PipService } from '@app/default-scan/dep-clients/python/python3-pip.service';
 import { Scanner } from '@app/default-scan/scanners/common/scanner.interface';
 import { DependencyCheckService } from '@app/default-scan/scanners/dependency-check/dependency-check.service';
+import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 import { LicenseCheckerService } from '@app/default-scan/scanners/license-checker/license-checker.service';
 import { LicenseMavenService } from '@app/default-scan/scanners/license-maven/license-maven.service';
 import { LicenseNugetService } from '@app/default-scan/scanners/license-nuget/license-nuget.service';
@@ -27,8 +29,6 @@ import * as path from 'path';
 import { join } from 'path';
 import * as Git from 'simple-git';
 import * as tmp from 'tmp';
-import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
-import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 
 @Injectable()
 export class DefaultScanWorkerService {
@@ -63,8 +63,7 @@ export class DefaultScanWorkerService {
     private readonly python3Service: Python3PipService,
     private readonly python3PipLicensesService: Python3PipLicensesService,
     private readonly goLicenseService: GoLicensesService,
-  ) {
-  }
+  ) {}
 
   cleanup(info: DefaultScanWorkerJobInfo, error: Error = null, resolve, reject) {
     try {

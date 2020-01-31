@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 export const goLicensesSimpleMockOutput =
   'github.com/vsurge/hello-insecure-go,https://github.com/vsurge/hello-insecure-go/blob/master/LICENSE,MIT';
 

@@ -1,11 +1,13 @@
 import { DefaultScanWorkerJobInfo } from '@app/default-scan/default-scan-worker/default-scan-worker-job-info.interface';
 import { DepClient } from '@app/default-scan/dep-clients/common/dep-client.interface';
+import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
 import { MavenService } from '@app/default-scan/dep-clients/maven/maven.service';
 import { NpmService } from '@app/default-scan/dep-clients/npm/npm.service';
 import { NugetService } from '@app/default-scan/dep-clients/nuget/nuget.service';
 import { Python3PipService } from '@app/default-scan/dep-clients/python/python3-pip.service';
 import { Scanner } from '@app/default-scan/scanners/common/scanner.interface';
 import { DependencyCheckService } from '@app/default-scan/scanners/dependency-check/dependency-check.service';
+import { GoLicensesService } from '@app/default-scan/scanners/go-licenses/go-licenses.service';
 import { LicenseCheckerService } from '@app/default-scan/scanners/license-checker/license-checker.service';
 import { LicenseMavenService } from '@app/default-scan/scanners/license-maven/license-maven.service';
 import { LicenseNugetService } from '@app/default-scan/scanners/license-nuget/license-nuget.service';
@@ -54,11 +56,13 @@ export class DefaultScanWorkerService {
     private readonly dependencyCheckService: DependencyCheckService,
     @Inject(forwardRef(() => NvdCheckService))
     private readonly nvdCheckService: NvdCheckService,
+    private readonly golangService: GolangService,
     private readonly mavenService: MavenService,
     private readonly npmService: NpmService,
     private readonly nugetService: NugetService,
     private readonly python3Service: Python3PipService,
     private readonly python3PipLicensesService: Python3PipLicensesService,
+    private readonly goLicenseService: GoLicensesService,
   ) {}
 
   cleanup(info: DefaultScanWorkerJobInfo, error: Error = null, resolve, reject) {
@@ -95,6 +99,10 @@ export class DefaultScanWorkerService {
     let client: DepClient;
 
     switch (packageManager.code) {
+      case 'golang-modules': {
+        client = this.golangService;
+        break;
+      }
       case 'maven': {
         client = this.mavenService;
         break;
@@ -120,7 +128,10 @@ export class DefaultScanWorkerService {
         // Let's check for a .sln file in case this might be a nuGet project
         const slnFiles = fs.readdirSync(workingDirectory).filter(fn => fn.endsWith('.sln'));
 
-        if (fs.existsSync(join(workingDirectory, 'package.json'))) {
+        if (fs.existsSync(join(workingDirectory, 'go.mod'))) {
+          this.logger.log('Detected a go.mod - Assigning Golang as a dependency client');
+          client = this.golangService;
+        } else if (fs.existsSync(join(workingDirectory, 'package.json'))) {
           this.logger.log('Detected a package.json - Assigning NPM as a dependency client');
           client = this.npmService;
         } else if (fs.existsSync(join(workingDirectory, 'pom.xml'))) {
@@ -241,6 +252,10 @@ export class DefaultScanWorkerService {
             if (depClient) {
               // Let's decide which license services to user based on the package manager.
               switch (depClient.packageManagerCode) {
+                case PackageManagerEnum.GOLANG: {
+                  scanners.push(this.goLicenseService);
+                  break;
+                }
                 case PackageManagerEnum.MAVEN: {
                   scanners.push(this.licenseMavenService);
                   break;

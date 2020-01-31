@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
-import { SystemConfiguration } from '../../models';
 import { getConnection, MigrationInterface, QueryRunner } from 'typeorm';
+import { SystemConfiguration } from '../../models';
 
 // TODO: Remove this migration from the code repository once it has been run
 export class ChangeGHEENV1579121137700 implements MigrationInterface {

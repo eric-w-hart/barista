@@ -10,7 +10,7 @@ export class NpmService extends DepClientBaseService {
   constructor() {
     super();
   }
-  logger = new Logger('NpmService');
+  logger = new Logger('GolangService');
   packageManagerCode = PackageManagerEnum.NPM;
 
   async command(workingDir: string, options?: any): Promise<string> {

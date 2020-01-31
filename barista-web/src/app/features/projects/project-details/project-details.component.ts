@@ -10,6 +10,7 @@ import { ProjectService } from '@app/shared/+state/project/project.service';
 import { ProjectDevelopmentTypeService } from '@app/shared/+state/projectDevelopmentType/project-development-type.service';
 import { ProjectStatusTypeService } from '@app/shared/+state/projectStatusType/project-status-type.service';
 import { ScanService } from '@app/shared/+state/scan/scan.service';
+import { SystemConfigurationService } from '@app/shared/+state/systemConfiguration/system-configuration.service';
 import {
   BomManualLicense,
   BomManualLicenseApiService,
@@ -25,7 +26,8 @@ import {
   ProjectDistinctSeverityDto,
   ProjectDistinctVulnerabilityDto,
   ProjectStatusType,
-  ScanApiService, SystemConfiguration,
+  ScanApiService,
+  SystemConfiguration,
 } from '@app/shared/api';
 import { AppDialogComponent } from '@app/shared/app-components/app-dialog/app-dialog.component';
 import IBreadcrumb from '@app/shared/app-components/breadcrumbs/IBreadcrumb';
@@ -37,7 +39,6 @@ import * as _ from 'lodash';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { combineLatest, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import {SystemConfigurationService} from '@app/shared/+state/systemConfiguration/system-configuration.service';
 
 @Component({
   selector: 'app-project-details',
@@ -90,9 +91,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   projectStatusType$: Observable<ProjectStatusType[]>;
   selectedTabIndex?: number;
   severityData$: Observable<ProjectDistinctSeverityDto[]>;
+  systemConfiguration: Observable<SystemConfiguration>;
   tooltips = null;
   vulnerabilityData$: Observable<ProjectDistinctVulnerabilityDto[]>;
-  systemConfiguration: Observable<SystemConfiguration>;
 
   addManualLicense() {
     if (this.project.name && this.project.currentVersion) {
@@ -157,9 +158,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   async ngOnInit() {
-
     this.systemConfiguration = this.systemConfigService.apiService.systemConfigurationIdGet('default');
-
 
     this.licenses$ = this.licenseApiService.licenseGet();
     this.projectId = this.route.snapshot.paramMap.get('projectId');

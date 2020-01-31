@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { NpmService } from './npm.service';
 
-describe('GolangService', () => {
+describe('NpmService', () => {
   let service: NpmService;
 
   beforeEach(async () => {

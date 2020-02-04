@@ -25,7 +25,13 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     &&  apt-get install -y mono-complete \
     &&  apt-get install -y dotnet-sdk-2.2
 
+#Install GOLANG
+RUN apt-get update \
+    && apt-get install -y golang-go
 
+ENV GOLANG_HOME = /usr/lib
+ENV GOLANG_VERSION = 1.10
+ENV PATH=${GOLANG_HOME}/go-${GOLANG_VERSION}/bin:${PATH}
 
 #Install MAVEN
 #Install maven from source so as to get a more modern version that is supplied with Ubuntu

@@ -56,6 +56,7 @@ export class DefaultScanWorkerService {
     private readonly dependencyCheckService: DependencyCheckService,
     @Inject(forwardRef(() => NvdCheckService))
     private readonly nvdCheckService: NvdCheckService,
+    @Inject(forwardRef(() => GoLicensesService))
     private readonly golangService: GolangService,
     private readonly mavenService: MavenService,
     private readonly npmService: NpmService,
@@ -252,7 +253,7 @@ export class DefaultScanWorkerService {
             if (depClient) {
               // Let's decide which license services to user based on the package manager.
               switch (depClient.packageManagerCode) {
-                case 'golang': {
+                case PackageManagerEnum.GO: {
                   scanners.push(this.goLicenseService);
                   break;
                 }

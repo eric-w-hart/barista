@@ -1,5 +1,5 @@
 import { DepClientBaseService } from '@app/default-scan/dep-clients/common/dep-client-base/dep-client-base.service';
-import { PackageManagerEnum } from '../../../models/PackageManager';
+import { PackageManagerEnum } from '@app/models/PackageManager';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()

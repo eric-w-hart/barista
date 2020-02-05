@@ -8,7 +8,7 @@ export class GolangService extends DepClientBaseService {
     super();
   }
   logger = new Logger('GolangService');
-  packageManagerCode = PackageManagerEnum.GOLANG;
+  packageManagerCode = PackageManagerEnum.GO;
 
   async command(workingDir: string, options?: any): Promise<string> {
     // Create a GOPATH directory .go under the cloned git repository

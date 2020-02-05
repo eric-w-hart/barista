@@ -8,7 +8,7 @@ export enum PackageManagerEnum {
   NUGET = 'nuget',
   PYTHON3_PIP = 'python3-pip',
   PYTHON2_7_PIP = 'python2_7-pip',
-  GO = 'golang',
+  GO = 'golang-modules',
 }
 
 @Entity()

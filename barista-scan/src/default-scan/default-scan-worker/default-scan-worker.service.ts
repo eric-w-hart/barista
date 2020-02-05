@@ -253,7 +253,7 @@ export class DefaultScanWorkerService {
             if (depClient) {
               // Let's decide which license services to user based on the package manager.
               switch (depClient.packageManagerCode) {
-                case PackageManagerEnum.GO: {
+                case PackageManagerEnum.MAVEN: {
                   scanners.push(this.goLicenseService);
                   break;
                 }

@@ -14,8 +14,7 @@ module.exports = {
         src: 'img/barista.png',
       },
       links: [
-        {to: 'docs/doc1', label: 'Docs', position: 'left'},
-        {to: 'blog', label: 'Blog', position: 'left'},
+        {to: 'docs/overview', label: 'Docs', position: 'left'},
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
@@ -30,12 +29,28 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/doc1',
+              label: 'Overview',
+              to: 'docs/overview',
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2',
+              label: 'Local Dev Environment Setup',
+              to: 'docs/local-dev-environment',
+            },
+            {
+              label: 'System Architecture',
+              to: 'docs/architecture',
+            },
+            {
+              label: 'License Scanners',
+              to: 'docs/license-scanners',
+            },
+            {
+              label: 'How to Develop a Web Feature',
+              to: 'docs/how-to-develop-a-feature',
+            },
+            {
+              label: 'Building and Running Barista Using Docker',
+              to: 'docs/barista-on-docker',
             },
           ],
         },
@@ -43,12 +58,8 @@ module.exports = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              label: 'GitHub Issues',
+              href: 'https://github.com/Optum/barista/issues',
             },
           ],
         },
@@ -56,16 +67,8 @@ module.exports = {
           title: 'Social',
           items: [
             {
-              label: 'Blog',
-              to: 'blog',
-            },
-            {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              href: 'https://github.com/Optum/barista',
             },
           ],
         },
@@ -79,8 +82,6 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

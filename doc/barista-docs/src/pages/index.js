@@ -8,32 +8,35 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: <>Easy to Use</>,
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    title: <>Developer Focused</>,
+    imageUrl: 'img/coding-1294361.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Barista is fundamentally a scanning tool to detect open source components,
+        licenses and potential vulnerabilities.  Automatically create and maintain
+        an open source bill of materials including multi-level dependencies.
       </>
     ),
   },
   {
-    title: <>Focus on What Matters</>,
-    imageUrl: 'img/undraw_docusaurus_tree.svg',
+    title: <>Customize business rules</>,
+    imageUrl: 'img/bot-icon-2883144.png',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Barista admins determine which obligation(s) are associated with each
+        license detected, and assign project approval status based on deployment
+        model, applicable license(s), and documented vulnerabilities for detected
+        dependencies.
       </>
     ),
   },
   {
-    title: <>Powered by React</>,
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    title: <>Cloud Native Architecture</>,
+    imageUrl: 'img/cloud-4273197.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Barista is designed for cloud native deployment environments allowing
+        hosting flexibility and scalability on demand.
       </>
     ),
   },
@@ -71,7 +74,7 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/doc1')}>
+              to={useBaseUrl('docs/overview')}>
               Get Started
             </Link>
           </div>

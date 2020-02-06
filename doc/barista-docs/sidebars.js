@@ -7,7 +7,7 @@
 
 module.exports = {
   someSidebar: {
-    Docusaurus: ['doc1', 'doc2', 'doc3'],
-    Features: ['mdx'],
+    Barista: ['overview'],
+    Technical: ['local-dev-environment','architecture','license-scanners','develop-web-feature','barista-on-docker'],
   },
 };

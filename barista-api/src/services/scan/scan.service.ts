@@ -20,7 +20,7 @@ import { Queue } from 'bull';
 import * as _ from 'lodash';
 import { InjectQueue } from 'nest-bull';
 import * as nodemailer from 'nodemailer';
-import { In } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 
 @Injectable()
 export class ScanService extends AppServiceBase<Scan> {
@@ -291,13 +291,12 @@ export class ScanService extends AppServiceBase<Scan> {
   }
 
   async tryGetLatestRunningScan(projectId: number): Promise<Scan> {
-    const activeJobs = await this.queue.getActive();
-    const activeJobsScanIds = activeJobs.map(job => job.data).map(data => data.scanId);
-
-    if (_.isEmpty(activeJobsScanIds)) {
-      return null;
-    }
-
-    return await this.db.findOne({ where: { projectId, id: In(activeJobsScanIds) } });
+    return await Scan.createQueryBuilder('scan')
+      .leftJoin('scan.project', 'project')
+      .where('project.id = :projectId', { projectId })
+      .andWhere('scan.completed_at is null')
+      .andWhere(`(scan.created_at > (Now() - interval '8 hour') and completed_at is null)`)
+      .limit(1)
+      .getOne();
   }
 }

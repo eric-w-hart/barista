@@ -7,7 +7,7 @@
 
 module.exports = {
   someSidebar: {
-    Barista: ['overview'],
-    Technical: ['local-dev-environment','architecture','license-scanners','develop-web-feature','barista-on-docker'],
+    Barista: ['overview','setup-admin-tables','setup-scan-project'],
+    Technical: ['local-dev-environment','architecture','license-scanners','licenses','develop-web-feature','barista-on-docker'],
   },
 };

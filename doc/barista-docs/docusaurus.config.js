@@ -78,6 +78,18 @@ module.exports = {
               label: 'GitHub Issues',
               href: 'https://github.com/Optum/barista/issues',
             },
+            {
+              label: 'Contributions to Barista',
+              to: 'docs/contributions',
+            },
+            {
+              label: 'Code of Conduct',
+              to: 'docs/code-of-conduct',
+            },
+            {
+              label: 'Individual Contributor License Agreement',
+              to: 'docs/icla',
+            },
           ],
         },
       ],

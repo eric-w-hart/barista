@@ -1,6 +1,6 @@
 ---
 id: code-of-conduct
-title: Contributor Covenant Code of Conduct
+title: Contributor Code of Conduct
 sidebar_label: code-of-conduct
 ---
 

@@ -1,3 +1,4 @@
+import { Index } from 'typeorm';
 import { Project, User } from '@app/models';
 import { LoginDto, UserInfo } from '@app/models/DTOs';
 import { AuthJwtToken } from '@app/models/DTOs/AuthJwtToken';
@@ -33,7 +34,9 @@ export class UserController implements CrudController<User> {
     @Query('filterText') filterText: string,
     @Request() request,
   ): Promise<GetManyDefaultResponse<Project> | Project[]> {
-    const { id: userId } = request.user;
+    const { groups: userId } = request.user;
+    userId.push(request.user.id);
+
     let qb = this.projectService.getUsersProjectsQuery(userId);
     if (filterText) {
       qb = qb.andWhere('lower(project.name) like :filter or lower(project.gitUrl) like :filter', {

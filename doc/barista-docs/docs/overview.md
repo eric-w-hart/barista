@@ -18,12 +18,13 @@ Barista allows a developer to set up their project for scanning from any Git com
 1. The repo is cloned into a temporary directory.  All contents will be destroyed once processing is finished.
 1. License scanning is initiated.  Barista currently supports the following technology stacks:
     1. Java using the Maven package manager
-    2. .Net using the NuGet package manager
-    3. Node using the NPM package manager
-    4. Python using the PIP package manager
+    1. .Net using the NuGet package manager
+    1. Node using the NPM package manager
+    1. Python using the PIP package manager
+    1. Go using the Go package manager
 
 
-    Support for additional package managers are on the roadmap as the community evolves e.g. Gradle, Go
+    Support for additional package managers are on the roadmap as the community evolves e.g. Gradle
 
 1.  Each technology stack uses native tools to gather project dependencies with as much meta data as can be harvested e.g. license, publisher information and or the project's published URL
 1. Unsupported technology stacks can be scanned using the [nexB/scancode-tool](https://github.com/nexB/scancode-toolkit) but results are not as comprehensive and performance is degraded.

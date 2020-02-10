@@ -16,7 +16,7 @@ module.exports = {
       links: [
         {to: 'docs/overview', label: 'Docs', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/Optum/barista',
           label: 'GitHub',
           position: 'right',
         },
@@ -26,12 +26,25 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Admin Docs',
           items: [
             {
               label: 'Overview',
               to: 'docs/overview',
             },
+            {
+              label: 'Admin Setup',
+              to: 'docs/setup-admin-tables',
+            },
+            {
+              label: 'Project Setup',
+              to: 'docs/setup-scan-project',
+            },
+          ],
+        },
+        {
+          title: 'Technical Docs',
+          items: [
             {
               label: 'Local Dev Environment Setup',
               to: 'docs/local-dev-environment',
@@ -43,6 +56,10 @@ module.exports = {
             {
               label: 'License Scanners',
               to: 'docs/license-scanners',
+            },
+            {
+              label: 'License Implementation',
+              to: 'docs/licenses',
             },
             {
               label: 'How to Develop a Web Feature',
@@ -61,14 +78,17 @@ module.exports = {
               label: 'GitHub Issues',
               href: 'https://github.com/Optum/barista/issues',
             },
-          ],
-        },
-        {
-          title: 'Social',
-          items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/Optum/barista',
+              label: 'Contributions to Barista',
+              to: 'docs/contributions',
+            },
+            {
+              label: 'Code of Conduct',
+              to: 'docs/code-of-conduct',
+            },
+            {
+              label: 'Individual Contributor License Agreement',
+              to: 'docs/icla',
             },
           ],
         },

@@ -18,6 +18,13 @@ sidebar_label: license-scanners
 ## Nuget
 * A custom solution that combines fetching the specified license if one is not stored locally and then interrogating the local `.nuspec` package files using [Scan Code](https://github.com/nexB/scancode-toolkit)
 
+## Python v2.7.17 & v3.7.5
+* [pip_licenses-1.15.2](https://github.com/raimon49/pip-licenses)
+
+## Go
+* [go-licenses](https://github.com/google/go-licenses)
+
+
 ## None
 * If a project does not specify a package manager or one cannot be detected, then the [Scan Code](https://github.com/nexB/scancode-toolkit) toolkit is used to scan the individual files.
 * This approach is considered inefficient and computationally expensive.

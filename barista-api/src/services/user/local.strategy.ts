@@ -24,7 +24,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         groups: ['group1', 'group1', 'group3'],
       };
     } else if (process.env.AUTH_TYPE === 'ldap') {
-      user = await this.ldapService.validateUser(username, password);
+      user = await this.ldapService.validateUser(username, password, false);
+      if (!user) {
+        user = await this.ldapService.validateUser(username, password, true);
+      }
       if (user) {
         user.groups = await this.ldapService.getUserGroups(username, password);
       }

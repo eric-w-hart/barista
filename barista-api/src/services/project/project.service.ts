@@ -109,7 +109,7 @@ export class ProjectService extends AppServiceBase<Project> {
   }
 
   getUsersProjectsQuery(userId: string): SelectQueryBuilder<Project> {
-    return this.db.createQueryBuilder('project').where('project.userId = :userId', { userId });
+    return this.db.createQueryBuilder('project').where('project.userId IN (:...userId)', { userId });
   }
 
   async gitUrlAuthForProject(project: Project) {

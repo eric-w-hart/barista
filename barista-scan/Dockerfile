@@ -1,6 +1,6 @@
 ARG BASETAG=compose
 ARG REPO=""
-FROM golang:1.13 as go
+
 FROM ${REPO}barista-scanbase:${BASETAG}
 ADD tools/docker-entrypoint.ksh /docker-entrypoint.ksh
 ARG BARISTA_VERSION=unspecified
@@ -36,6 +36,6 @@ COPY --from=go /usr/local/go /usr/local/go
 ENV PATH="/usr/local/go/bin:$PATH"
 RUN go version
 
-#RUN go get github.com/google/go-licenses
+RUN GOBIN=/usr/local/bin/ go get github.com/google/go-licenses
 
 USER 1011

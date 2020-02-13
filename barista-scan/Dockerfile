@@ -37,5 +37,6 @@ ENV PATH="/usr/local/go/bin:$PATH"
 RUN go version
 
 RUN go get github.com/google/go-licenses
+RUN GOBIN=/usr/local/bin/ go install
 
 USER 1011

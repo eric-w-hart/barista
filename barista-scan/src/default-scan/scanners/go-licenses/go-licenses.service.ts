@@ -65,8 +65,8 @@ export class GoLicensesService extends ScannerBaseService {
     result.displayIdentifier = value[0];
     result.path = value[0];
     result.rawResults = value;
-    result.publisherName = value[0];
-    result.publisherUrl = value[1];
+    // result.publisherName = value[0];
+    result.publisherUrl = value[0];
 
     return result;
   }

@@ -36,6 +36,6 @@ COPY --from=go /usr/local/go /usr/local/go
 ENV PATH="/usr/local/go/bin:$PATH"
 RUN go version
 
-RUN go get github.com/google/go-licenses
+#RUN go get github.com/google/go-licenses
 
 USER 1011

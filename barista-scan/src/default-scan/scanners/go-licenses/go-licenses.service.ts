@@ -43,7 +43,7 @@ export class GoLicensesService extends ScannerBaseService {
     }
 
     // tslint:disable-next-line:max-line-length
-    const command = `cd ${targetDir}; GOPATH=${targetDir}/.go ${this.toolsDir}/go-licenses/${binary} csv ./ > ${jobInfo.dataDir}/go-licenses.csv`;
+    const command = `cd ${targetDir}; GOPATH=${targetDir}/.go ${binary} csv ./ > ${jobInfo.dataDir}/go-licenses.csv`;
     return command;
   }
 
@@ -65,8 +65,8 @@ export class GoLicensesService extends ScannerBaseService {
     result.displayIdentifier = value[0];
     result.path = value[0];
     result.rawResults = value;
-    result.publisherName = value[0];
-    result.publisherUrl = value[1];
+    // result.publisherName = value[0];
+    result.publisherUrl = value[0];
 
     return result;
   }

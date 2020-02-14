@@ -35,7 +35,7 @@ export class ProjectStatsComponent implements OnInit {
           first(),
           map(items => {
             const counts = _.map(items, (item: any) => item.count);
-            const labels = _.map(items, (item: any) => item.license.name.replace(/[^a-zA-Z ]/g, ''));
+            const labels = _.map(items, (item: any) => item.license.name);
             return { counts, labels };
           }),
         )

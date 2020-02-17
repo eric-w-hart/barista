@@ -17,7 +17,8 @@ Barista allows a developer to set up their project for scanning from any Git com
     2. .Net using the NuGet package manager
     3. Node using the NPM package manager
     4. Python using the PIP package manager
-    - Support for additional package managers are on the roadmap as the community evolves e.g. Gradle, Go
+    5. GoLang using modules package manager
+    - Support for additional package managers are on the roadmap as the community evolves e.g. Gradle
 
 1.  Each technology stack uses native tools to gather project dependencies with as much meta data as can be harvested e.g. license, publisher information and or the project's published URL
 1. Unsupported technology stacks can be scanned using the [nexB/scancode-tool](https://github.com/nexB/scancode-toolkit) but results are not as comprehensive and performance is degraded.

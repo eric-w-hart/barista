@@ -179,7 +179,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this.projectStatusTypeService.getAll();
     this.outputFormatTypeService.getAll();
-    this.packageManagerService.getAll();
+    this.packageManagerService.getWithQuery({ sort: 'description,ASC' });
     this.deploymentTypeService.getAll();
     this.projectDevelopmentTypeService.getAll();
 

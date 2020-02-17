@@ -56,9 +56,10 @@ export class LdapService {
                   .map(g => g.split(',')[0])
                   .map(s => s.replace(/(.*)=(.*)/, '$2'))
                   .map(group => group.toLowerCase());
-                const baristaGroups = _.filter(groups, group => group.startsWith('barista_'));
-                this.logger.log(`User ${userName} is member of the following barista groups: ${baristaGroups}`);
-                return baristaGroups;
+                return groups;
+                // const baristaGroups = _.filter(groups, group => group.startsWith('barista_'));
+                // this.logger.log(`User ${userName} is member of the following barista groups: ${baristaGroups}`);
+                // return baristaGroups;
               }
               return [];
             } finally {
@@ -88,7 +89,7 @@ export class LdapService {
     return UserRole.Collaborator;
   }
 
-  validateUser(userName: string, pass: string): Promise<UserInfo> {
+  validateUser(userName: string, pass: string, applyFilter: boolean): Promise<UserInfo> {
     const client = this.createLdapClient();
 
     const searchUser = `cn=${userName},${this.ldapConfig.base}`;
@@ -98,8 +99,11 @@ export class LdapService {
       this.ldapConfig.securityAdminGroup,
       this.ldapConfig.group,
     ];
-    const adGroupsFilter =
-      '(|' + adGroups.map(group => `(memberOf=CN=${group},${this.ldapConfig.base})`).join('') + ')';
+
+    let adGroupsFilter = '(|' + adGroups.map(group => `(memberOf=CN=${group},${this.ldapConfig.base})`).join('') + ')';
+    if (!applyFilter) {
+      adGroupsFilter = '';
+    }
     this.logger.log(`AD Groups Filter ${adGroupsFilter}`);
     return client
       .bind(searchUser, pass)

@@ -21,7 +21,7 @@ export abstract class ScannerBaseService implements Scanner {
     this.startedAt = new Date();
 
     await this.preExecute(jobInfo).catch(error => {
-      this.baseLogger.error(`preExecute: ${error}`);
+      this.baseLogger.error(`preExecute: ${JSON.stringify(error)}`);
     });
 
     const command = await this.command(jobInfo);
@@ -30,7 +30,7 @@ export abstract class ScannerBaseService implements Scanner {
     }
 
     await this.postExecute(jobInfo).catch(error => {
-      this.baseLogger.error(`postExecute: ${error}`);
+      this.baseLogger.error(`postExecute: ${JSON.stringify(error)}`);
     });
 
     this.completedAt = new Date();

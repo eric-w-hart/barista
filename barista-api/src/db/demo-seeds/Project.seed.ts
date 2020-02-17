@@ -9,6 +9,24 @@ import {
 
 export const ProjectSeed: Array<Partial<Project>> = [
   {
+    name: 'go-licenses',
+    gitUrl: 'https://github.com/google/go-licenses',
+    packageManager: { code: 'golang-modules' } as PackageManager,
+    projectStatus: { code: 'new' } as ProjectStatusType,
+    outputFormat: { code: 'json' } as OutputFormatType,
+    deploymentType: { code: 'unspecified' } as DeploymentType,
+    developmentType: { code: 'organization' } as ProjectDevelopmentType,
+  },
+  {
+    name: 'hello-insecure-go',
+    gitUrl: 'https://github.com/vsurge/hello-insecure-go',
+    packageManager: { code: 'golang-modules' } as PackageManager,
+    projectStatus: { code: 'new' } as ProjectStatusType,
+    outputFormat: { code: 'json' } as OutputFormatType,
+    deploymentType: { code: 'unspecified' } as DeploymentType,
+    developmentType: { code: 'organization' } as ProjectDevelopmentType,
+  },
+  {
     name: 'barista-web',
     gitUrl: 'https://github.com/Optum/barista',
     customPackageManagerPath: 'barista-web/',

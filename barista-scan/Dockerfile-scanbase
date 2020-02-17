@@ -25,8 +25,6 @@ RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor 
     &&  apt-get install -y mono-complete \
     &&  apt-get install -y dotnet-sdk-2.2
 
-
-
 #Install MAVEN
 #Install maven from source so as to get a more modern version that is supplied with Ubuntu
 RUN wget -q https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz  -P /tmp\

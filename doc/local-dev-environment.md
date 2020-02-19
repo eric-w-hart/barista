@@ -36,3 +36,6 @@ In order to execute project scans, the following software packages must be insta
   * `brew install maven`
 * Nuget (.NET project dependencies and licenses)
   * `brew install nuget`
+* GoLang (GoLang with modules support)
+  * `Go v1.13 or later installed`
+  * `go get github.com/google/go-licenses`

@@ -84,7 +84,7 @@ order by count(*)
 - Vulnerablities by package/severity
 
 ```sql
-select p2.deployment_type_code , ssri."path" as "package" ,Upper(ssri.severity) , ssri."displayIdentifier" ,ssri.description ,count(*)
+select p2.deployment_type_code , ssri."path" as "package" ,Upper(ssri.severity) as severity , ssri."displayIdentifier" ,ssri.description ,count(*)
 from
 project p2 ,
 security_scan_result_item ssri ,

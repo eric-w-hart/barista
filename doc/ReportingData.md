@@ -30,6 +30,38 @@ order by s2."projectId" , s2.completed_at desc)
 order by p3."name"
 ```
 
+- Projects added by weekly/monthly
+
+```sql
+SELECT date_trunc('week', p2.created_at::date)::date AS weekly,
+       COUNT(*)
+FROM project p2
+GROUP BY weekly
+ORDER BY weekly;
+
+SELECT date_trunc('month', p2.created_at::date)::date AS monthly,
+       COUNT(*)
+FROM project p2
+GROUP BY monthly
+ORDER BY monthly;
+```
+
+- Scans by weekly/monthly
+
+```sql
+SELECT date_trunc('week', ssr.created_at::date)::date AS weekly,
+       COUNT(*)
+FROM security_scan_result ssr
+GROUP BY weekly
+ORDER BY weekly;
+
+SELECT date_trunc('month', ssr.created_at::date)::date AS monthly,
+       COUNT(*)
+FROM security_scan_result ssr
+GROUP BY monthly
+ORDER BY monthly;
+```
+
 - License counts for approved components without community projects
 
 ```sql

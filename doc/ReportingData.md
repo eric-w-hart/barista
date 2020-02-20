@@ -102,7 +102,7 @@ order by count(*),Upper(ssri.severity), package
 - Packages usage
 
 ```sql
-select  lsri."displayIdentifier", p3."name" ,p3.package_manager_code ,p3.deployment_type_code ,count(*)
+select  lsri."displayIdentifier" as package, p3."name" as project , p3.deployment_type_code , p3.package_manager_code
 from license l2,
 license_scan_result_item lsri ,
 license_scan_result lsr,
@@ -115,6 +115,4 @@ project p2
 where p2.id = s2."projectId" and p2.development_type_code = 'organization'
 order by s2."projectId" , s2.completed_at desc ) scan
 where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id
-group by lsri."displayIdentifier", p3.name ,p3.package_manager_code ,p3.deployment_type_code
-order by p3.deployment_type_code desc
 ```

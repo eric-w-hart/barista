@@ -8,7 +8,27 @@ where "wasImported"
 group by "development_type_code"
 ```
 
-- Projects with
+- Community Projects
+
+```sql
+select "name" ,id , created_at , updated_at, "wasImported" from project p
+where development_type_code = 'community'
+order by "name"
+```
+
+- Projects with scans
+
+```sql
+select "name", id , deployment_type_code, package_manager_code , git_url, created_at , updated_at from project p3
+where id in (
+select distinct on (s2."projectId" )
+s2."projectId"
+from scan s2,
+project p2
+where p2.id = s2."projectId" and p2.development_type_code = 'organization'
+order by s2."projectId" , s2.completed_at desc)
+order by p3."name"
+```
 
 - License counts for approved components without community projects
 

@@ -80,3 +80,21 @@ where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri.
 group by l2.name
 order by count(*)
 ```
+
+- Vulnerablities by package/severity
+
+```sql
+select  ssri."path" as "package" ,ssri.severity , ssri."displayIdentifier" ,ssri.description ,count(*)
+from
+project p2 ,
+security_scan_result_item ssri ,
+security_scan_result ssr ,
+(select distinct on (s2."projectId" )
+s2.id,
+s2."projectId"
+from scan s2
+order by s2."projectId" , s2.completed_at desc) scan
+where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id
+group by  ssri."path"  ,ssri.severity ,ssri."displayIdentifier" ,ssri.description
+order by count(*), package
+```

@@ -73,8 +73,10 @@ export class ScanController implements CrudController<Scan> {
 
     // Create the Scan with that project, set the deployment type of the project
     // at the time the scan was run
+
     project.globalSecurityException = false;
     project.globalLicenseException = false;
+    await this.projectService.db.save(project);
     const scan = await this.service.db.save({ project, deploymentType: project.deploymentType });
 
     // Add it to the queue

@@ -36,11 +36,7 @@ export class GoLicensesService extends ScannerBaseService {
       targetDir = path.join(jobInfo.tmpDir, scan.project.customPackageManagerPath);
     }
 
-    let binary = 'go-licenses';
-    // Get the platfrom specific go-licenses binary
-    if (process.platform === 'darwin') {
-      binary = 'mac-go-licenses';
-    }
+    const binary = 'go-licenses';
 
     // tslint:disable-next-line:max-line-length
     const command = `cd ${targetDir}; GOPATH=${targetDir}/.go ${binary} csv ./ > ${jobInfo.dataDir}/go-licenses.csv`;

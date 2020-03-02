@@ -173,6 +173,7 @@ export class ProjectController implements CrudController<Project> {
   ): Promise<Project> {
     const { id } = request.user;
     dto.userId = id;
+    dto.name = dto.name.replace('(', '-').replace(')', '-');
     const project = await this.service.createOne(req, dto);
 
     await this.commandBus.execute(

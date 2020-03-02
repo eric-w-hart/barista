@@ -34,7 +34,7 @@ async function bootstrap() {
     .setTitle('Barista API')
     .setDescription('REST API documentation for the Barista system')
     .setVersion('1.0')
-    .addBearerAuth('bearer', 'header', 'basic')
+    .addBearerAuth('bearer', 'header')
     .addOAuth2('accessCode')
     .setBasePath('api/v1')
     .setSchemes('https')

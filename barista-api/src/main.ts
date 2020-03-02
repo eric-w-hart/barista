@@ -37,6 +37,7 @@ async function bootstrap() {
     .addBearerAuth('bearer', 'header', 'basic')
     .addOAuth2('accessCode')
     .setBasePath('api/v1')
+    .setSchemes('https')
     .addTag('BomLicenseException', 'Methods')
     .addTag('BomManualLicense', 'Methods')
     .addTag('BomSecurityException', 'Methods')

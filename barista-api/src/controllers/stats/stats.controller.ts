@@ -18,9 +18,6 @@ import {
   model: {
     type: Project,
   },
-  routes: {
-    exclude: ['getOneBase', 'deleteOneBase', 'createManyBase', 'createOneBase', 'updateOneBase', 'replaceOneBase'],
-  },
 })
 @ApiUseTags('Stats')
 @Controller('stats')

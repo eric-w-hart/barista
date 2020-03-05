@@ -1,11 +1,6 @@
-import { ProjectScanStateDto } from '@app/models/DTOs/ProjectScanStateDto';
-import { Index } from 'typeorm';
-import { Project, ProjectScanStatusType } from '@app/models';
-import { LoginDto, UserInfo } from '@app/models/DTOs';
-import { AuthJwtToken } from '@app/models/DTOs/AuthJwtToken';
+import { Project } from '@app/models';
 import { ProjectService } from '@app/services/project/project.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
-import PaginateArrayResult from '@app/shared/util/paginate-array-result';
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
@@ -20,7 +15,6 @@ import {
   ParsedBody,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { LogEntry } from '@nestjs/common/interfaces/external/kafka-options.interface';
 
 @Crud({
   model: {

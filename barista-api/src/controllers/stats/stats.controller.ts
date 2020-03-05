@@ -20,14 +20,6 @@ import {
   model: {
     type: Project,
   },
-  query: {
-    sort: [
-      {
-        field: 'createdAt',
-        order: 'DESC',
-      },
-    ],
-  },
   routes: {
     exclude: ['getOneBase', 'deleteOneBase', 'createManyBase', 'createOneBase', 'updateOneBase', 'replaceOneBase'],
   },

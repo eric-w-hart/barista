@@ -19,7 +19,7 @@ import {
     type: Project,
   },
   routes: {
-    exclude: ['updateOneBase'],
+    exclude: ['updateOneBase', 'getManyBase', 'getOneBase', 'deleteOneBase', 'createManyBase', 'createOneBase'],
   },
 })
 @ApiUseTags('Stats')

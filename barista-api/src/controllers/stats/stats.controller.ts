@@ -18,6 +18,9 @@ import {
   model: {
     type: Project,
   },
+  routes: {
+    exclude: ['updateOneBase'],
+  },
 })
 @ApiUseTags('Stats')
 @Controller('stats')

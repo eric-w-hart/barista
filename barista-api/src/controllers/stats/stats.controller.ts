@@ -1,9 +1,7 @@
 import { Project } from '@app/models';
 import { ProjectService } from '@app/services/project/project.service';
-import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 
 import {
   Crud,
@@ -24,10 +22,10 @@ import {
     exclude: ['getOneBase', 'deleteOneBase', 'createManyBase', 'createOneBase', 'updateOneBase', 'replaceOneBase'],
   },
 })
-@ApiUseTags('stats')
+@ApiUseTags('Stats')
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
-  constructor(public service: ProjectService, private projectScanStatusTypeService: ProjectScanStatusTypeService) {}
+  constructor(public service: ProjectService) {}
   get base(): CrudController<Project> {
     return this;
   }

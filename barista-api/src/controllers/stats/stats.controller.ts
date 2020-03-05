@@ -1,3 +1,4 @@
+import { Index } from 'typeorm';
 import { Project } from '@app/models';
 import { ProjectService } from '@app/services/project/project.service';
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
@@ -19,7 +20,7 @@ import {
     type: Project,
   },
   routes: {
-    exclude: ['updateOneBase', 'deleteOneBase', 'replaceOneBase', 'createManyBase', 'createOneBase'],
+    only: ['getManyBase'],
   },
 })
 @ApiUseTags('Stats')

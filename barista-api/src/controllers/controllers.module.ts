@@ -21,6 +21,7 @@ import { ScanController } from '@app/controllers/scan/scan.controller';
 import { SecurityScanResultItemStatusTypeController } from '@app/controllers/security-scan-result-item-status-type/security-scan-result-item-status-type.controller';
 import { SecurityScanResultItemController } from '@app/controllers/security-scan-result-item/security-scan-result-item.controller';
 import { SecurityScanResultController } from '@app/controllers/security-scan-result/security-scan-result.controller';
+import { StatsController } from '@app/controllers/stats/stats.controller';
 import { SystemConfigurationController } from '@app/controllers/system-configuration/system-configuration.controller';
 import { ToolTipController } from '@app/controllers/tooltips/tooltip.controller';
 // tslint:disable-next-line:max-line-length
@@ -58,6 +59,7 @@ import { UserController } from './user/user.controller';
     SecurityScanResultController,
     SecurityScanResultItemController,
     SecurityScanResultItemStatusTypeController,
+    StatsController,
     SystemConfigurationController,
     ToolTipController,
     UserController,

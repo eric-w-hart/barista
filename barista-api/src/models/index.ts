@@ -29,3 +29,4 @@ export { VulnerabilityStatusDeploymentType } from './VulnerabilityStatusDeployme
 export { LicenseObligation } from './LicenseObligation';
 export { ProjectNote } from './ProjectNote';
 export { ToolTip } from './ToolTip';
+export { ProjectsByLatestScan } from './vProjectbyLatestScan';

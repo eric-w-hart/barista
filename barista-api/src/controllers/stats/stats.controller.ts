@@ -89,6 +89,15 @@ export class StatsController implements CrudController<Project> {
     return bf.create(format);
   }
 
+  async getLatestScanDate(project: Project) {
+    if (project) {
+      const scan = await this.service.latestCompletedScan(project);
+      if (scan) {
+        return scan.createdAt.toDateString();
+      }
+    }
+  }
+
   @Get('/badges/:id/licensestate')
   @Header('Content-Type', 'image/svg+xml')
   @Header('Content-Disposition', 'attachment; filename=licensestate.svg')
@@ -96,13 +105,16 @@ export class StatsController implements CrudController<Project> {
     const project = await this.service.db.findOne(Number(id));
 
     let licenseStatus = await ProjectScanStatusTypeService.Unknown();
+    let latestScanDate = 'unknown';
     if (project) {
-      licenseStatus = await this.service.highestLicenseStatus(project);
+      const checklicenseStatus = await this.service.highestLicenseStatus(project);
+      if (checklicenseStatus) {
+        licenseStatus = checklicenseStatus;
+      }
+      latestScanDate = await this.getLatestScanDate(project);
     }
 
-    const svg = this.createSVG(
-      this.createFormat('barista license state', licenseStatus.createdAt.toDateString(), licenseStatus.code),
-    );
+    const svg = this.createSVG(this.createFormat('barista license state', latestScanDate, licenseStatus.code));
     return res
       .status(200)
       .send(svg)
@@ -116,13 +128,16 @@ export class StatsController implements CrudController<Project> {
     const project = await this.service.db.findOne(Number(id));
 
     let securityStatus = await ProjectScanStatusTypeService.Unknown();
+    let latestScanDate = 'unknown';
     if (project) {
-      securityStatus = await this.service.highestSecurityStatus(project);
+      const checksecurityStatus = await this.service.highestSecurityStatus(project);
+      if (checksecurityStatus) {
+        securityStatus = checksecurityStatus;
+      }
+      latestScanDate = await this.getLatestScanDate(project);
     }
 
-    const svg = this.createSVG(
-      this.createFormat('barista security state', securityStatus.createdAt.toDateString(), securityStatus.code),
-    );
+    const svg = this.createSVG(this.createFormat('barista security state', latestScanDate, securityStatus.code));
     return res
       .status(200)
       .send(svg)

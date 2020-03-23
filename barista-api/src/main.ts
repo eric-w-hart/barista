@@ -34,9 +34,10 @@ async function bootstrap() {
     .setTitle('Barista API')
     .setDescription('REST API documentation for the Barista system')
     .setVersion('1.0')
-    .addBearerAuth('bearer', 'header', 'basic')
+    .addBearerAuth('Authorization', 'header')
     .addOAuth2('accessCode')
     .setBasePath('api/v1')
+    .setSchemes('https', 'http')
     .addTag('BomLicenseException', 'Methods')
     .addTag('BomManualLicense', 'Methods')
     .addTag('BomSecurityException', 'Methods')
@@ -85,6 +86,12 @@ async function bootstrap() {
 
   app.use(arena);
   app.enableCors();
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    next();
+  });
 
   app.setGlobalPrefix('api/v1');
   await app.listen(process.env.API_PORT || 3000);

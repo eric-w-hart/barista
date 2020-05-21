@@ -1,21 +1,9 @@
 version: "2"
 
 services:
-  barista-base:
-    image: barista-base:compose
-    build:
-      context: .
-      dockerfile: Dockerfile-base
-
-  barista-scanbase:
-    image: barista-scanbase:compose
-    build:
-      context: barista-scan
-      dockerfile: Dockerfile-scanbase
-
   barista-web:
     env_file: barista-compose.env
-    image: barista-web:compose
+    image: optumopensource/barista-web:compose
     build:
       context: barista-web
       dockerfile: Dockerfile
@@ -34,7 +22,7 @@ services:
 
   barista-api:
     env_file: barista-compose.env
-    image: barista-api:compose
+    image: optumopensource/barista-api:compose
     build:
       context: barista-api
       dockerfile: Dockerfile

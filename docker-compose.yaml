@@ -4,13 +4,6 @@ services:
   barista-web:
     env_file: barista-compose.env
     image: optumopensource/barista-web:compose
-    build:
-      context: barista-web
-      dockerfile: Dockerfile
-      args:
-        - BARISTA_API_BASE_PATH=/api/v1
-        - REPO=
-        - TAG=compose
     volumes:
       - ./docker-compose/nginx-config:/etc/nginx/conf.d
     networks:
@@ -23,12 +16,6 @@ services:
   barista-api:
     env_file: barista-compose.env
     image: optumopensource/barista-api:compose
-    build:
-      context: barista-api
-      dockerfile: Dockerfile
-      args:
-        - REPO=
-        - TAG=compose
     networks:
       - baristanetwork
     depends_on:
@@ -38,12 +25,6 @@ services:
   barista-scan:
     env_file: barista-compose.env
     image: barista-scan:compose
-    build:
-      context: barista-scan
-      dockerfile: Dockerfile
-      args:
-        - REPO=
-        - BASETAG=compose
     networks:
       - baristanetwork
     volumes:

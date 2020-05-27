@@ -10,7 +10,9 @@ export PATH="$HOME/.pyenv/bin:$PATH" \
 # In order to save build time, the python versions are built and stored in an attached shared volume for each instance.
 # These are loaded at run time and linked as virtual environment for Python.
 
-rm -fr .pyenv/versions/*
+#rm -fr .pyenv/versions/*
+for i in .pyenv/versions/* ; do test -L $i && rm -f $i && echo removed link $i; done
+
 a=$PWD   #save the current directory
 cd /opt/pythons
 # Find available versions and link them to the default location.

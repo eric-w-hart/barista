@@ -39,6 +39,6 @@ ENV PATH="/usr/local/go/bin:$PATH"
 RUN go version
 
 RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses 
-RUN chmod g+rwx /usr/src/app/go/*
+RUN chmod -R 775 /usr/src/app/go/
 
 USER 1011

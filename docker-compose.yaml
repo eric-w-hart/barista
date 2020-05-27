@@ -24,7 +24,7 @@ services:
 
   barista-scan:
     env_file: barista-compose.env
-    image: barista-scan:compose
+    image: optumopensource/barista-scan:compose
     networks:
       - baristanetwork
     volumes:

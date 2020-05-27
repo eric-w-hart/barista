@@ -38,7 +38,7 @@ COPY --from=go /usr/local/go /usr/local/go
 ENV PATH="/usr/local/go/bin:$PATH"
 RUN go version
 
-RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses \
-    && chmod -R g+rwx /usr/local/bin/
+RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses 
+RUN chmod g+rwx /usr/src/app/go/*
 
 USER 1011

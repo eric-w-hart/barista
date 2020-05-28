@@ -1,4 +1,4 @@
-# Builing and Running Barista using docker
+# Building and Running Barista using docker
 
 While you are free to buid and run Barista on your own, we find it easiest to use docker images to manage the process.  Using [docker-compose](https://docs.docker.com/compose/), one can get a demo version of Barista up and running in a short time with very few customizations.
 The compose configuration will build the application with docker and  run the 5 major components with a single command.

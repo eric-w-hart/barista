@@ -5,7 +5,7 @@ sidebar_label: barista-on-docker
 ---
 
 
-While you are free to buid and run Barista on your own, we find it easiest to use docker images to manage the process.  Using [docker-compose](https://docs.docker.com/compose/), one can get a demo version of Barista up and running in a short time with very few customizations.
+While you are free to build and run Barista on your own, we find it easiest to use docker images to manage the process.  Using [docker-compose](https://docs.docker.com/compose/), one can get a demo version of Barista up and running in a short time with very few customizations.
 The compose configuration will build the application with docker and  run the 5 major components with a single command.
 - Postgres Database - stores the state of the application.
 - Redis Server - a queue and ephemeral store for inter-server communication.

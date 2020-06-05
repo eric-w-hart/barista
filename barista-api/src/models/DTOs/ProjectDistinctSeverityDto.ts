@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class ProjectDistinctSeverityDto {
-  @ApiProperty()
+  @ApiModelProperty()
   count: number;
 
-  @ApiProperty()
+  @ApiModelProperty()
   severity: string;
 }

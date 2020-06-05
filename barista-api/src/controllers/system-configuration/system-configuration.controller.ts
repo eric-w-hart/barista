@@ -1,7 +1,7 @@
 import { SystemConfiguration } from '@app/models/SystemConfiguration';
 import { SystemConfigurationService } from '@app/services/system-configuration/system-configuration.service';
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 @Crud({
@@ -19,7 +19,7 @@ import { Crud, CrudController } from '@nestjsx/crud';
     },
   },
 })
-@ApiTags('SystemConfiguration')
+@ApiUseTags('SystemConfiguration')
 @Controller('system-configuration')
 export class SystemConfigurationController implements CrudController<SystemConfiguration> {
   constructor(public service: SystemConfigurationService) {}

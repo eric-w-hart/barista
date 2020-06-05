@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ModelBase } from './ModelBase';
 import { Scan } from './Scan';
@@ -6,31 +6,31 @@ import { SecurityScanResultItem } from './SecurityScanResultItem';
 
 @Entity()
 export class SecurityScanResult extends ModelBase {
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'completed_at', nullable: true })
   completedAt: Date;
 
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'html_results', type: 'text', nullable: true })
   htmlResults: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'json_results', type: 'jsonb', nullable: true })
   jsonResults: any;
 
-  @ApiProperty({ type: (type) => Scan })
-  @ManyToOne((type) => Scan, (scan) => scan.securityScanResults, {
+  @ApiModelProperty({ type: type => Scan })
+  @ManyToOne(type => Scan, scan => scan.securityScanResults, {
     onDelete: 'CASCADE',
   })
   scan: Scan;
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'scan_tool' })
   scanTool: string;
 
-  @OneToMany((type) => SecurityScanResultItem, (resultItem) => resultItem.securityScan)
+  @OneToMany(type => SecurityScanResultItem, resultItem => resultItem.securityScan)
   securityScanResultItems: SecurityScanResultItem[];
 
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'started_at', nullable: true })
   startedAt: Date;
 }

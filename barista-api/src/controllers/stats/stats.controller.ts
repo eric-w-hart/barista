@@ -17,7 +17,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import {
@@ -39,7 +39,7 @@ import {
     only: ['getManyBase'],
   },
 })
-@ApiTags('Stats')
+@ApiUseTags('Stats')
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
   constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {}
@@ -115,7 +115,10 @@ export class StatsController implements CrudController<Project> {
     }
 
     const svg = this.createSVG(this.createFormat('barista license state', latestScanDate, licenseStatus.code));
-    return res.status(200).send(svg).end();
+    return res
+      .status(200)
+      .send(svg)
+      .end();
   }
 
   @Get('/badges/:id/securitystate')
@@ -135,7 +138,10 @@ export class StatsController implements CrudController<Project> {
     }
 
     const svg = this.createSVG(this.createFormat('barista security state', latestScanDate, securityStatus.code));
-    return res.status(200).send(svg).end();
+    return res
+      .status(200)
+      .send(svg)
+      .end();
   }
 
   @Get('/badges/:id/vulnerabilities')
@@ -152,11 +158,14 @@ export class StatsController implements CrudController<Project> {
       if (vulnerabilities.length === 0) {
         valueString = 'none detected';
       }
-      vulnerabilities.forEach((vul) => (valueString = valueString + vul.severity + ':' + vul.count + ' '));
+      vulnerabilities.forEach(vul => (valueString = valueString + vul.severity + ':' + vul.count + ' '));
     }
 
     const svg = this.createSVG(this.createFormat('barista vulnerabilities', valueString, securityStatus.code));
-    return res.status(200).send(svg).end();
+    return res
+      .status(200)
+      .send(svg)
+      .end();
   }
 
   @Get('/badges/:id/components')
@@ -184,6 +193,9 @@ export class StatsController implements CrudController<Project> {
     }
 
     const svg = this.createSVG(this.createFormat('barista open source components', valueString, color));
-    return res.status(200).send(svg).end();
+    return res
+      .status(200)
+      .send(svg)
+      .end();
   }
 }

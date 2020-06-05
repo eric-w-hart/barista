@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BomItemBase } from './BomItemBase';
 import { Project } from './Project';
@@ -10,12 +10,12 @@ export class BomSecurityException extends BomItemBase {
   /**
    * The CVE ID for the vulnerability
    */
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'cve_id', nullable: true })
   cveId: string;
 
-  @ApiProperty({ type: (type) => Project })
-  @ManyToOne((type) => Project, (project) => project.securityExceptions, {
+  @ApiModelProperty({ type: type => Project })
+  @ManyToOne(type => Project, project => project.securityExceptions, {
     eager: true,
     onDelete: 'CASCADE',
   })
@@ -24,15 +24,15 @@ export class BomSecurityException extends BomItemBase {
   /**
    * The ProjectScanStatusType at the time of detection.
    */
-  @ApiProperty({ type: (type) => ProjectScanStatusType })
-  @ManyToOne((type) => ProjectScanStatusType)
+  @ApiModelProperty({ type: type => ProjectScanStatusType })
+  @ManyToOne(type => ProjectScanStatusType)
   @JoinColumn({ name: 'project_scan_status_type_code', referencedColumnName: 'code' })
   projectScanStatus: ProjectScanStatusType;
 
   /**
    * Corresponds to the path field on the SecurityScanResultItem
    */
-  @ApiProperty()
+  @ApiModelProperty()
   @Column()
   securityItemPath: string;
 }

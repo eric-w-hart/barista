@@ -1,7 +1,7 @@
 import { ProjectStatusType } from '@app/models/ProjectStatusType';
 import { ProjectStatusTypeService } from '@app/services/project-status-type/project-status-type.service';
 import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 @Crud({
@@ -9,7 +9,7 @@ import { Crud, CrudController } from '@nestjsx/crud';
     type: ProjectStatusType,
   },
 })
-@ApiTags('ProjectStatusType')
+@ApiUseTags('ProjectStatusType')
 @Controller('project-status-type')
 export class ProjectStatusTypeController implements CrudController<ProjectStatusType> {
   constructor(public service: ProjectStatusTypeService) {}

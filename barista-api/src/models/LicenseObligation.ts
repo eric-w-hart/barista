@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class LicenseObligation {
-  @ApiProperty()
+  @ApiModelProperty()
   licenseCode: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   obligationCode: string;
 }

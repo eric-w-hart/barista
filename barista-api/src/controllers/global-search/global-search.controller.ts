@@ -3,13 +3,13 @@ import { ModuleSearchParentRecordDto } from '@app/models/DTOs/ModuleSearchParent
 import { GlobalSearchService } from '@app/services/global-search/global-search.service';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { GetManyDefaultResponse } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
+@ApiOAuth2Auth()
 @Controller('global-search')
-@ApiTags('GlobalSearch')
+@ApiUseTags('GlobalSearch')
 export class GlobalSearchController {
   constructor(private globalSearchService: GlobalSearchService) {}
 

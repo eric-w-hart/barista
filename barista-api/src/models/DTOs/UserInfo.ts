@@ -1,25 +1,25 @@
 import { UserRole } from '@app/models/User';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class UserInfo {
-  @ApiProperty()
+  @ApiModelProperty()
   displayName: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   email: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   groups: string[];
 
-  @ApiProperty()
+  @ApiModelProperty()
   id: string;
 
-  @ApiProperty({
+  @ApiModelProperty({
     enum: [UserRole.Admin, UserRole.Collaborator, UserRole.LicenseAdmin, UserRole.SecurityAdmin],
     type: UserRole,
   })
   role: UserRole;
 
-  @ApiProperty()
+  @ApiModelProperty()
   userName: string;
 }

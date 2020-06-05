@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class EntityCodeAndRelationFilterDto {
-  @ApiProperty()
+  @ApiModelProperty()
   code: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   filter: string;
 }

@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from 'nest-bull';
 
-const AppQueueModuleDefinition = BullModule.registerQueue({
+const AppQueueModuleDefinition = BullModule.forRoot({
   name: 'scan-queue',
-  redis: {
-    enableReadyCheck: true,
-    host: process.env.REDIS_HOST || 'localhost',
-    port: Number(process.env.REDIS_PORT) || 6379,
+  options: {
+    redis: {
+      enableReadyCheck: true,
+      host: process.env.REDIS_HOST || 'localhost',
+      port: Number(process.env.REDIS_PORT) || 6379,
+    },
   },
 });
 

@@ -1,21 +1,21 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class AppStatus {
-  @ApiProperty()
+  @ApiModelProperty()
   appCommitHash: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   appEnvironment: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   appMetaData?: any;
 
-  @ApiProperty()
+  @ApiModelProperty()
   appName: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   appVersion: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   nodeEnv?: string;
 }

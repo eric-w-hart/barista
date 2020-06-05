@@ -1,12 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class LicenseDto {
-  @ApiProperty()
+  @ApiModelProperty()
   id: number;
 
-  @ApiProperty()
+  @ApiModelProperty()
   modulesCount: number;
 
-  @ApiProperty()
+  @ApiModelProperty()
   name: string;
 }

@@ -7,7 +7,7 @@ import { UserService } from '@app/services/user/user.service';
 import PaginateArrayResult from '@app/shared/util/paginate-array-result';
 import { Body, Controller, Get, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } from '@nestjsx/crud';
 
 @Crud({
@@ -18,13 +18,13 @@ import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } 
     exclude: ['getManyBase', 'getOneBase', 'deleteOneBase', 'createManyBase', 'createOneBase', 'updateOneBase'],
   },
 })
-@ApiTags('User')
+@ApiUseTags('User')
 @Controller('user')
 export class UserController implements CrudController<User> {
   constructor(public service: UserService, private projectService: ProjectService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
+  @ApiOAuth2Auth()
   @Get('projects')
   @UseInterceptors(CrudRequestInterceptor)
   @ApiResponse({ status: 200, type: Project, isArray: true })
@@ -50,7 +50,7 @@ export class UserController implements CrudController<User> {
   @UseGuards(AuthGuard('jwt'))
   @Get('/me')
   @ApiResponse({ status: 200, type: UserInfo })
-  @ApiBearerAuth()
+  @ApiOAuth2Auth()
   getProfile(@Request() req) {
     return req.user;
   }

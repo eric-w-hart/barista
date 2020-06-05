@@ -1,13 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 import { Column } from 'typeorm';
 import { ModelBase } from './ModelBase';
 
 export class BomItemBase extends ModelBase {
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ type: 'text', default: '' })
   notes: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'user_id' })
   userId: string;
 }

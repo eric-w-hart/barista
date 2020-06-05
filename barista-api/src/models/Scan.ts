@@ -1,5 +1,5 @@
 import { JobInfoDto } from '@app/models/DTOs/JobInfoDto';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { DeploymentType } from './DeploymentType';
 import { LicenseScanResult } from './LicenseScanResult';
@@ -9,11 +9,11 @@ import { SecurityScanResult } from './SecurityScanResult';
 
 @Entity()
 export class Scan extends ModelBase {
-  @ApiModelProperty({ type: Date })
+  @ApiProperty({ type: Date })
   @Column({ name: 'completed_at', nullable: true })
   completedAt: Date;
 
-  @ManyToOne(type => DeploymentType, {
+  @ManyToOne((type) => DeploymentType, {
     eager: true,
 
     onDelete: 'SET NULL',
@@ -21,26 +21,26 @@ export class Scan extends ModelBase {
   })
   deploymentType: DeploymentType;
 
-  @ApiModelProperty({ type: type => JobInfoDto })
+  @ApiProperty({ type: (type) => JobInfoDto })
   @Column({ name: 'job_info', type: 'jsonb', nullable: true })
   jobInfo: JobInfoDto;
 
-  @ApiModelProperty({ type: type => LicenseScanResult, isArray: true })
-  @OneToMany(type => LicenseScanResult, result => result.scan, { eager: true })
+  @ApiProperty({ type: (type) => LicenseScanResult, isArray: true })
+  @OneToMany((type) => LicenseScanResult, (result) => result.scan, { eager: true })
   licenseScanResults: LicenseScanResult[];
 
-  @ApiModelProperty({ type: type => Project })
-  @ManyToOne(type => Project, project => project.scans, {
+  @ApiProperty({ type: (type) => Project })
+  @ManyToOne((type) => Project, (project) => project.scans, {
     eager: true,
     onDelete: 'CASCADE',
   })
   project: Project;
 
-  @ApiModelProperty({ type: type => SecurityScanResult, isArray: true })
-  @OneToMany(type => SecurityScanResult, result => result.scan)
+  @ApiProperty({ type: (type) => SecurityScanResult, isArray: true })
+  @OneToMany((type) => SecurityScanResult, (result) => result.scan)
   securityScanResults: SecurityScanResult[];
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'started_at', nullable: true })
   startedAt: Date;
 }

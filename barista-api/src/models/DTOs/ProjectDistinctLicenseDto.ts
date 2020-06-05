@@ -1,9 +1,9 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ProjectDistinctLicenseDto {
-  @ApiModelProperty()
+  @ApiProperty()
   count: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   license: any;
 }

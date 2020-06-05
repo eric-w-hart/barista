@@ -3,11 +3,11 @@ import { LicenseStatusDeploymentType } from '@app/models/LicenseStatusDeployment
 import { LicenseStatusDeploymentTypeService } from '@app/services/license-status-deployment-type/license-status-deployment-type.service';
 import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   query: {
     join: {
@@ -30,7 +30,7 @@ import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } 
     type: LicenseStatusDeploymentType,
   },
 })
-@ApiUseTags('LicenseStatusDeploymentType')
+@ApiTags('LicenseStatusDeploymentType')
 @Controller('license-status-deployment-type')
 export class LicenseStatusDeploymentTypeController implements CrudController<LicenseStatusDeploymentType> {
   constructor(public service: LicenseStatusDeploymentTypeService) {}

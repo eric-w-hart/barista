@@ -18,7 +18,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from 'bull';
 import * as _ from 'lodash';
-import { InjectQueue } from 'nest-bull';
+import { InjectQueue } from '@nestjs/bull';
 import * as nodemailer from 'nodemailer';
 import { In, IsNull } from 'typeorm';
 
@@ -108,10 +108,9 @@ export class ScanService extends AppServiceBase<Scan> {
       let scanCodes = [];
 
       if (licenseScanResult) {
-        const licenseItems = await (await this.licenseScanResultItemService.bomLicenseResultItemQuery(
-          licenseScanResult.scan,
-          '',
-        )).getMany();
+        const licenseItems = await (
+          await this.licenseScanResultItemService.bomLicenseResultItemQuery(licenseScanResult.scan, '')
+        ).getMany();
 
         const licenseCodes = _.map(licenseItems, (item: any) => {
           return item.projectScanStatus.code;
@@ -160,10 +159,9 @@ export class ScanService extends AppServiceBase<Scan> {
       let scanCodes = [];
 
       if (securityScanResult) {
-        const securityItems = await (await this.securityScanResultItemService.bomSecurityResultItemQuery(
-          securityScanResult.scan,
-          '',
-        )).getMany();
+        const securityItems = await (
+          await this.securityScanResultItemService.bomSecurityResultItemQuery(securityScanResult.scan, '')
+        ).getMany();
 
         const codes = _.map(securityItems, (item: any) => {
           return item.projectScanStatus.code;

@@ -29,15 +29,14 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api/v1');
 
   const options = new DocumentBuilder()
     .setTitle('Barista API')
     .setDescription('REST API documentation for the Barista system')
     .setVersion('1.0')
-    .addBearerAuth('Authorization', 'header')
-    .addOAuth2('accessCode')
-    .setBasePath('api/v1')
-    .setSchemes('https', 'http')
+    .addBearerAuth()
+    .addOAuth2()
     .addTag('BomLicenseException', 'Methods')
     .addTag('BomManualLicense', 'Methods')
     .addTag('BomSecurityException', 'Methods')
@@ -93,7 +92,6 @@ async function bootstrap() {
     next();
   });
 
-  app.setGlobalPrefix('api/v1');
   await app.listen(process.env.API_PORT || 3000);
 }
 

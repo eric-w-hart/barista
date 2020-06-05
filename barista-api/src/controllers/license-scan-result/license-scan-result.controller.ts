@@ -1,7 +1,7 @@
 import { LicenseScanResult } from '@app/models';
 import { LicenseScanResultService } from '@app/services/license-scan-result/license-scan-result.service';
 import { Controller } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 // prettier-ignore
@@ -23,7 +23,7 @@ import { Crud, CrudController } from '@nestjsx/crud';
     },
   },
 })
-@ApiUseTags('LicenseScanResult')
+@ApiTags('LicenseScanResult')
 @Controller('license-scan-result')
 export class LicenseScanResultController
   implements CrudController<LicenseScanResult> {

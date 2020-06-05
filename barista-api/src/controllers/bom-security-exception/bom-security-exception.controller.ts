@@ -5,7 +5,7 @@ import { ProjectService } from '@app/services/project/project.service';
 import { Body, Controller, Get, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -18,7 +18,7 @@ import {
 } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
+@ApiOAuth2Auth()
 @Crud({
   model: {
     type: BomSecurityException,
@@ -37,7 +37,7 @@ import {
     exclude: ['createdAt', 'updatedAt'],
   },
 })
-@ApiTags('BomSecurityException')
+@ApiUseTags('BomSecurityException')
 @Controller('bom-security-exception')
 export class BomSecurityExceptionController implements CrudController<BomSecurityException> {
   constructor(

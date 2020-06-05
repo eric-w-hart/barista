@@ -1,26 +1,26 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class ModuleSearchParentRecordDto {
-  @ApiProperty()
+  @ApiModelProperty()
   entityCount: number;
 
-  @ApiProperty()
+  @ApiModelProperty()
   entityName: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   projectDescription: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   projectEmail: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   projectGitUrl: string;
-  @ApiProperty()
+  @ApiModelProperty()
   projectId: number;
 
-  @ApiProperty()
+  @ApiModelProperty()
   projectName: string;
 
-  @ApiProperty()
+  @ApiModelProperty()
   projectOwner: string;
 }

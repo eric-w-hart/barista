@@ -16,13 +16,13 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
+import { InjectQueue } from 'nest-bull';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
+@ApiOAuth2Auth()
 @Crud({
   query: {
     join: {
@@ -41,7 +41,7 @@ import { InjectQueue } from '@nestjs/bull';
     type: Scan,
   },
 })
-@ApiTags('Scan')
+@ApiUseTags('Scan')
 @Controller('scan')
 export class ScanController implements CrudController<Scan> {
   constructor(

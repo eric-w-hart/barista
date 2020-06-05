@@ -1,13 +1,13 @@
 import { ProjectScanStatusType } from '@app/models';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class ProjectScanStateDto {
-  @ApiProperty({ type: (type) => ProjectScanStatusType })
+  @ApiModelProperty({ type: type => ProjectScanStatusType })
   licenseStatus: ProjectScanStatusType;
 
-  @ApiProperty()
+  @ApiModelProperty()
   projectId: number;
 
-  @ApiProperty({ type: (type) => ProjectScanStatusType })
+  @ApiModelProperty({ type: type => ProjectScanStatusType })
   securityStatus: ProjectScanStatusType;
 }

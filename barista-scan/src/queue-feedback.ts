@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
-import { BullQueueEvents, OnQueueActive, OnQueueError, OnQueueEvent, Processor } from '@nestjs/bull';
+import { BullQueueEvents, OnQueueActive, OnQueueError, OnQueueEvent, Queue } from 'nest-bull';
 
-@Processor('scan-queue')
+@Queue({ name: 'scan-queue' })
 export class QueueFeedback {
   private readonly logger = new Logger('QueueFeedback');
 

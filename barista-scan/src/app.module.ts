@@ -5,18 +5,20 @@ import { QueueFeedback } from '@app/queue-feedback';
 import { shellExecute, shellExecuteSync } from '@app/shared/util/shell-execute';
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from 'nest-bull';
 import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    BullModule.registerQueue({
+    BullModule.forRoot({
       name: 'scan-queue',
-      redis: {
-        enableReadyCheck: true,
-        host: process.env.REDIS_HOST || 'localhost',
-        port: Number(process.env.REDIS_PORT) || 6379,
+      options: {
+        redis: {
+          enableReadyCheck: true,
+          host: process.env.REDIS_HOST || 'localhost',
+          port: Number(process.env.REDIS_PORT) || 6379,
+        },
       },
       processors: [
         {

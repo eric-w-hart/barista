@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export class AuthJwtToken {
-  @ApiProperty()
+  @ApiModelProperty()
   accessToken: string;
 }

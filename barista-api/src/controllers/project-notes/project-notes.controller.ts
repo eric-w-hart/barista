@@ -2,11 +2,11 @@ import { ProjectNote } from '@app/models';
 import { ProjectNotesService } from '@app/services/project-notes/project-notes.service';
 import { Body, Controller, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequest, CrudRequestInterceptor, ParsedRequest } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
+@ApiOAuth2Auth()
 @Crud({
   model: {
     type: ProjectNote,
@@ -30,7 +30,7 @@ import { Crud, CrudController, CrudRequest, CrudRequestInterceptor, ParsedReques
     exclude: ['createOneBase'],
   },
 })
-@ApiTags('ProjectNotes')
+@ApiUseTags('ProjectNotes')
 @Controller('project-notes')
 export class ProjectNotesController implements CrudController<ProjectNote> {
   constructor(public service: ProjectNotesService) {}

@@ -1,7 +1,7 @@
 import { SecurityScanResultItem } from '@app/models';
 import { SecurityScanResultItemService } from '@app/services/security-scan-result-item/security-scan-result-item.service';
 import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 
 // prettier-ignore
@@ -33,7 +33,7 @@ import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
     type: SecurityScanResultItem,
   },
 })
-@ApiTags('SecurityScanResultItem')
+@ApiUseTags('SecurityScanResultItem')
 @Controller('security-scan-result-item')
 export class SecurityScanResultItemController
   implements CrudController<SecurityScanResultItem> {

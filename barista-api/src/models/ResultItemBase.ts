@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 import { Column } from 'typeorm';
 import { ModelBase } from './ModelBase';
 
@@ -6,27 +6,27 @@ export class ResultItemBase extends ModelBase {
   /**
    * A human readable string used to describe the item that can be displayed to the user
    */
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'description', nullable: true })
   description: string;
 
   /**
    * A human readable string used to identify the item that can be displayed to the user
    */
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'displayIdentifier' })
   displayIdentifier: string;
   /**
    * The item type, file/library/license file/other reserved for future use
    */
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'item_type', nullable: true })
   itemType: string;
 
   /**
    * The path of the item if applicable
    */
-  @ApiProperty()
+  @ApiModelProperty()
   @Column({ name: 'path' })
   path: string;
 

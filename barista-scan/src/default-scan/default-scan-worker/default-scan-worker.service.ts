@@ -32,14 +32,14 @@ import * as tmp from 'tmp';
 
 @Injectable()
 export class DefaultScanWorkerService {
-  private dataDir = tmp.dirSync();
+  private dataDir = tmp.dirSync({ unsafeCleanup: true });
   private doneCallback: DoneCallback;
   private git = Git();
   private job: Job;
   private jobInfo: DefaultScanWorkerJobInfo;
   private logger = new Logger('DefaultScanWorkerService');
   private scanners: Scanner[];
-  private tmpDir = tmp.dirSync();
+  private tmpDir = tmp.dirSync({ unsafeCleanup: true });
 
   constructor(
     private readonly projectService: ProjectService,
@@ -284,8 +284,11 @@ export class DefaultScanWorkerService {
           await scan.reload();
           scan.completedAt = new Date();
           await scan.save();
-
-          await this.scanService.sendMailOnScanCompletion(scan);
+          try {
+            await this.scanService.sendMailOnScanCompletion(scan);
+          } catch (error) {
+            this.logger.error(error);
+          }
 
           this.cleanup(this.jobInfo, null, resolve, reject);
         };

@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { SigninComponent } from '@app/features/signin/signin.component';
 import { SignupComponent } from '@app/features/signup/signup.component';
 import { StatusComponent } from '@app/features/status/status.component';
+import { HomeComponent } from '@app/features/home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/signin', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'status',
     component: StatusComponent,
@@ -20,6 +21,11 @@ const routes: Routes = [
     path: 'signup',
     component: SignupComponent,
     data: { showHeader: false, showSidebar: false },
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    data: { showHeader: false, showSidebar: false, showFooter: false },
   },
 ];
 

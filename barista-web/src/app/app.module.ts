@@ -96,6 +96,7 @@ import { ProjectStatusComponent } from './features/projects/project-details/proj
 import { LicenseScanResultItemDetailsComponent } from './features/projects/project-scans/project-scan-details/license-scan-result/license-scan-result-items/license-scan-result-item-details/license-scan-result-item-details.component';
 import { SecurityScanResultItemDetailsComponent } from './features/projects/project-scans/project-scan-details/security-scan-result/security-scan-result-items/security-scan-result-item-details/security-scan-result-item-details.component';
 import { StatusComponent } from './features/status/status.component';
+import { HomeComponent } from './features/home/home.component';
 
 // tslint:enable:max-line-length
 
@@ -130,6 +131,7 @@ export function apiConfigFactory(): Configuration {
     FlexLayoutTypeComponent,
     FooterComponent,
     HeaderComponent,
+    HomeComponent,
     LicenseDetailsComponent,
     LicenseObligationComponent,
     LicenseScanResultComponent,

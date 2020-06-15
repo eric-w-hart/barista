@@ -305,7 +305,19 @@ export class DefaultScanWorkerService {
           await doScanProcess();
         } else if (!_.isEmpty(gitUrl)) {
           this.logger.log('Cloning Git Repository');
-          this.git.clone(gitUrl, this.jobInfo.tmpDir, ['--depth', '1'], async (cloneError, cloneResult) => {
+          const gitBranch = scan.tag;
+          this.logger.log('Branch = ' + gitBranch);
+          const gitOptions = [];
+          if (gitBranch) {
+            this.logger.log('Branch = ' + gitBranch);
+            gitOptions.push('--branch');
+            gitOptions.push(gitBranch);
+          } else {
+            this.logger.log('Branch = default branch');
+            gitOptions.push('--depth');
+            gitOptions.push('1');
+          }
+          this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions, async (cloneError, cloneResult) => {
             if (cloneError) {
               this.logger.error(`Clone Error: ${cloneError}`);
             }

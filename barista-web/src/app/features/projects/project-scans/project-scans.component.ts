@@ -26,6 +26,9 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     super();
   }
 
+  menuScanBranchData: any;
+  branches: any;
+
   columns: IDataTableColumns[];
   currentPagedData: any = {
     count: 0,
@@ -60,7 +63,7 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
         query.page,
         query.cache,
       )
-      .subscribe(results => {
+      .subscribe((results) => {
         this.currentPagedData = results || { count: 0, data: [], page: 1, total: 0 };
         this.pageResults$.next(this.currentPagedData);
       });
@@ -75,6 +78,9 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
   ngOnDestroy(): void {}
 
   ngOnInit() {
+    this.menuScanBranchData = {
+      menuItems: [{ name: 'first' }, { name: 'second' }],
+    };
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
 
     this.columns = [
@@ -90,7 +96,7 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     this.projectService
       .getByKey(this.projectId)
       .pipe(first())
-      .subscribe(project => {
+      .subscribe((project) => {
         this.showScanButton = this.authService.isProjectOwner(project);
       });
   }
@@ -105,17 +111,17 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
 
     this.scanService.apiService
-      .scanProjectIdPost(this.projectId)
+      .scanProjectIdBranchPost(this.projectId, { branch: 'dependabot/go_modules/github.com/spf13/cobra-0.0.7' })
       .pipe(first())
       .subscribe(
-        result => {
+        (result) => {
           this.trackScanStatus(result.id);
 
           this.trackScan(result.id, 0);
 
           this.showMessage('Scan successfully started.');
         },
-        response => {
+        (response) => {
           this.showMessage(response.error.error);
         },
       );
@@ -136,7 +142,7 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
   }
 
   trackScanStatus(scanId: number) {
-    this.scanService.apiService.scanIdGet(scanId).subscribe(scanDetail => {
+    this.scanService.apiService.scanIdGet(scanId).subscribe((scanDetail) => {
       if (!scanDetail.completedAt) {
         const API_RATE_LIMIT = 1000;
 

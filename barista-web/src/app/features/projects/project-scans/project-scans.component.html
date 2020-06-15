@@ -1,13 +1,28 @@
-
 <mat-card class="content-card" fxFill>
   <mat-card-header class="content-header">
     <mat-card-title>
       Projects Scans
-<!--      <button class="add-button" [routerLink]="['/project/new']" mat-icon-button><mat-icon>add</mat-icon></button>-->
-      <button *ngIf="showScanButton" class="scan-btn" type="button" mat-button color="warn" (click)="scan()">
-        <mat-icon>add</mat-icon>
-        <span>Scan</span>
-      </button>
+      <!--      <button class="add-button" [routerLink]="['/project/new']" mat-icon-button><mat-icon>add</mat-icon></button>-->
+      <mat-button-toggle-group *ngIf="showScanButton">
+        <button type="button" mat-button color="warn" (click)="scan()">
+          <mat-icon>add</mat-icon>
+          <span>Scan</span>
+        </button>
+        <mat-button-toggle
+          class="split-button-1 drop-down-button"
+          [matMenuTriggerFor]="dropdownMenuOne"
+          [matMenuTriggerData]="menuScanBranchData"
+        >
+          <mat-icon>arrow_drop_down</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-menu #dropdownMenuOne="matMenu">
+        <ng-template matMenuContent let-aliasMenuItems="menuItems">
+          <button mat-menu-item *ngFor="let item of aliasMenuItems">
+            {{ item.name }}
+          </button>
+        </ng-template>
+      </mat-menu>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content class="dashboard-card-content">
@@ -22,7 +37,7 @@
       [selectionType]="'single'"
       (select)="onSelect($event)"
       [getPageResults]="getPageResults.bind(this)"
-      >
+    >
     </app-datatable>
 
     <ng-template #dateCellTmpl let-value="value" ngx-datatable-cell-template>
@@ -30,9 +45,8 @@
     </ng-template>
 
     <ng-template #scanProgressTmpl let-row="row" let-value="value" ngx-datatable-cell-template>
-      {{value}}
+      {{ value }}
       <span *ngIf="row.isScanning" class="scan-progress">Scanning... <i class="material-icons animate">loop</i></span>
     </ng-template>
-
   </mat-card-content>
 </mat-card>

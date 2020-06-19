@@ -91,12 +91,30 @@ export class AuthService implements OnDestroy {
       this.statusChange.next((status = { ...status, isLoggedIn: true, statusMessage: '' }));
       await this.router.navigate([this.redirectUrl || '/dashboard']);
     } catch (e) {
-      this.statusChange.next(
-        (status = {
-          ...status,
-          statusMessage: e.statusText || 'An unknown error occurred.',
-        }),
-      );
+      // error message if username and password are incorrect
+      if (e instanceof TypeError && username && password){
+        this.statusChange.next(
+          (status = {
+            ...status,
+            statusMessage: "Incorrect username or password",
+          }),
+        );}
+      // error message if a username and/or password was not entered
+      else if (e instanceof TypeError && !username || !password){
+        this.statusChange.next(
+          (status = {
+            ...status,
+            statusMessage: "Please enter a username and password",
+          }),
+        );}
+      // all other errors
+      else{
+        this.statusChange.next(
+          (status = {
+            ...status,
+            statusMessage: e.statusText || "An unknown error occured",
+          }),
+        );}
     } finally {
       this.statusChange.next({ ...status, isLoggingIn: false });
     }

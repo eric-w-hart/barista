@@ -71,7 +71,7 @@
               <mat-form-field class="field">
                 <input matInput [placeholder]="(systemConfiguration | async)?.askIdDisplayName" required [(ngModel)]="project.askID" name="askID"
                        [disabled]="project?.developmentType?.code == 'community'"
-                       [matTooltip]="tooltips['askID']">
+                       [matTooltip]="tooltips['projectID']">
               </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile>

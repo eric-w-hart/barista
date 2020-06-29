@@ -15,19 +15,20 @@ import { first, map } from 'rxjs/operators';
 })
 export class ProjectStatsComponent implements OnInit {
   constructor() {}
+
+  // only needs __data and @Input __data$; data passed in as JSON objects
   licenseData;
   @Input() licenseData$: Observable<ProjectDistinctLicenseDto>;
 
-  licenseLabels;
   severityData;
   @Input() severityData$: Observable<ProjectDistinctSeverityDto>;
-  severityLabels;
 
   vulnerabilityData;
   @Input() vulnerabilityData$: Observable<ProjectDistinctVulnerabilityDto>;
 
-  vulnerabilityLabels;
-
+  /**
+   * Handle input, format data for charts
+   */
   ngOnInit() {
     if (this.licenseData$) {
       this.licenseData$
@@ -40,7 +41,6 @@ export class ProjectStatsComponent implements OnInit {
           }),
         )
         .subscribe(result => {
-          this.licenseLabels = result.labels;
           this.licenseData = result.counts;
         });
     }
@@ -56,7 +56,6 @@ export class ProjectStatsComponent implements OnInit {
           }),
         )
         .subscribe(result => {
-          this.vulnerabilityLabels = result.labels;
           this.vulnerabilityData = result.counts;
         });
     }
@@ -72,7 +71,6 @@ export class ProjectStatsComponent implements OnInit {
           }),
         )
         .subscribe(result => {
-          this.severityLabels = result.labels;
           this.severityData = result.counts;
         });
     }

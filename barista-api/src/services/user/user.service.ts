@@ -3,7 +3,7 @@ import { UserInfo } from '@app/models/DTOs';
 import { AuthJwtToken } from '@app/models/DTOs/AuthJwtToken';
 import { UserRole } from '@app/models/User';
 import { AppServiceBase } from '@app/services/app-service-base/app-base.service';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ImATeapotException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
@@ -55,6 +55,8 @@ export class UserService extends AppServiceBase<User> {
         }
       }
     }
+    // ImATeapot is a placeholder for now
+    throw new ImATeapotException("Invalid Username or Password");
 
     return null;
   }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartBaseComponent } from '@app/shared/app-components/charts/chart-base/chart-base.component';
-import { ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-pie-chart',
@@ -12,13 +11,13 @@ export class PieChartComponent extends ChartBaseComponent implements OnInit {
     super();
   }
 
-  public chartOptions: ChartOptions = {
-    responsive: true,
-    legend: {
-      position: 'top',
-    },
-  };
-  chartType: ChartType = 'pie';
+  // Options:
+  view: any[] = [500, 250];
+  gradient: boolean = true;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = false;
+  legendPosition: string = 'left';
 
   ngOnInit() {}
 }

@@ -3,9 +3,8 @@ import { Input, OnInit, Directive } from '@angular/core';
 @Directive()
 export abstract class ChartBaseComponent implements OnInit {
   protected constructor() {}
-  @Input() data: number[];
-  @Input() labels: string[];
-  @Input() legend = false;
+  @Input() data: any[];
+  @Input() legend: boolean;
 
   ngOnInit() {}
 }

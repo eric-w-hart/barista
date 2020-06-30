@@ -29,7 +29,7 @@ export class MavenService extends DepClientBaseService {
 
   async command(workingDir: string, options?: any): Promise<string> {
     let command = 'mvn -e dependency:copy-dependencies';
-    command = MavenService.appendSettings(command);
+    //command = MavenService.appendSettings(command);
 
     // If the user has specified a custom pom.xml file then let's apply it
     let customPom = null;

@@ -4,6 +4,7 @@ import {
   ProjectDistinctSeverityDto,
   ProjectDistinctVulnerabilityDto,
 } from '@app/shared/api';
+import { ChartElementDto } from '@app/shared/api/model/chart-element-dto';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -16,7 +17,6 @@ import { first, map } from 'rxjs/operators';
 export class ProjectStatsComponent implements OnInit {
   constructor() {}
 
-  // only needs __data and @Input __data$; data passed in as JSON objects
   licenseData;
   @Input() licenseData$: Observable<ProjectDistinctLicenseDto>;
 
@@ -27,7 +27,9 @@ export class ProjectStatsComponent implements OnInit {
   @Input() vulnerabilityData$: Observable<ProjectDistinctVulnerabilityDto>;
 
   /**
-   * Handle input, format data for charts
+   * Contains 3 parts, each handles converting data from an API call
+   * to an object receivable by the charts handler. Uses JSON for compatibility
+   * with ngx-charts library.
    */
   ngOnInit() {
     if (this.licenseData$) {
@@ -35,13 +37,14 @@ export class ProjectStatsComponent implements OnInit {
         .pipe(
           first(),
           map(items => {
-            const counts = _.map(items, (item: any) => item.count);
-            const labels = _.map(items, (item: any) => item.license.name);
-            return { counts, labels };
+            const data: ChartElementDto[] = _.map(items, (item: any) => {
+              return {'name': item.license.name, 'value': item.count}; 
+            });
+            return data;
           }),
         )
-        .subscribe(result => {
-          this.licenseData = result.counts;
+        .subscribe(data => {
+          this.licenseData = data;
         });
     }
 
@@ -50,13 +53,14 @@ export class ProjectStatsComponent implements OnInit {
         .pipe(
           first(),
           map(items => {
-            const counts = _.map(items, (item: any) => item.count);
-            const labels = _.map(items, (item: any) => item.path);
-            return { counts, labels };
+            const data: ChartElementDto[] = _.map(items, (item: any) => {
+              return {'name': item.path, 'value': item.count}; 
+            });
+            return data;
           }),
         )
-        .subscribe(result => {
-          this.vulnerabilityData = result.counts;
+        .subscribe(data => {
+          this.vulnerabilityData = data;
         });
     }
 
@@ -65,13 +69,14 @@ export class ProjectStatsComponent implements OnInit {
         .pipe(
           first(),
           map(items => {
-            const counts = _.map(items, (item: any) => item.count);
-            const labels = _.map(items, (item: any) => item.severity);
-            return { counts, labels };
+            const data: ChartElementDto[] = _.map(items, (item: any) => {
+              return {'name': item.severity, 'value': item.count}; 
+            });
+            return data;
           }),
         )
-        .subscribe(result => {
-          this.severityData = result.counts;
+        .subscribe(data => {
+          this.severityData = data;
         });
     }
   }

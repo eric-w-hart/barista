@@ -40,7 +40,7 @@ export class LicenseMavenService extends ScannerBaseService {
     // tslint:disable-next-line:max-line-length
     let command = `mvn -e org.codehaus.mojo:license-maven-plugin:2.0.0:aggregate-download-licenses -DlicensesOutputFile=${jobInfo.dataDir}/license-maven-results.xml -DlicensesOutputDirectory=${jobInfo.dataDir}/maven-licenses`;
 
-    command = MavenService.appendSettings(command);
+    //command = MavenService.appendSettings(command);
 
     let customPom = null;
     if (scan.project.customPackageManagerFilename) {

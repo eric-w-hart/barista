@@ -12,12 +12,11 @@ export class PieChartComponent extends ChartBaseComponent implements OnInit {
   }
 
   // Options:
-  view: any[] = [500, 250];
+  view: any[] = [750, 250];
   gradient: boolean = true;
-  showLegend: boolean = true;
   showLabels: boolean = true;
   isDoughnut: boolean = false;
-  legendPosition: string = 'left';
+  legendPosition: string = 'right';
 
   ngOnInit() {}
 }

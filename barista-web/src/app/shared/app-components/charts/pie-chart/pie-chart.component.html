@@ -1,13 +1,13 @@
-<div style="display: block">
-  <ngx-charts-pie-chart
-  *ngIf="!data || data.length < 1"
-  [view]="view"
-  [results]="data"
-  [legend]="legend"
-  [showLegend]="showLegend"
-  [showLabels]="showLabels"
-  [isDoughnut]="isDoughnut"
-  [legendPosition]="legendPosition"
->
-</ngx-charts-pie-chart>
+<div class="pie-chart-container">
+  <div class="pie-chart">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [results]="data"
+      [legend]="legend"
+      [labels]="showLabels"
+      [doughnut]="isDoughnut"
+      [legendPosition]="legendPosition"
+    >
+    </ngx-charts-pie-chart>
+  </div>
 </div>

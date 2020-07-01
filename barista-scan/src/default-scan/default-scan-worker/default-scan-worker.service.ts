@@ -29,6 +29,7 @@ import * as path from 'path';
 import { join } from 'path';
 import * as Git from 'simple-git';
 import * as tmp from 'tmp';
+import * as url from 'url';
 
 @Injectable()
 export class DefaultScanWorkerService {
@@ -160,12 +161,19 @@ export class DefaultScanWorkerService {
           options.customPackageManagerFilename = slnFiles[0];
         }
       }
+      options.useMavenCustomSettings = !this.isGitHubCom(scan.project.gitUrl);
+      this.logger.log('userMavenCustom = ' + options.useMavenCustomSettings);
 
       return depClient.fetchDependencies(workingDirectory, options);
     } else {
       this.logger.log('No package manager configured, not fetching dependencies.');
       return Promise.resolve();
     }
+  }
+
+  isGitHubCom(gitUrl: string) {
+    const urlParts = url.parse(gitUrl);
+    return urlParts.hostname.toLowerCase() === 'github.com';
   }
 
   async scan(job: Job<any>, callback: DoneCallback) {

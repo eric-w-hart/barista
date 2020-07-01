@@ -29,7 +29,7 @@ export class LicenseMavenService extends ScannerBaseService {
   private logger = new Logger('LicenseMavenService');
   name = 'LicenseMavenService';
 
-  public async command(jobInfo: DefaultScanWorkerJobInfo) {
+  public async command(jobInfo: DefaultScanWorkerJobInfo, options?: any) {
     // Create the Scan with that project
     const scan: Scan = await this.scanService.db
       .createQueryBuilder('scan')
@@ -39,8 +39,12 @@ export class LicenseMavenService extends ScannerBaseService {
 
     // tslint:disable-next-line:max-line-length
     let command = `mvn -e org.codehaus.mojo:license-maven-plugin:2.0.0:aggregate-download-licenses -DlicensesOutputFile=${jobInfo.dataDir}/license-maven-results.xml -DlicensesOutputDirectory=${jobInfo.dataDir}/maven-licenses`;
-
-    command = MavenService.appendSettings(command);
+    if (options && options.hasOwnProperty('useMavenCustomSettings')) {
+      if (options.useMavenCustomSettings) {
+        command = MavenService.appendSettings(command);
+        this.logger.log('useMavenCustom');
+      }
+    }
 
     let customPom = null;
     if (scan.project.customPackageManagerFilename) {

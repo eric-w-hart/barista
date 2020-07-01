@@ -272,7 +272,6 @@ export class DefaultScanWorkerService {
             scannerPromises.push(
               new Promise(async scanPromiseResolve => {
                 this.logger.log(`Starting ${scanner.name}`);
-
                 await scanner.execute(this.jobInfo);
 
                 // TODO: Make this report a more accurate progress potentially with a callback within the scanner to capture steps

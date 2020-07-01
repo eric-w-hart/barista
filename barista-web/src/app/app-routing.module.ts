@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    data: { showHeader: false, showSidebar: false, showFooter: false },
+    data: { showHeader: true, showSidebar: false, showFooter: true },
   },
 ];
 

@@ -1,17 +1,16 @@
 <div>
 <mat-toolbar color="primary">
-  <button
-    type = "button"
-    mat-icon-button
-    (click)="navService.changeState()">
-    <mat-icon >menu</mat-icon>
-  </button>
-  <h1><span [routerLink]="['/dashboard']">Barista</span></h1>
   <img class="ml-1" src="assets/images/barista-icon.png"/>
+  <h1><span class="mat-h1" [routerLink]="['/home']">Barista</span></h1>
   <span class="fill-space"></span>
   <app-help-menu></app-help-menu>
   <span *ngIf="isLoggedIn">
     <button type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</button>
   </span>
+  <span *ngIf="!isLoggedIn">
+    <input matInput placeholder="Username" [(ngModel)]="username" name="username" ><br>
+    <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password">
+  </span>
+  <button *ngIf="!isLoggedIn" mat-button (click)="signin()" type="submit">Login</button>
 </mat-toolbar>
 </div>

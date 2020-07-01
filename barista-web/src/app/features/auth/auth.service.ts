@@ -89,7 +89,8 @@ export class AuthService implements OnDestroy {
       const userInfo = await this.userApiService.userMeGet().toPromise();
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       this.statusChange.next((status = { ...status, isLoggedIn: true, statusMessage: '' }));
-      await this.router.navigate([this.redirectUrl || '/dashboard']);
+      await this.router.navigate([this.redirectUrl || '/home']);
+      window.location.reload();
     } catch (e) {
       this.statusChange.next(
         (status = {
@@ -104,7 +105,9 @@ export class AuthService implements OnDestroy {
 
   async logout() {
     localStorage.removeItem('accessToken');
-    await this.router.navigate(['/signin']);
+    await this.router.navigate(['/home']);
+    window.location.reload();
+
   }
 
   ngOnDestroy(): void {}

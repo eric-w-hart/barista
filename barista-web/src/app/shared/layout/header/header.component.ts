@@ -16,6 +16,8 @@ export class HeaderComponent implements OnInit {
   role: string;
   @Output() public sidenavToggle = new EventEmitter();
   userName: string;
+  password = '';
+  username = '';
 
   async logout() {
     await this.authService.logout();
@@ -26,5 +28,8 @@ export class HeaderComponent implements OnInit {
     const { displayName, role } = this.authService.userInfo;
     this.userName = displayName;
     this.role = UserInfo.RoleEnum[role];
+  }
+  async signin() {
+    await this.authService.login(this.username, this.password);
   }
 }

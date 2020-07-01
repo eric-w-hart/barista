@@ -11,7 +11,8 @@ describe('PieChartComponent', () => {
     TestBed.configureTestingModule({
       imports: [NgxChartsModule],
       declarations: [PieChartComponent],
-    }).compileComponents();
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {

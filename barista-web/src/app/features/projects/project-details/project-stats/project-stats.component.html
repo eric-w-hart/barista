@@ -6,6 +6,7 @@
   *ngIf="licenseData"
   [data]="licenseData"
   [legend]="true"
+  [legendTitle]="'Licenses:'"
 ></app-pie-chart>
 <hr/>
 <h1>Severity Distribution</h1>
@@ -16,6 +17,7 @@
   *ngIf="severityData"
   [data]="severityData"
   [legend]="true"
+  [legendTitle]="'Severities:'"
 ></app-pie-chart>
 <hr/>
 <h1>Vulnerability Distribution</h1>
@@ -26,4 +28,5 @@
   *ngIf="vulnerabilityData"
   [data]="vulnerabilityData"
   [legend]="true"
+  [legendTitle]="'Vulnerabilities:'"
 ></app-pie-chart>

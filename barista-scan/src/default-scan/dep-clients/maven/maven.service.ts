@@ -30,9 +30,7 @@ export class MavenService extends DepClientBaseService {
 
   async command(workingDir: string, options?: any): Promise<string> {
     let command = 'mvn -e dependency:copy-dependencies';
-    this.logger.log('userMavenCustomOutside = ' + options.useMavenCustomSettings);
     if (options && options.hasOwnProperty('useMavenCustomSettings')) {
-      this.logger.log('userMavenCustomInside = ' + options.useMavenCustomSettings);
       if (options.useMavenCustomSettings) {
         command = MavenService.appendSettings(command);
         this.logger.log('useMavenCustom');

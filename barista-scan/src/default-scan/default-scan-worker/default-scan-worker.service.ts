@@ -161,6 +161,8 @@ export class DefaultScanWorkerService {
           options.customPackageManagerFilename = slnFiles[0];
         }
       }
+      options.useMavenCustomSettings = !this.isGitHubCom(scan.project.gitUrl);
+      this.logger.log('userMavenCustom = ' + options.useMavenCustomSettings);
 
       return depClient.fetchDependencies(workingDirectory, options);
     } else {
@@ -270,9 +272,8 @@ export class DefaultScanWorkerService {
             scannerPromises.push(
               new Promise(async scanPromiseResolve => {
                 this.logger.log(`Starting ${scanner.name}`);
-                const options: any = {};
-                options.useMavenCustomSettings = !this.isGitHubCom(scan.project.gitUrl);
-                await scanner.execute(this.jobInfo, options);
+
+                await scanner.execute(this.jobInfo);
 
                 // TODO: Make this report a more accurate progress potentially with a callback within the scanner to capture steps
                 progress = progress + 10;

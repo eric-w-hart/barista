@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@app/features/auth/auth.service';
-import { UserInfo } from '@app/shared/api/model/user-info';
+import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
+import { untilDestroyed } from 'ngx-take-until-destroy';import { UserInfo } from '@app/shared/api/model/user-info';
 import { NavService } from '@app/shared/nav/nav.service';
 
 @Component({
@@ -9,8 +9,12 @@ import { NavService } from '@app/shared/nav/nav.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
-  constructor(private router: Router, public navService: NavService, private authService: AuthService) { }
+export class HeaderComponent implements OnInit, OnDestroy{
+  constructor(private router: Router, public navService: NavService, private authService: AuthService) {
+    authService.statusChange.pipe(untilDestroyed(this)).subscribe((value: AuthServiceStatus) => {
+      this.message = value.statusMessage;
+    });
+  }
 
   isLoggedIn: boolean;
   role: string;
@@ -22,7 +26,9 @@ export class HeaderComponent implements OnInit {
 
   async logout() {
     await this.authService.logout();
+    window.location.reload();
   }
+  ngOnDestroy(): void {}
 
   ngOnInit() {
     this.isLoggedIn = AuthService.isLoggedIn;

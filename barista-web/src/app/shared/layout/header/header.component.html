@@ -9,11 +9,15 @@
   <span *ngIf="isLoggedIn">
     <button type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</button>
   </span>
-  <span *ngIf="!isLoggedIn">
-    <input matInput placeholder="Username" [(ngModel)]="username" name="username" ><br>
-    <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password">
-    <label *ngIf="!!message" class="error" style="color:'red'">{{message}}</label>
-  </span>
-  <button *ngIf="!isLoggedIn" mat-button (click)="signin()" type="submit">Login</button>
+  <form>
+    <span *ngIf="!isLoggedIn">
+      <input matInput placeholder="Username" [(ngModel)]="username" name="username" ><br>
+      <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password">
+    </span>
+    <button *ngIf="!isLoggedIn" mat-button (click)="signin()" type="submit">Login</button>
+  </form>
 </mat-toolbar>
+<mat-toolbar-footer *ngIf="!!message">
+  <strong class="error">{{message}}</strong>
+</mat-toolbar-footer>
 </div>

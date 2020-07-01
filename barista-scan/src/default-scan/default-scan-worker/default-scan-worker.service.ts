@@ -29,6 +29,7 @@ import * as path from 'path';
 import { join } from 'path';
 import * as Git from 'simple-git';
 import * as tmp from 'tmp';
+import * as url from 'url';
 
 @Injectable()
 export class DefaultScanWorkerService {
@@ -168,6 +169,11 @@ export class DefaultScanWorkerService {
     }
   }
 
+  isGitHubCom(gitUrl: string) {
+    const urlParts = url.parse(gitUrl);
+    return urlParts.hostname.toLowerCase() === 'github.com';
+  }
+
   async scan(job: Job<any>, callback: DoneCallback) {
     return new Promise<void>(async (resolve, reject) => {
       this.jobInfo = {};
@@ -264,8 +270,9 @@ export class DefaultScanWorkerService {
             scannerPromises.push(
               new Promise(async scanPromiseResolve => {
                 this.logger.log(`Starting ${scanner.name}`);
-
-                await scanner.execute(this.jobInfo);
+                const options: any = {};
+                options.useMavenCustomSettings = !this.isGitHubCom(scan.project.gitUrl);
+                await scanner.execute(this.jobInfo, options);
 
                 // TODO: Make this report a more accurate progress potentially with a callback within the scanner to capture steps
                 progress = progress + 10;

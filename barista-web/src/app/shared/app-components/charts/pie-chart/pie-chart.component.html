@@ -1,9 +1,15 @@
-<div style="display: block">
-  <canvas baseChart *ngIf="data"
-          [data]="data"
-          [labels]="labels"
-          [chartType]="chartType"
-          [legend]="legend"
-          [options]="chartOptions"
-  ></canvas>
+<div *ngIf="data && data.length >= 1" class="pie-chart-container">
+  <div class="pie-chart">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [results]="data"
+      [legend]="legend"
+      [legendTitle]="legendTitle"
+      [labels]="showLabels"
+      [doughnut]="isDoughnut"
+      [legendPosition]="legendPosition"
+      [scheme]="colorScheme"
+    >
+    </ngx-charts-pie-chart>
+  </div>
 </div>

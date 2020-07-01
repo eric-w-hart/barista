@@ -14,6 +14,7 @@ import * as execa from 'execa';
 import * as _ from 'lodash';
 import * as pit from 'p-iteration';
 import * as path from 'path';
+import * as url from 'url';
 
 @Injectable()
 export class LicenseMavenService extends ScannerBaseService {
@@ -29,7 +30,7 @@ export class LicenseMavenService extends ScannerBaseService {
   private logger = new Logger('LicenseMavenService');
   name = 'LicenseMavenService';
 
-  public async command(jobInfo: DefaultScanWorkerJobInfo, options?: any) {
+  public async command(jobInfo: DefaultScanWorkerJobInfo) {
     // Create the Scan with that project
     const scan: Scan = await this.scanService.db
       .createQueryBuilder('scan')
@@ -39,11 +40,10 @@ export class LicenseMavenService extends ScannerBaseService {
 
     // tslint:disable-next-line:max-line-length
     let command = `mvn -e org.codehaus.mojo:license-maven-plugin:2.0.0:aggregate-download-licenses -DlicensesOutputFile=${jobInfo.dataDir}/license-maven-results.xml -DlicensesOutputDirectory=${jobInfo.dataDir}/maven-licenses`;
-    if (options && options.hasOwnProperty('useMavenCustomSettings')) {
-      if (options.useMavenCustomSettings) {
-        command = MavenService.appendSettings(command);
-        this.logger.log('useMavenCustom');
-      }
+
+    if (!this.isGitHubCom(scan.project.gitUrl)) {
+      command = MavenService.appendSettings(command);
+      this.logger.log('useMavenCustom-License');
     }
 
     let customPom = null;
@@ -76,6 +76,11 @@ export class LicenseMavenService extends ScannerBaseService {
     }
 
     return `${groupId}:${artifactId}:${version}`;
+  }
+
+  isGitHubCom(gitUrl: string) {
+    const urlParts = url.parse(gitUrl);
+    return urlParts.hostname.toLowerCase() === 'github.com';
   }
 
   public licenseScanResultItemFromJson(key: string, value: any, dependency: any) {

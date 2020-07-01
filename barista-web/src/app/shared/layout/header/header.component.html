@@ -3,6 +3,8 @@
   <img class="ml-1" src="assets/images/barista-icon.png"/>
   <h1><span class="mat-h1" [routerLink]="['/home']">Barista</span></h1>
   <span class="fill-space"></span>
+  <button *ngIf="isLoggedIn" mat-button (click)="dashboardLink()" type="submit">Dashboard</button>
+  <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">My Projects</button>
   <app-help-menu></app-help-menu>
   <span *ngIf="isLoggedIn">
     <button type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</button>
@@ -10,6 +12,7 @@
   <span *ngIf="!isLoggedIn">
     <input matInput placeholder="Username" [(ngModel)]="username" name="username" ><br>
     <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password">
+    <label *ngIf="!!message" class="error" style="color:'red'">{{message}}</label>
   </span>
   <button *ngIf="!isLoggedIn" mat-button (click)="signin()" type="submit">Login</button>
 </mat-toolbar>

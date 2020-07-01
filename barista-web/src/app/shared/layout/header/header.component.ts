@@ -10,7 +10,7 @@ import { NavService } from '@app/shared/nav/nav.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  constructor(private router: Router, public navService: NavService, private authService: AuthService) {}
+  constructor(private router: Router, public navService: NavService, private authService: AuthService) { }
 
   isLoggedIn: boolean;
   role: string;
@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   userName: string;
   password = '';
   username = '';
+  message = '';
 
   async logout() {
     await this.authService.logout();
@@ -31,5 +32,11 @@ export class HeaderComponent implements OnInit {
   }
   async signin() {
     await this.authService.login(this.username, this.password);
+  }
+  async myProjectLink(){
+    await this.router.navigate(['/project']);
+  }
+  async dashboardLink(){
+    await this.router.navigate(['/dashboard']);
   }
 }

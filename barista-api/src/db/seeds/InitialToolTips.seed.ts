@@ -33,8 +33,8 @@ export const InitialToolTipsSeed: Array<Partial<ToolTip>> = [
   },
   {
     pageName: 'ProjectDetailsComponent',
-    elementName: 'askID',
-    content: 'Ask Id.',
+    elementName: 'projectID',
+    content: 'Please input your project ID.',
   },
   {
     pageName: 'ProjectDetailsComponent',

@@ -1,11 +1,12 @@
 import { DepClientBaseService } from '@app/default-scan/dep-clients/common/dep-client-base/dep-client-base.service';
 import { PackageManagerEnum } from '@app/models/PackageManager';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 
 @Injectable()
 export class MavenService extends DepClientBaseService {
+  private logger = new Logger('MavenService');
   packageManagerCode = PackageManagerEnum.MAVEN;
 
   constructor() {
@@ -29,8 +30,12 @@ export class MavenService extends DepClientBaseService {
 
   async command(workingDir: string, options?: any): Promise<string> {
     let command = 'mvn -e dependency:copy-dependencies';
-    command = MavenService.appendSettings(command);
-
+    if (options && options.hasOwnProperty('useMavenCustomSettings')) {
+      if (options.useMavenCustomSettings) {
+        command = MavenService.appendSettings(command);
+        this.logger.log('useMavenCustom');
+      }
+    }
     // If the user has specified a custom pom.xml file then let's apply it
     let customPom = null;
     if (options && options.hasOwnProperty('customPackageManagerFilename')) {

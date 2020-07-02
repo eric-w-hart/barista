@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PieChartComponent } from '@app/shared/app-components/charts/pie-chart/pie-chart.component';
-import { ChartsModule } from 'ng2-charts';
+import { BarChartComponent } from '@app/shared/app-components/charts/bar-chart/bar-chart.component'
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ProjectStatsComponent } from './project-stats.component';
 
 describe('ProjectStatsComponent', () => {
@@ -10,8 +11,11 @@ describe('ProjectStatsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ChartsModule],
-      declarations: [ProjectStatsComponent, PieChartComponent],
+      imports: [NgxChartsModule],
+      declarations: [
+        ProjectStatsComponent,
+        PieChartComponent, 
+        BarChartComponent],
     }).compileComponents();
   }));
 

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChartsModule } from 'ng2-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PieChartComponent } from './pie-chart.component';
 
 describe('PieChartComponent', () => {
@@ -9,7 +9,7 @@ describe('PieChartComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ChartsModule],
+      imports: [NgxChartsModule],
       declarations: [PieChartComponent],
     }).compileComponents();
   }));

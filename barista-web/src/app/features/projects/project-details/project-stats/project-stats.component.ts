@@ -26,11 +26,6 @@ export class ProjectStatsComponent implements OnInit {
   vulnerabilityData;
   @Input() vulnerabilityData$: Observable<ProjectDistinctVulnerabilityDto>;
 
-  /**
-   * Contains 3 parts, each handles converting data from an API call
-   * to an object receivable by the charts handler. Uses JSON for compatibility
-   * with ngx-charts library.
-   */
   ngOnInit() {
     if (this.licenseData$) {
       this.licenseData$
@@ -39,6 +34,10 @@ export class ProjectStatsComponent implements OnInit {
           map(items => {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
               return {'name': item.license.name, 'value': item.count}; 
+            });
+            data.sort((x, y) => {
+              // inverted so that higher numbers are first
+              return -(x.value - y.value);
             });
             return data;
           }),
@@ -56,6 +55,10 @@ export class ProjectStatsComponent implements OnInit {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
               return {'name': item.path, 'value': item.count}; 
             });
+            data.sort((x, y) => {
+              // inverted so that higher numbers are first
+              return -(x.value - y.value);
+            });
             return data;
           }),
         )
@@ -71,6 +74,10 @@ export class ProjectStatsComponent implements OnInit {
           map(items => {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
               return {'name': item.severity, 'value': item.count}; 
+            });
+            data.sort((x, y) => {
+              // inverted so that higher numbers are first
+              return -(x.value - y.value);
             });
             return data;
           }),

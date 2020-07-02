@@ -13,7 +13,7 @@ import { LicenseScanResultItemDatatableComponent } from '@app/shared/app-compone
 import { ProjectScanStatusTypeComponent } from '@app/shared/app-components/project-scan-status-type/project-scan-status-type.component';
 import { AppMaterialModule } from '@app/shared/app-material.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { ChartsModule } from 'ng2-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 const expose = [
   AppDatatableComponent,
@@ -33,7 +33,7 @@ const expose = [
     CommonModule,
     AppMaterialModule,
     NgxDatatableModule,
-    ChartsModule,
+    NgxChartsModule,
     RouterModule,
     FlexLayoutModule,
     GlobalInjectorModule,

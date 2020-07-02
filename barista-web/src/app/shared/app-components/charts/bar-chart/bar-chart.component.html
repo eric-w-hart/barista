@@ -1,1 +1,19 @@
-<p>bar-chart works!</p>
+<div *ngIf="data && data.length >= 1" class="bar-chart-container">
+    <div class="bar-chart">
+      <ngx-charts-bar-vertical
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="data"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="legend"
+      [legendTitle]="legendTitle"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      >
+      </ngx-charts-bar-vertical>
+    </div>
+  </div>

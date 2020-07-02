@@ -19,7 +19,7 @@ export class PieChartComponent extends ChartBaseComponent implements OnInit {
   legendPosition: string = 'right';
 
   colorScheme = {
-   domain: ["#50514f","#f25f5c","#ffe066","#247ba0","#70c1b3"]
+   domain: ["#f25f5c","#ffe066","#247ba0","#70c1b3"]
   };
 
   ngOnInit() {}

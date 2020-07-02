@@ -10,23 +10,20 @@ export class BarChartComponent extends ChartBaseComponent implements OnInit {
   constructor(){
     super();
   };
-  xAxisLabel: string = "hnnng";
-  yAxisLabel: string = "arrrr";
-
   // Options:
   view: any[] = [700, 400];
-  gradient: boolean = true;
-  legendPosition: string = 'right';
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  @Input() xAxisLabel;
+  showYAxisLabel = true;
+  @Input() yAxisLabel;
+
   colorScheme = {
-    domain: ["#50514f","#f25f5c","#ffe066","#247ba0","#70c1b3"]
+    domain: ["#f25f5c","#ffe066","#247ba0","#70c1b3"]
   };
-  xAxis: boolean = true; // show or hide the xAxis
-  yAxis: boolean = true; 
-  showGridLines: boolean = false;
-  showXAxisLabel: boolean = true;
-  showYAxisLabel: boolean = true;
-  showDataLabel: boolean = true;
-  noBarWhenZero: boolean = false;
 
   ngOnInit(){}
 

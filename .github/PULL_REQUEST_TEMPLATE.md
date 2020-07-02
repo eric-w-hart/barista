@@ -1,9 +1,11 @@
 ## Purpose:
 
 ## Type:
-- [] Documentation:
-- [] Bugfix:
-- [] New Feature: 
+- [ ] Documentation:
+
+- [ ] Bugfix:
+
+- [ ] New Feature: 
 
 ## Changes:
 

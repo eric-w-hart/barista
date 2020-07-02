@@ -1,0 +1,10 @@
+<span>
+    <mat-menu #profileMenu="matMenu">
+      <a *ngFor="let menuItem of profileMenuItems" [href]="menuItem.url" target="_blank" mat-menu-item>{{ menuItem.title }}</a>
+    </mat-menu>
+  
+    <button mat-button [matMenuTriggerFor]="profileMenu">
+      <img src="assets/images/person-circle-outline.svg"/>
+    </button>
+  </span>
+  

@@ -33,5 +33,6 @@ export interface SystemConfiguration {
     npmRegistry: string;
     spdxLicenseListVersion: string;
     askIdDisplayName: string;
+    profileMenu: object;
 }
 

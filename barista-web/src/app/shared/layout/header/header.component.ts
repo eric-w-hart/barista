@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   password = '';
   username = '';
   message = '';
+  isVisible = false;
 
   async logout() {
     await this.authService.logout();
@@ -44,5 +45,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
   async dashboardLink(){
     await this.router.navigate(['/dashboard']);
+  }
+  profileBtn(){
+    this.isVisible = true;
   }
 }

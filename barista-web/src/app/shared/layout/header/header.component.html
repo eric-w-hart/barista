@@ -17,6 +17,15 @@
         </button>
       </mat-menu>
     </span>
+    <span *ngIf="isAdmin">
+      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin">
+        Admin
+      </button>
+      <mat-menu #adminMenu="matMenu">
+        <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">{{item.displayName}}
+        </button>
+      </mat-menu>
+    </span>
   </span>
   <form>
     <span *ngIf="!isLoggedIn">

@@ -7,15 +7,16 @@
   <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>
   <app-help-menu></app-help-menu>
   <span *ngIf="isLoggedIn">
-    <!--<button type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</button>-->
-    <div class=profile>
-      <button id="profileBtn" class="ml-1" (click)="profileBtn()">
-        <img src="assets/images/person-circle-outline.svg">
+    <span>
+      <button mat-button [matMenuTriggerFor]="profileMenu">
+        <img src="assets/images/person-circle-outline.svg"/>
       </button>
-      <div id="dropProfile" class="profile-content">
-        <button *ngIf="isVisible" type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</button>
-      </div>
-    </div>
+      <mat-menu #profileMenu="matMenu">
+        <button mat-menu-item>
+          <span type="button" mat-button (click)="logout()">Logout</span>
+        </button>
+      </mat-menu>
+    </span>
   </span>
   <form>
     <span *ngIf="!isLoggedIn">

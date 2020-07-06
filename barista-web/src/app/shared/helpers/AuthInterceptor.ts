@@ -19,6 +19,11 @@ export class AuthInterceptor implements HttpInterceptor {
       return of(err.message);
     }
 
+    // relay error message from ImATeapotException to authservice
+    if (err.status === 418) {
+      throw new Error(err.error.message);
+    }
+
     return throwError(err);
   }
 

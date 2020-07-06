@@ -1,0 +1,11 @@
+@import 'variables';
+
+mat-grid-tile {
+    background-color: white;
+}
+
+.grid-tile-text{
+    position: absolute;
+    padding-top: 24px !important;
+    text-align: left;
+}

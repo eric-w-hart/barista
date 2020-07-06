@@ -1,0 +1,64 @@
+<div class="content-container">
+    <mat-grid-list cols="2" rowHeight="2:1" gutterSize="10px">
+        <mat-grid-tile>
+            <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+                <h2> No data. </h2>
+            </div>
+            <app-bar-chart
+                *ngIf="topComponentLicenseData"
+                [data]="topComponentLicenseData"
+                [legend]="true"
+                [legendTitle]="'Data:'"
+                [xAxisLabel]="'X Axis'"
+                [yAxisLabel]="'Y Axis'"
+            >
+            </app-bar-chart>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <div class="grid-tile-text">
+                <p>
+                    This is test data. I have no clue what these numbers mean, and you shouldn't either.
+                    <br>
+                    Isn't that interesting? All these numbers. 
+                    <br>
+                    Huh. 
+                    <br>
+                    I wonder if these lines are displaying correctly.
+                    <br>
+                    Probably not.
+                </p>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <div class="grid-tile-text">
+                <p>
+                    This is test data. I have no clue what these numbers mean, and you shouldn't either.
+
+                    Isn't that interesting? All these numbers. 
+    
+                    Huh. 
+    
+                    I wonder if these lines are displaying correctly.
+    
+                    Probably not.
+                </p>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+                <h2> No data. </h2>
+            </div>
+            <app-pie-chart
+                *ngIf="topComponentLicenseData"
+                [data]="topComponentLicenseData"
+                [legend]="true"
+                [legendTitle]="'Data:'"
+            >
+            </app-pie-chart>
+        </mat-grid-tile>
+    </mat-grid-list>
+    
+</div>

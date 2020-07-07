@@ -1,11 +1,16 @@
-@import 'variables';
+.chart-text {
 
-mat-grid-tile {
-    background-color: white;
 }
 
-.grid-tile-text{
-    position: absolute;
-    padding-top: 24px !important;
-    text-align: left;
+.flex-container {
+    display: inline-flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    padding: 10px;
+    margin: 0px;
+    list-style: none;
+}
+
+.flex-item {
+    margin: 30px;
 }

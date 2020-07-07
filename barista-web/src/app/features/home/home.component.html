@@ -1,7 +1,7 @@
 <mat-card class="content-card" fxFill>
       <mat-card-content>
-        <div class="flex-container">
-            <div class="flex-item">
+        <div class="flex-grid">
+            <div class="col" fxFlex>
                 <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
                     <h2> No data. </h2>
                 </div>
@@ -15,31 +15,32 @@
                 >
                 </app-bar-chart>
             </div>
-            <mat-card class="text" fxFlex> 
-                <mat-card-title>
-                    License Data
-                </mat-card-title>
-                <mat-card-subtitle>
-                    Data Acquired Over 3 months
-                </mat-card-subtitle>
-                <mat-card-content>
-                    This is a dataset representing lansdkjbas;jblskjdbfakjsdbflkabsdflkjabsd;fkjbaldskjbf;kjdbf;kjbdsg;kjnsd;FKJB'kndj;JSNFLANK SDF;NASD;KJFB ;KSJDBF;KAJB;kjbaf;gkjab;dkfjbg.
-                </mat-card-content>
-            </mat-card>
-            <div class="flex-item">
-                <div class="chart-text">
-                    This is test data. I have no clue what these numbers mean, and you shouldn't either.
-                    <br>
-                    Isn't that interesting? All these numbers. 
-                    <br>
-                    Huh. 
-                    <br>
-                    I wonder if these lines are displaying correctly.
-                    <br>
-                    Probably not.
-                </div>
+            <div class="col">
+                <mat-card class="text" fxFlex> 
+                    <mat-card-title>
+                        License Data
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        Data Acquired Over 3 months
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum commodo vestibulum mauris vel tincidunt. Mauris imperdiet arcu ipsum, quis facilisis velit dapibus ac. Integer tortor orci, blandit nec felis maximus, sollicitudin vulputate nunc. Nulla efficitur urna ante, sit amet placerat mauris facilisis ac. Nam rutrum id diam ac ultrices. Nam ex ipsum, finibus ac aliquam dapibus, cursus venenatis nulla. Phasellus condimentum diam urna, at feugiat lectus sodales et. Vestibulum volutpat pretium orci, a dapibus velit placerat sed. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc aliquet venenatis enim, at fringilla dui rhoncus eget. Aliquam erat volutpat.                    </mat-card-content>
+                </mat-card>
             </div>
-            <div class="flex-item">
+            <div class="col">
+                <mat-card class="text" fxFlex> 
+                    <mat-card-title>
+                        License Data
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        Data Acquired Over 3 months
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum commodo vestibulum mauris vel tincidunt. Mauris imperdiet arcu ipsum, quis facilisis velit dapibus ac. Integer tortor orci, blandit nec felis maximus, sollicitudin vulputate nunc. Nulla efficitur urna ante, sit amet placerat mauris facilisis ac. Nam rutrum id diam ac ultrices. Nam ex ipsum, finibus ac aliquam dapibus, cursus venenatis nulla. Phasellus condimentum diam urna, at feugiat lectus sodales et. Vestibulum volutpat pretium orci, a dapibus velit placerat sed. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc aliquet venenatis enim, at fringilla dui rhoncus eget. Aliquam erat volutpat.                    </mat-card-content>
+                </mat-card>
+            </div>
+            
+            <div class="col" fxFlex>
                 <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
                     <h2> No data. </h2>
                 </div>

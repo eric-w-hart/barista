@@ -24,11 +24,11 @@ export class AuthService implements OnDestroy {
     try {
       const info = JSON.parse(localStorage.getItem('userInfo'));
       if (!info) {
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/home']);
       }
       return info;
     } catch (e) {
-      this.router.navigate(['/signin']);
+      this.router.navigate(['/home']);
     }
   }
 

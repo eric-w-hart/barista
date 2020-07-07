@@ -1,13 +1,16 @@
 <div>
 <mat-toolbar color="primary">
   <img class="ml-1" src="assets/images/barista-icon.png"/>
-  <h1><span class="mat-h1" [routerLink]="['/home']" title="Home">Barista</span></h1>
+  <button mat-button [routerLink]="['/home']" title="Home">
+      <img class="ml-1" src="assets/images/barista-icon.png"/>
+  </button>
+  <h1><span class="mat-h1" title="Home">Barista</span></h1>
   <span class="fill-space"></span>
   <button *ngIf="isLoggedIn" mat-button (click)="dashboardLink()" type="submit">Dashboard</button>
   <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>
   <app-help-menu title="Help"></app-help-menu>
   <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin">
+      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">
          <mat-icon class="routeIcon">how_to_reg</mat-icon>
       </button>
       <mat-menu #adminMenu="matMenu">

@@ -1,56 +1,63 @@
-<div class="content-container">
-    <div class="flex-container">
-        <div class="flex-item">
-            <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
-                <h2> No data. </h2>
+<mat-card class="content-card" fxFill>
+    <mat-card-header>
+        <mat-card-title>
+          <h1>Data</h1>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex-container">
+            <div class="flex-item">
+                <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+                    <h2> No data. </h2>
+                </div>
+                <app-bar-chart
+                    *ngIf="topComponentLicenseData"
+                    [data]="topComponentLicenseData"
+                    [legend]="true"
+                    [legendTitle]="'Data:'"
+                    [xAxisLabel]="'Licenses'"
+                    [yAxisLabel]="'License Count'"
+                >
+                </app-bar-chart>
             </div>
-            <app-bar-chart
-                *ngIf="topComponentLicenseData"
-                [data]="topComponentLicenseData"
-                [legend]="true"
-                [legendTitle]="'Data:'"
-                [xAxisLabel]="'Licenses'"
-                [yAxisLabel]="'License Count'"
-            >
-            </app-bar-chart>
-        </div>
-        <div class="flex-item">
-            <p>
-                This is test data. I have no clue what these numbers mean, and you shouldn't either.
-                <br>
-                Isn't that interesting? All these numbers. 
-                <br>
-                Huh. 
-                <br>
-                I wonder if these lines are displaying correctly.
-                <br>
-                Probably not.
-            </p>
-        </div>
-        <div class="flex-item">
-            <div class="chart-text">
-                This is test data. I have no clue what these numbers mean, and you shouldn't either.
-                <br>
-                Isn't that interesting? All these numbers. 
-                <br>
-                Huh. 
-                <br>
-                I wonder if these lines are displaying correctly.
-                <br>
-                Probably not.
+            <div class="flex-item">
+                <p>
+                    This is test data. I have no clue what these numbers mean, and you shouldn't either.
+                    <br>
+                    Isn't that interesting? All these numbers. 
+                    <br>
+                    Huh. 
+                    <br>
+                    I wonder if these lines are displaying correctly.
+                    <br>
+                    Probably not.
+                </p>
+            </div>
+            <div class="flex-item">
+                <div class="chart-text">
+                    This is test data. I have no clue what these numbers mean, and you shouldn't either.
+                    <br>
+                    Isn't that interesting? All these numbers. 
+                    <br>
+                    Huh. 
+                    <br>
+                    I wonder if these lines are displaying correctly.
+                    <br>
+                    Probably not.
+                </div>
+            </div>
+            <div class="flex-item">
+                <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+                    <h2> No data. </h2>
+                </div>
+                <app-pie-chart
+                    *ngIf="topComponentLicenseData"
+                    [data]="topComponentLicenseData"
+                    [legend]="true"
+                    [legendTitle]="'Data:'"
+                >
+                </app-pie-chart>
             </div>
         </div>
-        <div class="flex-item">
-            <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
-                <h2> No data. </h2>
-            </div>
-            <app-pie-chart
-                *ngIf="topComponentLicenseData"
-                [data]="topComponentLicenseData"
-                [legend]="true"
-                [legendTitle]="'Data:'"
-            >
-            </app-pie-chart>
-        </div>
-    </div>
-</div>
+      </mat-card-content>
+</mat-card>

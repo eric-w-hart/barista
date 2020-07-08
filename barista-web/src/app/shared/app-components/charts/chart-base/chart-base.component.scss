@@ -1,13 +1,11 @@
 .chart-container {
-    position: relative;
-    top: 10px;
-    bottom: 30px;
-    left: 0px;
-    right: 0px;
+    //position: relative;
+    align-items: center;
+    // border: 1px aqua solid;
 }
 
 .chart {
-    height: 100%;
-    width: 100%;
+    //height: 100%;
+    width: calc(100% - 30px);
     padding-bottom: 50%; // allows resizing within container
 }

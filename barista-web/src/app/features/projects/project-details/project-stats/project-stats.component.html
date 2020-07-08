@@ -30,3 +30,16 @@
   [legend]="true"
   [legendTitle]="'Vulnerabilities:'"
 ></app-pie-chart>
+<h1>License Distribution</h1>
+<div *ngIf="!licenseData || licenseData.length < 1">
+  <h2>No licenses data to display.</h2>
+</div>
+<app-horizontal-bar-chart
+  *ngIf="licenseData"
+  [data]="licenseData"
+  [legend]="true"
+  [legendTitle]="'Licenses:'"
+  [xAxisLabel]="'Licenses'"
+  [yAxisLabel]="'Count'"
+></app-horizontal-bar-chart>
+<hr/>

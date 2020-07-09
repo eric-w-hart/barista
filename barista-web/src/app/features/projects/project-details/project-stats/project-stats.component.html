@@ -2,44 +2,48 @@
 <div *ngIf="!licenseData || licenseData.length < 1">
   <h2>No licenses data to display.</h2>
 </div>
-<app-pie-chart
-  *ngIf="licenseData"
-  [data]="licenseData"
-  [legend]="true"
-  [legendTitle]="'Licenses:'"
-></app-pie-chart>
+<div class="project-container">
+  <div class="project">
+    <app-pie-chart
+    *ngIf="licenseData"
+    [data]="licenseData"
+    [legend]="true"
+    [legendTitle]="'Licenses:'"
+    >
+    </app-pie-chart>
+  </div>
+</div>
 <hr/>
 <h1>Severity Distribution</h1>
 <div *ngIf="!severityData || severityData.length < 1">
   <h2>No severity data to display.</h2>
 </div>
-<app-pie-chart
-  *ngIf="severityData"
-  [data]="severityData"
-  [legend]="true"
-  [legendTitle]="'Severities:'"
-></app-pie-chart>
+<div class="project-container">
+  <div class="project">
+    <app-pie-chart
+    *ngIf="severityData"
+    [data]="severityData"
+    [legend]="true"
+    [legendTitle]="'Severities:'"
+    >
+    </app-pie-chart>
+  </div>
+</div>
 <hr/>
 <h1>Vulnerability Distribution</h1>
 <div *ngIf="!vulnerabilityData || vulnerabilityData.length < 1">
   <h2>No vulnerability data to display.</h2>
 </div>
-<app-pie-chart
-  *ngIf="vulnerabilityData"
-  [data]="vulnerabilityData"
-  [legend]="true"
-  [legendTitle]="'Vulnerabilities:'"
-></app-pie-chart>
-<h1>License Distribution</h1>
-<div *ngIf="!licenseData || licenseData.length < 1">
-  <h2>No licenses data to display.</h2>
+<div class="project-container">
+  <div class="project">
+    <app-pie-chart
+    *ngIf="vulnerabilityData"
+    [data]="vulnerabilityData"
+    [legend]="true"
+    [legendTitle]="'Vulnerabilities:'"
+    >
+    </app-pie-chart>
+  </div>
 </div>
-<app-horizontal-bar-chart
-  *ngIf="licenseData"
-  [data]="licenseData"
-  [legend]="true"
-  [legendTitle]="'Licenses:'"
-  [xAxisLabel]="'Licenses'"
-  [yAxisLabel]="'Count'"
-></app-horizontal-bar-chart>
-<hr/>
+
+

@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { AppDialogComponent } from '@app/shared/app-components/app-dialog/app-dialog.component';
 import { BreadcrumbsComponent } from '@app/shared/app-components/breadcrumbs/breadcrumbs.component';
 import { PieChartComponent } from '@app/shared/app-components/charts/pie-chart/pie-chart.component';
-import { BarChartComponent } from '@app/shared/app-components/charts/bar-chart/bar-chart.component'
+import { BarChartComponent } from '@app/shared/app-components/charts/bar-chart/bar-chart.component';
+import { GaugeChartComponent } from '@app/shared/app-components/charts/gauge-chart/gauge-chart.component';
 import { AppDatatableComponent } from '@app/shared/app-components/datatable/app-datatable.component';
 import { DynamicMenuComponent } from '@app/shared/app-components/dynamic-menu/dynamic-menu.component';
 import { GlobalInjectorModule } from '@app/shared/app-components/global-injector.module';
@@ -23,6 +24,7 @@ const expose = [
   LicenseScanResultItemDatatableComponent,
   BarChartComponent,
   PieChartComponent,
+  GaugeChartComponent,
   ProjectScanStatusTypeComponent,
   HelpMenuComponent,
   DynamicMenuComponent,

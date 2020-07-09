@@ -4,7 +4,8 @@ import { ChartBaseComponent } from '@app/shared/app-components/charts/chart-base
 @Component({
   selector: 'app-horizontal-bar-chart',
   templateUrl: './horizontal-bar-chart.component.html',
-  styleUrls: ['./horizontal-bar-chart.component.scss']
+  styleUrls: ['../chart-base/chart-base.component.scss',
+              './horizontal-bar-chart.component.scss']
 })
 export class HorizontalBarChartComponent extends ChartBaseComponent implements OnInit {
 

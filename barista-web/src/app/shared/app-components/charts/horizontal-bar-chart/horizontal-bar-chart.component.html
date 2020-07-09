@@ -1,20 +1,17 @@
 <div *ngIf="data && data.length >= 1" class="chart-container">
     <div class="chart">
         <ngx-charts-bar-horizontal
-        [view]="view"
         [scheme]="colorScheme"
-        [results]="single"
+        [results]="data"
         [gradient]="gradient"
         [xAxis]="showXAxis"
         [yAxis]="showYAxis"
-        [legend]="showLegend"
+        [legend]="legend"
         [showXAxisLabel]="showXAxisLabel"
         [showYAxisLabel]="showYAxisLabel"
         [xAxisLabel]="xAxisLabel"
         [yAxisLabel]="yAxisLabel"
-        (select)="onSelect($event)"
-        (activate)="onActivate($event)"
-        (deactivate)="onDeactivate($event)">
+        >
       </ngx-charts-bar-horizontal>
     </div>
   </div>

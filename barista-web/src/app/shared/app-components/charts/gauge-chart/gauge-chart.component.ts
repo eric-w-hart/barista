@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ChartBaseComponent } from '@app/shared/app-components/charts/chart-base/chart-base.component';
 
 @Component({
@@ -14,10 +14,10 @@ export class GaugeChartComponent extends ChartBaseComponent implements OnInit {
   };
 
   //Options
-  legendPosition: string = 'below';
+  legendPosition: string = 'right';
 
+  @Input() units;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(){}
 
 }

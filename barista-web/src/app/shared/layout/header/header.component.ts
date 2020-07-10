@@ -52,6 +52,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
   async dashboardLink(){
     await this.router.navigate(['/dashboard']);
   }
+  async homeLink(){
+    await this.router.navigate(['/home']);
+  }
   profileBtn(){
     this.isVisible = true;
   }

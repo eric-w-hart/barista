@@ -1,0 +1,8 @@
+.chart-container {
+    align-items: center;
+}
+
+.chart {
+    width: calc(100% - 30px);
+    padding-bottom: 50%; // allows resizing within container
+}

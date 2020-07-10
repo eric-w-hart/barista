@@ -1,13 +1,12 @@
-<div *ngIf="data && data.length >= 1" class="bar-chart-container">
-    <div class="bar-chart">
+<div *ngIf="data && data.length >= 1" class="chart-container">
+    <div class="chart">
       <ngx-charts-bar-vertical
-      [view]="view"
       [scheme]="colorScheme"
       [results]="data"
       [gradient]="gradient"
       [xAxis]="showXAxis"
       [yAxis]="showYAxis"
-      [legend]="showLegend"
+      [legend]="legend"
       [legendTitle]="legendTitle"
       [showXAxisLabel]="showXAxisLabel"
       [showYAxisLabel]="showYAxisLabel"

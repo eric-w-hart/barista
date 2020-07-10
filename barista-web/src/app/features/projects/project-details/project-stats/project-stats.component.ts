@@ -33,7 +33,7 @@ export class ProjectStatsComponent implements OnInit {
           first(),
           map(items => {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
-              return {'name': item.license.name, 'value': item.count}; 
+              return {'name': item.license.name, 'value': Number(item.count)};
             });
             data.sort((x, y) => {
               // inverted so that higher numbers are first
@@ -53,7 +53,7 @@ export class ProjectStatsComponent implements OnInit {
           first(),
           map(items => {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
-              return {'name': item.path, 'value': item.count}; 
+              return {'name': item.path, 'value': Number(item.count)};
             });
             data.sort((x, y) => {
               // inverted so that higher numbers are first
@@ -73,7 +73,7 @@ export class ProjectStatsComponent implements OnInit {
           first(),
           map(items => {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
-              return {'name': item.severity, 'value': item.count}; 
+              return {'name': item.severity, 'value': Number(item.count)};
             });
             data.sort((x, y) => {
               // inverted so that higher numbers are first

@@ -7,5 +7,10 @@ export abstract class ChartBaseComponent implements OnInit {
   @Input() legend: boolean;
   @Input() legendTitle: string;
 
+  gradient = false;
+  colorScheme = {
+    domain: ["#f25f5c","#ffe066","#247ba0","#70c1b3"]
+   };
+
   ngOnInit() {}
 }

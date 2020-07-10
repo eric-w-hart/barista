@@ -1,0 +1,28 @@
+.flex-grid{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 5px;
+    margin: 30px;
+}
+
+/* 2x2 Grid */
+.flex-grid .col {
+    flex: 1 1 auto;
+    max-width: 50%;
+    margin: 5px;
+}
+
+.flex-grid .col .mat-card {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Responsive, 1x1 Grid for pages <= 800px*/
+@media (max-width: 800px) {
+    .flex-grid .col {
+        flex: 100%;
+        max-width: 100%;
+    }
+}

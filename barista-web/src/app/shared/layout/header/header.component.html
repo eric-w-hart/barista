@@ -1,9 +1,9 @@
 <div>
 <mat-toolbar color="primary">
-  <button mat-button [routerLink]="['/home']" title="Home">
-      <img class="ml-1" src="assets/images/barista-icon.png"/>
-  </button>
-  <h1><span class="mat-h1" title="Home">Barista</span></h1>
+  <img class="ml-1" src="assets/images/barista-icon.png"/>
+  &nbsp;
+  &nbsp;
+  <h1><span class="mat-h1" [routerLink]="['/home']" title="Home">Barista</span></h1>
   <span class="fill-space"></span>
   <button *ngIf="isLoggedIn" mat-button (click)="dashboardLink()" type="submit">Dashboard</button>
   <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>

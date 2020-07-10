@@ -1,6 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { PieChartComponent } from '@app/shared/app-components/charts/pie-chart/pie-chart.component';
-import { BarChartComponent } from '@app/shared/app-components/charts/bar-chart/bar-chart.component'
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

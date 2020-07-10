@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PieChartComponent } from '@app/shared/app-components/charts/pie-chart/pie-chart.component';
-import { BarChartComponent } from '@app/shared/app-components/charts/bar-chart/bar-chart.component';
 
 import { data } from './temporary_display_data';
 

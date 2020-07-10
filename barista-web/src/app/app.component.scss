@@ -27,3 +27,11 @@ main app-signin{
   background-image: url("../assets/images/bg.jpg");
   background-position: center;
 }
+
+main app-home{
+  background-image: url("../assets/images/bg.png");
+  background-position: center top;
+  //background-repeat: repeat-x;
+  background-attachment: fixed;
+  background-size: cover;
+}

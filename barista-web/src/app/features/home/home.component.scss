@@ -10,8 +10,9 @@
 /* 2x2 Grid */
 .flex-grid .col {
     flex: 1 1 auto;
-    max-width: 50%;
+    max-width: 49%;
     margin: 5px;
+    padding-bottom: 3%;
 }
 
 .flex-grid .col .mat-card {

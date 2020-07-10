@@ -1,15 +1,14 @@
 <div *ngIf="data && data.length >= 1" class="chart-container">
   <div class="chart">
-    <ngx-charts-pie-chart
+    <ngx-charts-gauge
       [view]="view"
+      [scheme]="colorScheme"
       [results]="data"
       [legend]="legend"
-      [legendTitle]="legendTitle"
-      [labels]="showLabels"
-      [doughnut]="isDoughnut"
       [legendPosition]="legendPosition"
-      [scheme]="colorScheme"
-    >
-    </ngx-charts-pie-chart>
+      [legendTitle]="legendTitle"
+      [units]="units"
+      >
+    </ngx-charts-gauge>
   </div>
 </div>

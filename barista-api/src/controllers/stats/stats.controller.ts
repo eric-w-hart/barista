@@ -215,7 +215,7 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getTopComponentScans() {
     const query =
-      'select lsri."displayIdentifier" as package, count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id group by package order by count(*) desc, package';
+      'select lsri."displayIdentifier" as name, count(*) as value from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id group by package order by count(*) desc, package';
     const stats = await this.service.db.manager.query(query, ['organization']);
 
     return stats;

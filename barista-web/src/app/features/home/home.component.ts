@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   // create a variable for each dataset we want stored on the page.
   // for consistency, variables end in Data, async variables end in Data$
   topComponentLicenseData: any;
+  topComponentScansData: any;
   // TODO: create DTO for each dataset, wrap it in observable
 
   /**
@@ -26,5 +27,8 @@ export class HomeComponent implements OnInit {
       this.topComponentLicenseData = response;
     });
     console.log(this.topComponentLicenseData);
+    this.statsApi.statsComponentsScansGet().subscribe((response) => {
+      this.topComponentScansData = response;
+    })
   }
 }

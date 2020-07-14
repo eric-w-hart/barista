@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { data } from './temporary_display_data';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
 import { observable } from 'rxjs';
 

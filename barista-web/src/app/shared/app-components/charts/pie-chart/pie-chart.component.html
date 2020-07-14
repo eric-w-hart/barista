@@ -1,7 +1,6 @@
 <div *ngIf="data && data.length >= 1" class="chart-container">
   <div class="chart">
     <ngx-charts-pie-chart
-      [view]="view"
       [results]="data"
       [legend]="legend"
       [legendTitle]="legendTitle"
@@ -9,6 +8,7 @@
       [doughnut]="isDoughnut"
       [legendPosition]="legendPosition"
       [scheme]="colorScheme"
+      [customColors]="customColors"
     >
     </ngx-charts-pie-chart>
   </div>

@@ -11,7 +11,7 @@
   <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>
   <app-help-menu title="Help"></app-help-menu>
   <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin">
+      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">
          <mat-icon class="routeIcon">how_to_reg</mat-icon>
       </button>
       <mat-menu #adminMenu="matMenu">

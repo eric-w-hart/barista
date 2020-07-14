@@ -18,8 +18,4 @@ export class PieChartComponent extends ChartBaseComponent implements OnInit {
   legendPosition: string = 'right';
 
   ngOnInit() {}
-
-  ngAfterViewInit() {
-    this.data = [...this.data];
-  }
 }

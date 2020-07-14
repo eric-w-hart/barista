@@ -1,5 +1,5 @@
 import { UserRole } from '@app/models/User';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ImATeapotException } from '@nestjs/common';
 import * as _ from 'lodash';
 import LdapClient from 'promised-ldap';
 import { ProjectService } from '@app/services/project/project.service';
@@ -124,6 +124,8 @@ export class LdapService {
               if (_.isEmpty(result.entries)) {
                 // not a primary account
                 this.logger.warn(`User ${userName} doesn't belong to any groups.`);
+                // ImATeapot is a placeholder for now
+                throw new ImATeapotException("Required group membership is not present");
                 return null;
               }
 
@@ -149,6 +151,10 @@ export class LdapService {
       })
       .catch(e => {
         this.logger.error(`AD query error: ${e}`);
+        if (applyFilter){
+          // ImATeapot is a placeholder for now
+          throw new ImATeapotException("Invalid Username or Password");
+        }
         return null;
       });
   }

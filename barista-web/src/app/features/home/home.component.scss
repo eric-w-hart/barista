@@ -10,13 +10,15 @@
 /* 2x2 Grid */
 .flex-grid .col {
     flex: 1 1 auto;
-    max-width: 50%;
+    max-width: 49%;
     margin: 5px;
+    padding-bottom: 3%;
 }
 
 .flex-grid .col .mat-card {
     width: 100%;
     box-sizing: border-box;
+    background-color: #f0e1d1; //almond
 }
 
 /* Responsive, 1x1 Grid for pages <= 800px*/

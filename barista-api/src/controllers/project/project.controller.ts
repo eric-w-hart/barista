@@ -14,6 +14,7 @@ import { SecurityScanResultItemService } from '@app/services/security-scan-resul
 import PaginateArrayResult, { EmptyPaginateResult } from '@app/shared/util/paginate-array-result';
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import gitP, { SimpleGit } from 'simple-git/promise';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import {
@@ -74,6 +75,8 @@ import {
 @ApiUseTags('Project')
 @Controller('project')
 export class ProjectController implements CrudController<Project> {
+  private git: SimpleGit = gitP();
+
   constructor(
     public service: ProjectService,
     private licenseScanResultItemService: LicenseScanResultItemService,
@@ -296,6 +299,35 @@ export class ProjectController implements CrudController<Project> {
       return this.service.distinctVulnerabilities(project);
     } else {
       return [];
+    }
+  }
+
+  @Get('/:id/gitbranches')
+  @UseInterceptors(CrudRequestInterceptor)
+  @ApiResponse({ status: 200, type: [ProjectDistinctVulnerabilityDto] })
+  async getGitBranches(@Param('id') id: string) {
+    const project = await this.service.db.findOne(Number(id));
+    if (project) {
+      const gitUrl = await this.service.gitUrlAuthForProject(project);
+      const gitOptions = [];
+      gitOptions.push(gitUrl);
+
+      const branches = this.git.listRemote(gitOptions);
+      const array = (await branches).substring(1, (await branches).length - 1).split('\n');
+      const branchesAndTags = [];
+      array.forEach(element => {
+        const branch = element.indexOf('refs/heads/');
+        const branchName = element.substring(branch + 11);
+        if (branch > 0) {
+          branchesAndTags.push(branchName);
+        }
+        const tag = element.indexOf('refs/tags/');
+        const tagName = element.substring(tag + 12);
+        if (tag > 0) {
+          branchesAndTags.push(tagName);
+        }
+      });
+      return branchesAndTags;
     }
   }
 }

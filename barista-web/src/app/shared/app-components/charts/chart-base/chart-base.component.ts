@@ -13,4 +13,8 @@ export abstract class ChartBaseComponent implements OnInit {
    };
 
   ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.data = [...this.data];
+  }
 }

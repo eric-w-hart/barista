@@ -17,7 +17,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import {
@@ -197,5 +197,16 @@ export class StatsController implements CrudController<Project> {
       .status(200)
       .send(svg)
       .end();
+  }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/components')
+  @ApiResponse({ status: 200 })
+  async getTopComponents() {
+    const query =
+      'select l2.name as "name", count(*) as "value" from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" group by l2.name order by count(*) desc limit 10';
+    const stats = await this.service.db.manager.query(query, ['organization']);
+
+    return stats;
   }
 }

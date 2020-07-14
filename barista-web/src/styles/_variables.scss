@@ -11,3 +11,5 @@ $warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $coffee-theme: mat-light-theme($primary, $accent, $warn);
+
+$accent-color: #f5ebe0; // linen

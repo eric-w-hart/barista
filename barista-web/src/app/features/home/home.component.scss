@@ -1,3 +1,5 @@
+@import 'variables';
+
 .flex-grid{
     display: flex;
     flex-flow: row wrap;
@@ -9,7 +11,10 @@
 
 /* 2x2 Grid */
 .flex-grid .col {
+    justify-content: center;
+    align-items: center;
     flex: 1 1 auto;
+    min-width: 49%;
     max-width: 49%;
     margin: 5px;
     padding-bottom: 3%;
@@ -18,7 +23,7 @@
 .flex-grid .col .mat-card {
     width: 100%;
     box-sizing: border-box;
-    background-color: #f0e1d1; //almond
+    background-color: $accent-color; // from variables
 }
 
 /* Responsive, 1x1 Grid for pages <= 800px*/
@@ -27,4 +32,26 @@
         flex: 100%;
         max-width: 100%;
     }
+}
+@media (max-width: 800px) {
+    .flex-grid {
+        flex-flow: row-reverse wrap;
+    }
+}
+
+.button {
+    min-width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2%;
+}
+
+.image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2%;
 }

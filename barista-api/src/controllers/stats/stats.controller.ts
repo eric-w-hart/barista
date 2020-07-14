@@ -209,4 +209,48 @@ export class StatsController implements CrudController<Project> {
 
     return stats;
   }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/components/scans')
+  @ApiResponse({ status: 200 })
+  async getTopComponentScans() {
+    const query =
+      'select lsri."displayIdentifier" as package, count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id group by package order by count(*) desc, package';
+    const stats = await this.service.db.manager.query(query, ['organization']);
+
+    return stats;
+  }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/projects')
+  @ApiResponse({ status: 200 })
+  async getMonthlyProjects() {
+    const query =
+      "SELECT date_trunc('month', p2.created_at::date)::date AS monthly, COUNT(*) FROM project p2 GROUP BY monthly ORDER BY monthly;";
+    const stats = await this.service.db.manager.query(query);
+
+    return stats;
+  }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/projects/scans')
+  @ApiResponse({ status: 200 })
+  async getMonthlyScans() {
+    const query =
+      "SELECT date_trunc('month', ssr.created_at::date)::date AS monthly, COUNT(*) FROM security_scan_result ssr GROUP BY monthly ORDER BY monthly;";
+    const stats = await this.service.db.manager.query(query);
+
+    return stats;
+  }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/vulnerabilities')
+  @ApiResponse({ status: 200 })
+  async getTopVulnerabilities() {
+    const query =
+      'select ssri."path" as "package" ,Upper(ssri.severity) as severity , ssri."displayIdentifier" ,ssri.description ,count(*) from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id group by package, ssri."path" ,Upper(ssri.severity) ,ssri."displayIdentifier" ,ssri.description order by count(*) desc, package, Upper(ssri.severity)';
+    const stats = await this.service.db.manager.query(query);
+
+    return stats;
+  }
 }

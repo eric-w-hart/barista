@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
 import { observable } from 'rxjs';
+import { data } from './temporary_display_data';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +16,9 @@ export class HomeComponent implements OnInit {
   // for consistency, variables end in Data, async variables end in Data$
   topComponentLicenseData: any;
   topComponentScansData: any;
+  projectsAddedMonthly: any;
+  monthlyProjectScans: any;
+  tempData: any;
   // TODO: create DTO for each dataset, wrap it in observable
 
   /**
@@ -29,5 +33,15 @@ export class HomeComponent implements OnInit {
     this.statsApi.statsComponentsScansGet().subscribe((response) => {
       this.topComponentScansData = response;
     })
+    console.log(this.topComponentScansData);
+    this.statsApi.statsProjectsGet().subscribe((response) => {
+      this.projectsAddedMonthly = response;
+    })
+    console.log(this.projectsAddedMonthly);
+    this.statsApi.statsProjectsScansGet().subscribe((response) => {
+      this.monthlyProjectScans = response;
+    })
+    console.log(this.monthlyProjectScans);
+    this.tempData = data;
   }
 }

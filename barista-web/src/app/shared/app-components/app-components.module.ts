@@ -17,6 +17,7 @@ import { ProjectScanStatusTypeComponent } from '@app/shared/app-components/proje
 import { AppMaterialModule } from '@app/shared/app-material.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LineChartComponent } from '@app/shared/app-components/charts/line-chart/line-chart.component';
 
 const expose = [
   AppDatatableComponent,
@@ -27,6 +28,7 @@ const expose = [
   BarChartComponent,
   PieChartComponent,
   GaugeChartComponent,
+  LineChartComponent,
   ProjectScanStatusTypeComponent,
   HelpMenuComponent,
   DynamicMenuComponent,

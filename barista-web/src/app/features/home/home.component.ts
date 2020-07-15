@@ -18,6 +18,8 @@ export class HomeComponent implements OnInit {
   topComponentScansData: any;
   projectsAddedMonthly: any;
   monthlyProjectScans: any;
+  highVulnerability: any;
+  licenseOnCompliance: any;
   tempData: any;
   // TODO: create DTO for each dataset, wrap it in observable
 
@@ -42,6 +44,14 @@ export class HomeComponent implements OnInit {
       this.monthlyProjectScans = response;
     })
     console.log(this.monthlyProjectScans);
+    this.statsApi.statsHighVulnerabilityGet().subscribe((response) => {
+      this.highVulnerability = [{"name": "High Vulnerability Index", "value": response}];
+    })
+    console.log(this.highVulnerability);
+    this.statsApi.statsLicenseOnComplianceGet().subscribe((response) => {
+      this.licenseOnCompliance = [{"name": "License Compliance Index", "value": response}];
+    })
+    console.log(this.licenseOnCompliance);
     this.tempData = data;
   }
 }

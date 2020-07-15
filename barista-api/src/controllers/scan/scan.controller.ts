@@ -1,3 +1,4 @@
+import { ScanBranchDto } from './../../models/DTOs/ScanBranchDto';
 import { LogProjectChangeCommand } from '@app/models/commands/LogProjectChangeCommand';
 import { JobInfoDto } from '@app/models/DTOs/JobInfoDto';
 import { Scan } from '@app/models/Scan';
@@ -13,6 +14,9 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
+  Query,
+  Body,
+  Logger,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
@@ -50,10 +54,9 @@ export class ScanController implements CrudController<Scan> {
     private commandBus: CommandBus,
     @InjectQueue('scan-queue') readonly queue: Queue,
   ) {}
+  logger = new Logger('ScanService');
 
-  @Post('/project/:id')
-  @UseInterceptors(CrudRequestInterceptor)
-  async doScan(@Param('id') id: number, @Request() request: any): Promise<any> {
+  async performScan(id: number, branch: string, request: any) {
     const { id: userId } = request.user;
     // Fetch the project by id
     const project = await this.projectService.findOne(id);
@@ -77,7 +80,7 @@ export class ScanController implements CrudController<Scan> {
     project.globalSecurityException = false;
     project.globalLicenseException = false;
     await this.projectService.db.save(project);
-    const scan = await this.service.db.save({ project, deploymentType: project.deploymentType });
+    const scan = await this.service.db.save({ project, deploymentType: project.deploymentType, tag: branch });
 
     // Add it to the queue
     const jobInfo = await this.queue.add('default-scan', { scanId: scan.id }, { attempts: 1 });
@@ -101,8 +104,21 @@ export class ScanController implements CrudController<Scan> {
         userId,
       ),
     );
-
     return dbScan;
+  }
+
+  @Post('/project/:id')
+  @UseInterceptors(CrudRequestInterceptor)
+  async doScan(@Param('id') id: number, @Request() request: any): Promise<any> {
+    this.logger.log('not branch');
+    return this.performScan(id, null, request);
+  }
+
+  @Post('/project/:id/branch/')
+  @UseInterceptors(CrudRequestInterceptor)
+  async doScanbyBranch(@Param('id') id: number, @Body() branch: ScanBranchDto, @Request() request: any): Promise<any> {
+    this.logger.log(branch.branch);
+    return this.performScan(id, branch.branch, request);
   }
 
   @Get('/queue/job/:id')

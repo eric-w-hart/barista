@@ -39,9 +39,8 @@
     <button *ngIf="!isLoggedIn" mat-button (click)="signin()" type="submit">Login</button>
   </form>
 </mat-toolbar>
-<mat-toolbar-footer *ngIf="!!message">
-  <div class="error-div">
-    <strong class="error">{{message}}</strong>
+
+  <div id="error" *ngIf="!!message && !isLoggedIn">
+    {{message}}
   </div>
-</mat-toolbar-footer>
 </div>

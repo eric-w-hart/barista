@@ -454,7 +454,6 @@ export class ScanApiService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling scanProjectIdPost.');
         }
-console.log(scanBranchDTO);
 
         let headers = this.defaultHeaders;
 

@@ -4,10 +4,14 @@ import { AuthService } from '@app/features/auth/auth.service';
 import { ProjectService } from '@app/shared/+state/project/project.service';
 import { ScanService } from '@app/shared/+state/scan/scan.service';
 import { ScanApiService } from '@app/shared/api';
+import { ProjectApiService } from '@app/shared/api';
 import { ComponentWithMessage } from '@app/shared/app-components/ComponentWithMessage';
 import IDataTableColumns from '@app/shared/interfaces/IDataTableColumns';
 import { Observable, Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { ScanBranchDto } from '@app/shared/api/model/scan-branch';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-project-scans',
@@ -19,15 +23,15 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     private authService: AuthService,
     private projectService: ProjectService,
     private scanApiService: ScanApiService,
+    private projectApiSerice: ProjectApiService,
     private scanService: ScanService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
     super();
   }
-
-  menuScanBranchData: any;
-  branches: any;
+  selectedBranch = 'Default Branch';
+  branches: Observable<ScanBranchDto[]>;
 
   columns: IDataTableColumns[];
   currentPagedData: any = {
@@ -78,13 +82,12 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
   ngOnDestroy(): void {}
 
   ngOnInit() {
-    this.menuScanBranchData = {
-      menuItems: [{ name: 'first' }, { name: 'second' }],
-    };
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
+    this.branches = this.projectApiSerice.projectBranches(this.projectId);
 
     this.columns = [
       { name: 'Scan Id', prop: 'id', flexGrow: 1, cellTemplate: this.scanProgressTmpl },
+      { name: 'Branch', prop: 'tag', flexGrow: 1 },
       {
         name: 'Date',
         prop: 'createdAt',
@@ -109,9 +112,13 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
 
   scan() {
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
-
+    let scanBranch = this.selectedBranch;
+    if (this.selectedBranch === 'Default Branch') {
+      scanBranch = '';
+    }
+    console.log(scanBranch);
     this.scanService.apiService
-      .scanProjectIdBranchPost(this.projectId, { branch: 'dependabot/go_modules/github.com/spf13/cobra-0.0.7' })
+      .scanProjectIdBranchPost(this.projectId, { branch: scanBranch })
       .pipe(first())
       .subscribe(
         (result) => {

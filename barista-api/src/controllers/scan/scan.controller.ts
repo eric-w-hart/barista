@@ -55,6 +55,7 @@ export class ScanController implements CrudController<Scan> {
     @InjectQueue('scan-queue') readonly queue: Queue,
   ) {}
   logger = new Logger('ScanService');
+
   async performScan(id: number, branch: string, request: any) {
     const { id: userId } = request.user;
     // Fetch the project by id

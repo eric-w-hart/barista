@@ -3,26 +3,21 @@
     <mat-card-title>
       Projects Scans
       <!--      <button class="add-button" [routerLink]="['/project/new']" mat-icon-button><mat-icon>add</mat-icon></button>-->
-      <mat-button-toggle-group *ngIf="showScanButton">
-        <button type="button" mat-button color="warn" (click)="scan()">
+      <div *ngIf="showScanButton">
+        <button class="scan-btn" mat-raised-button color="primary" (click)="scan()">
           <mat-icon>add</mat-icon>
           <span>Scan</span>
         </button>
-        <mat-button-toggle
-          class="split-button-1 drop-down-button"
-          [matMenuTriggerFor]="dropdownMenuOne"
-          [matMenuTriggerData]="menuScanBranchData"
-        >
-          <mat-icon>arrow_drop_down</mat-icon>
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-      <mat-menu #dropdownMenuOne="matMenu">
-        <ng-template matMenuContent let-aliasMenuItems="menuItems">
-          <button mat-menu-item *ngFor="let item of aliasMenuItems">
-            {{ item.name }}
-          </button>
-        </ng-template>
-      </mat-menu>
+        <mat-form-field class="branch-select">
+          <mat-label>Select a Branch</mat-label>
+          <mat-select [(value)]="selectedBranch">
+            <mat-option value="Default Branch">Default Branch</mat-option>
+            <mat-option *ngFor="let branch of branches | async" [value]="branch.branch">
+              {{ branch.branch }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content class="dashboard-card-content">

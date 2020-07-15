@@ -56,6 +56,5 @@ export class HomeComponent implements OnInit {
       this.licenseOnCompliance = [{"name": "License Compliance Index", "value": response}];
     })
     console.log(this.licenseOnCompliance);
-    this.tempData = data;
-  }
+    }
 }

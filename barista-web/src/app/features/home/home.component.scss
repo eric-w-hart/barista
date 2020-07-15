@@ -62,3 +62,31 @@
     flex-direction: column;
     padding: 2%;
 }
+
+
+.info {
+    text-decoration:none;
+    position:relative;
+}
+.info span {
+    display:none;
+}
+.info:hover span {
+    display: block;
+    //positioning
+    position: absolute;
+    //left: -400px;
+    overflow: auto;
+    width: 400px;
+    //text
+  	margin: 0px;
+  	padding: 10px;
+  	color: black;
+    text-align: left;
+    font-size: small;
+  	font-weight: normal;
+    //box
+  	background: #e5e5e5;
+  	border: 1px solid #666;
+    z-index: 100;
+}

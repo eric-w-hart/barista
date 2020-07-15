@@ -1,6 +1,44 @@
 <div class="flex-grid" fxFlex>
+    <div class="banner" *ngIf="!isLoggedIn">
+        <div class="image">
+            <img src="assets/images/barista.png">
+        </div>
+        <div class="button">
+            <a mat-raised-button [href]="'https://optum.github.io/barista/docs/overview'" target="_blank">Get Started</a>
+        </div>
+    </div>
     <div class="col">
         <mat-card>
+            <mat-card-title>
+                Top 10 Component Licenses
+            </mat-card-title>
+            <mat-card-subtitle>
+                Data gathered from current scans in database
+            </mat-card-subtitle>
+          <mat-card-content>
+          <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-bar-chart
+              *ngIf="topComponentLicenseData"
+              [data]="topComponentLicenseData"
+              [legend]="true"
+              [legendTitle]="'Data:'"
+              [xAxisLabel]="'Licenses'"
+              [yAxisLabel]="'License Count'"
+          >
+          </app-bar-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="col">
+        <mat-card>
+            <mat-card-title>
+                Top 10 Component Licenses
+            </mat-card-title>
+            <mat-card-subtitle>
+                Data gathered from current scans in database
+            </mat-card-subtitle>
           <mat-card-content>
           <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
               <h2> No data. </h2>
@@ -18,28 +56,4 @@
         </mat-card>
 
     </div>
-    <div class="col">
-        <div class="image">
-            <img src="assets/images/barista.png">
-        </div>
-        <div class="button">
-            <button mat-button-raise class="button">Get Started</button>
-        </div>
-    </div>
-    <div class="col">
-        <mat-card>
-            <mat-card-content>
-                This graph shows the 10 licenses that are most widely used across our organization's scanned projects. 
-                <br>
-                From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                <br>
-                If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
-            </mat-card-content>
-        </mat-card>
-    </div>
-
-    <div class="col">
-
-    </div>
-   
 </div>

@@ -1,6 +1,20 @@
 <div class="flex-grid" fxFlex>
     <div class="col">
         <mat-card>
+          <mat-card-title>
+            <div style="text-align:center;">
+                Top 10 Component Licenses
+                <span style="float:left;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
+                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
+                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
           <mat-card-content>
           <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
               <h2> No data. </h2>
@@ -19,6 +33,39 @@
 
     </div>
     <div class="col">
+        <mat-card>
+          <mat-card-title>
+            <div style="text-align:center;">
+                Top 10 Component Licenses
+                <span style="float:left;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
+                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
+                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-pie-chart
+              *ngIf="topComponentLicenseData"
+              [data]="topComponentLicenseData"
+              [legend]="true"
+              [legendTitle]="'Data:'"
+              [xAxisLabel]="'Licenses'"
+              [yAxisLabel]="'License Count'"
+          >
+          </app-pie-chart>
+          </mat-card-content>
+        </mat-card>
+
+    </div>
+    <div class="col">
         <div class="image">
             <img src="assets/images/barista.png">
         </div>
@@ -29,7 +76,7 @@
     <div class="col">
         <mat-card>
             <mat-card-content>
-                This graph shows the 10 licenses that are most widely used across our organization's scanned projects. 
+                This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
                 <br>
                 From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
                 <br>
@@ -41,5 +88,5 @@
     <div class="col">
 
     </div>
-   
+
 </div>

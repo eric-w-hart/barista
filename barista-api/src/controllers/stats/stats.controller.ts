@@ -253,4 +253,46 @@ export class StatsController implements CrudController<Project> {
 
     return stats;
   }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/licensenoncompliance/index')
+  @ApiResponse({ status: 200 })
+  async getLicenseComplianceIndex() {
+    const query1 =
+      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" )s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and lsri.project_scan_status_type_code <> 'green'`;
+    const licenseProblemCount = await this.service.db.manager.query(query1);
+  
+    const query2 =
+      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from  scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`;
+    const licenseComponentCount = await this.service.db.manager.query(query2);
+
+    if (licenseProblemCount.length > 0 && licenseComponentCount.length > 0) { 
+      const licenseComplianceIndex = (licenseProblemCount[0].count / licenseComponentCount[0].count * 100); 
+
+      return licenseComplianceIndex;
+    } 
+
+    return 'no data found';  
+  }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/highvulnerability/index')
+  @ApiResponse({ status: 200})
+  async getHighVulnerabilityIndex() {
+    const query1 =
+      `select count(*) from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id and ssri."severity" in ('CRITICAL','HIGH')`; 
+    const highVulnerabilityCount = await this.service.db.manager.query(query1);
+
+    const query2 =
+      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`; 
+    const licenseComponentCount = await this.service.db.manager.query(query2);
+
+    if (highVulnerabilityCount.length > 0 && licenseComponentCount.length > 0) {
+      const highVulnerabilityIndex = highVulnerabilityCount[0].count / licenseComponentCount[0].count * 100; 
+
+      return highVulnerabilityIndex; 
+    } 
+
+    return 'no data found'; 
+  }
 }

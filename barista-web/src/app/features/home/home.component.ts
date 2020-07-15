@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
 import { observable } from 'rxjs';
-import { data } from './temporary_display_data';
 
 @Component({
   selector: 'app-home',

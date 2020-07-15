@@ -3,24 +3,24 @@
 .flex-grid{
     display: flex;
     flex-flow: row wrap;
+    flex: 1 1 100%;
     justify-content: space-around;
     align-items: flex-start;
-    padding: 5px;
-    margin: 30px;
+    padding: 30px;
 }
 
 /* 2x2 Grid */
 .flex-grid .col {
     justify-content: center;
     align-items: center;
-    flex: 1 1 auto;
-    min-width: 49%;
-    max-width: 49%;
-    margin: 5px;
+    flex: 0 0 45%;
+    margin: 2%;
     padding-bottom: 3%;
 }
 
 .flex-grid .col .mat-card {
+    display: block;
+    height: auto;
     width: 100%;
     box-sizing: border-box;
     background-color: $accent-color; // from variables
@@ -39,8 +39,15 @@
     }
 }
 
+.banner {
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 auto;
+}
+
 .button {
-    min-width: 25%;
+    min-width: 20%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,4 +61,32 @@
     justify-content: center;
     flex-direction: column;
     padding: 2%;
+}
+
+
+.info {
+    text-decoration:none;
+    position:relative;
+}
+.info span {
+    display:none;
+}
+.info:hover span {
+    display: block;
+    //positioning
+    position: absolute;
+    //left: -400px;
+    overflow: auto;
+    width: 400px;
+    //text
+  	margin: 0px;
+  	padding: 10px;
+  	color: black;
+    text-align: left;
+    font-size: small;
+  	font-weight: normal;
+    //box
+  	background: #e5e5e5;
+  	border: 1px solid #666;
+    z-index: 100;
 }

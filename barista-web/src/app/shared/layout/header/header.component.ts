@@ -30,7 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy{
   isVisible = false;
 
   async logout() {
-    await this.authService.logout();
+    localStorage.removeItem('accessToken');
+    await this.router.navigate(['/home']);
     window.location.reload();
   }
   ngOnDestroy(): void {}

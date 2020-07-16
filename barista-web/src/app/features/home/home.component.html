@@ -30,15 +30,14 @@
           <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
               <h2> No data. </h2>
           </div>
-          <app-bar-chart
+          <app-horizontal-bar-chart
               *ngIf="topComponentLicenseData"
               [data]="topComponentLicenseData"
               [legend]="true"
-              [legendTitle]="'Data:'"
-              [xAxisLabel]="'Licenses'"
-              [yAxisLabel]="'License Count'"
+              [legendTitle]="'Licenses:'"
+              [xAxisLabel]="'Count'"
           >
-          </app-bar-chart>
+          </app-horizontal-bar-chart>
           </mat-card-content>
         </mat-card>
     </div>
@@ -48,7 +47,7 @@
         <mat-card>
           <mat-card-title>
             <div>
-                Top 10 Component Scans
+                Top 10 Components Scanned
                 <span style="float:right;">
                   <a class="info">
                     <img src="assets/images/help-circle-outline.svg"/>
@@ -64,15 +63,14 @@
           <div *ngIf="!topComponentScansData || topComponentScansData.length < 1">
               <h2> No data. </h2>
           </div>
-          <app-pie-chart
-              *ngIf="topComponentScansData"
-              [data]="topComponentScansData"
-              [legend]="true"
-              [legendTitle]="'Data:'"
-              [xAxisLabel]="'Licenses'"
-              [yAxisLabel]="'License Count'"
-          >
-          </app-pie-chart>
+            <app-horizontal-bar-chart
+                *ngIf="topComponentScansData"
+                [data]="topComponentScansData"
+                [legend]="true"
+                [legendTitle]="'Components:'"
+                [xAxisLabel]="'Count'"
+            >
+            </app-horizontal-bar-chart>
           </mat-card-content>
         </mat-card>
     </div>
@@ -102,9 +100,9 @@
               *ngIf="projectsAddedMonthly"
               [data]="projectsAddedMonthly"
               [legend]="true"
-              [legendTitle]="'Data:'"
-              [xAxisLabel]="'Licenses'"
-              [yAxisLabel]="'License Count'"
+              [legendTitle]="'Months:'"
+              [xAxisLabel]="'Month'"
+              [yAxisLabel]="'Count'"
           >
           </app-bar-chart>
           </mat-card-content>
@@ -136,9 +134,9 @@
               *ngIf="monthlyProjectScans"
               [data]="monthlyProjectScans"
               [legend]="true"
-              [legendTitle]="'Data:'"
-              [xAxisLabel]="'Licenses'"
-              [yAxisLabel]="'License Count'"
+              [legendTitle]="'Months:'"
+              [xAxisLabel]="'Month'"
+              [yAxisLabel]="'Count'"
           >
           </app-bar-chart>
           </mat-card-content>

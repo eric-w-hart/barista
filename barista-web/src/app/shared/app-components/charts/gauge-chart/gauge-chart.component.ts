@@ -15,8 +15,14 @@ export class GaugeChartComponent extends ChartBaseComponent implements OnInit {
 
   //Options
   legendPosition: string = 'right';
+  max: number;
 
   @Input() units;
+
+  format(data) {
+    //rounds the number
+    return data.toFixed(2);
+  }
 
   ngOnInit(){}
 

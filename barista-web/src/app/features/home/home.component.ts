@@ -37,10 +37,12 @@ export class HomeComponent implements OnInit {
     })
     console.log(this.topComponentScansData);
     this.statsApi.statsProjectsGet().subscribe((response) => {
+      response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
     })
     console.log(this.projectsAddedMonthly);
     this.statsApi.statsProjectsScansGet().subscribe((response) => {
+      response = this.parseMonth(response);
       this.monthlyProjectScans = response;
     })
     console.log(this.monthlyProjectScans);
@@ -61,5 +63,66 @@ export class HomeComponent implements OnInit {
       else if(n < med){ return 'MEDIUM' }
       else if(n < high){ return 'HIGH' }
       else { return 'CRITICAL' }
+    }
+
+    parseMonth(data: any){
+      for (var item of data){
+        switch (item.name.substring(5, 7)) {
+          case "01": {
+            item.name = "January";
+            break;
+          }
+          case "02": {
+            item.name = "February";
+            break;
+          }
+          case "03": {
+            item.name = "March";
+            break;
+          }
+          case "04": {
+            item.name = "April";
+            break;
+          }
+          case "05": {
+            item.name = "May";
+            break;
+          }
+          case "06": {
+            item.name = "June";
+            break;
+          }
+          case "07": {
+            item.name = "July";
+            break;
+          }
+          case "08": {
+            item.name = "August";
+            break;
+          }
+          case "09": {
+            item.name = "September";
+            break;
+          }
+          case "10": {
+            item.name = "October";
+            break;
+          }
+          case "11": {
+            item.name = "November";
+            break;
+          }
+          case "12": {
+            item.name = "December";
+            break;
+          }
+          default: {
+            item.name = "Unknown";
+            break;
+          }
+        }
+      }
+
+      return data;
     }
 }

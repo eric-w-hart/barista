@@ -16,6 +16,8 @@ export class GaugeChartComponent extends ChartBaseComponent implements OnInit {
   //Options
   legendPosition: string = 'right';
   max: number;
+  angleSpan: number = 360;
+  startAngle:number = -180;
 
   @Input() units;
 

@@ -2,25 +2,107 @@
     <!-- Banner -->
     <div class="banner" *ngIf="!isLoggedIn">
         <div class="image">
-            <img src="assets/images/barista.png">
+            <img src="assets/images/barista_logo_text_removed.png">
+        </div>
+        <div class="mat-headline banner_text" style="text-align: center;">
+          Open Source Governance <br> Ensuring You Always Have a Great Brew
         </div>
         <div class="button">
-            <a mat-raised-button [href]="'https://optum.github.io/barista/docs/overview'" target="_blank">Get Started</a>
+            <a mat-raised-button [href]="'https://optum.github.io/barista/'" target="_blank">Learn More</a>
         </div>
     </div>
     <!-- End of Banner -->
     <!-- Column 1 -->
+    <div class="thirds">
+        <mat-card>
+          <mat-card-title>
+            <div>
+                High Vulnerability Index
+                <span style="float:right;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>
+                      <mat-card>
+                        <mat-card-content>
+                          <h3>Index Thresholds</h3>
+                          Low: <{{low}}<br>
+                          Medium: <{{med}}<br>
+                          High: <{{high}}<br>
+                          Critical: {{high}}+
+                        </mat-card-content>
+                      </mat-card>
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!highVulnerability || highVulnerability.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-gauge-chart
+              *ngIf="highVulnerability"
+              [data]="highVulnerability"
+          >
+          </app-gauge-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <!-- End of Column 1 -->
+    <!-- Column 2 -->
+    <div class="thirds">
+        <mat-card>
+          <mat-card-title>
+            <div>
+                License Risk Index
+                <span style="float:right;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>
+                      <mat-card>
+                        <mat-card-content>
+                          <h3>Index Thresholds</h3>
+                          Low: <{{low}}<br>
+                          Medium: <{{med}}<br>
+                          High: <{{high}}<br>
+                          Critical: {{high}}+
+                        </mat-card-content>
+                      </mat-card>
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!licenseOnCompliance || licenseOnCompliance.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-gauge-chart
+              *ngIf="licenseOnCompliance"
+              [data]="licenseOnCompliance"
+          >
+          </app-gauge-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <!-- End of Column 2 -->
+    <!-- Column 3 -->
     <div class="col">
         <mat-card>
           <mat-card-title>
-            <div style="text-align:center;">
+            <div>
                 Top 10 Component Licenses
                 <span style="float:right;">
                   <a class="info">
                     <img src="assets/images/help-circle-outline.svg"/>
-                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
+                    <span>
+                      <mat-card>
+                        <mat-card-content>
+                          This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
                     From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
                     If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                        </mat-card-content>
+                      </mat-card>
                     </span>
                   </a>
                 </span>
@@ -30,51 +112,126 @@
           <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
               <h2> No data. </h2>
           </div>
-          <app-bar-chart
+          <app-horizontal-bar-chart
               *ngIf="topComponentLicenseData"
               [data]="topComponentLicenseData"
               [legend]="true"
-              [legendTitle]="'Data:'"
-              [xAxisLabel]="'Licenses'"
-              [yAxisLabel]="'License Count'"
+              [legendTitle]="'Licenses:'"
+              [xAxisLabel]="'Count'"
+          >
+          </app-horizontal-bar-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <!-- End of Column 3-->
+    <!-- Column 4 -->
+    <div class="col">
+        <mat-card>
+          <mat-card-title>
+            <div>
+                Top 10 Vulnerabale Components (by count)
+                <span style="float:right;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>
+                      <mat-card>
+                        <mat-card-content>
+                          This chart displays the top vulnerabilities in order of count, and not by severity. The higher the count, the more prevelant that vulnerability is in our database.
+                        </mat-card-content>
+                      </mat-card>
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!topVulnerabilities || topVulnerabilities.length < 1">
+              <h2> No data. </h2>
+          </div>
+            <app-horizontal-bar-chart
+                *ngIf="topVulnerabilities"
+                [data]="topVulnerabilities"
+                [legend]="true"
+                [legendTitle]="'Components:'"
+                [xAxisLabel]="'Count'"
+            >
+            </app-horizontal-bar-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <!-- End of Column 4 -->
+    <!-- Column 5 -->
+    <div class="col">
+        <mat-card>
+          <mat-card-title>
+            <div>
+                Monthly Projects
+                <span style="float:right;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>
+                      <mat-card>
+                        <mat-card-content>
+                          How many projects have been created by month. Sorted by month, not by count.
+                        </mat-card-content>
+                      </mat-card>
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!projectsAddedMonthly || projectsAddedMonthly.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-bar-chart
+              *ngIf="projectsAddedMonthly"
+              [data]="projectsAddedMonthly"
+              [legend]="true"
+              [legendTitle]="'Months:'"
+              [xAxisLabel]="'Month'"
+              [yAxisLabel]="'Count'"
           >
           </app-bar-chart>
           </mat-card-content>
         </mat-card>
     </div>
-    <!-- End of Column 1-->
-    <!-- Column 2 -->
+    <!-- End of Column 5 -->
+    <!-- Column 6 -->
     <div class="col">
         <mat-card>
           <mat-card-title>
-            <div style="text-align:center;">
-                Top 10 Component Licenses
+            <div>
+                Monthly Scans
                 <span style="float:right;">
                   <a class="info">
                     <img src="assets/images/help-circle-outline.svg"/>
-                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                    <span>
+                      <mat-card>
+                        <mat-card-content>
+                          Number of scans done by month. Sorted by month, not by count.
+                        </mat-card-content>
+                      </mat-card>
                     </span>
                   </a>
                 </span>
             </div>
           </mat-card-title>
           <mat-card-content>
-          <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
+          <div *ngIf="!monthlyProjectScans || monthlyProjectScans.length < 1">
               <h2> No data. </h2>
           </div>
-          <app-pie-chart
-              *ngIf="topComponentLicenseData"
-              [data]="topComponentLicenseData"
+          <app-bar-chart
+              *ngIf="monthlyProjectScans"
+              [data]="monthlyProjectScans"
               [legend]="true"
-              [legendTitle]="'Data:'"
-              [xAxisLabel]="'Licenses'"
-              [yAxisLabel]="'License Count'"
+              [legendTitle]="'Months:'"
+              [xAxisLabel]="'Month'"
+              [yAxisLabel]="'Count'"
           >
-          </app-pie-chart>
+          </app-bar-chart>
           </mat-card-content>
         </mat-card>
     </div>
-    <!-- End of Column 2 -->
+    <!-- End of Column 6 -->
 </div>

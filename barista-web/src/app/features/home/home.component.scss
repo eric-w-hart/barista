@@ -63,6 +63,12 @@
     padding: 2%;
 }
 
+.banner_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $accent-color;
+}
 
 .info {
     text-decoration:none;

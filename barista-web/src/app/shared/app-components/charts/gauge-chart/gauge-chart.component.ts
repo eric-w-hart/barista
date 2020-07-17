@@ -22,8 +22,14 @@ export class GaugeChartComponent extends ChartBaseComponent implements OnInit {
   @Input() units;
 
   format(data) {
-    //rounds the number
-    return data.toFixed(2);
+    // number needs 2 decimal places to avoid oversized number in gauge
+    // checks if there are fewer than 2 decimal places
+    if (data.toString().split(".").length === 1 || data.toString().split(".")[1].length < 2) {
+      // returns the number with decimal places
+      return data.toFixed(2);
+    }
+    // trunactes the number for 2 decimal places
+    return ((data * 100) - (data * 100) % 1) / 100;
   }
 
   ngOnInit(){}

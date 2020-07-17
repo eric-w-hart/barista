@@ -45,7 +45,7 @@ export class StatsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public statsComponentsGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsComponentsGetOrganization(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -71,7 +71,81 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/organization`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public statsComponentsGetCommunity(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/community`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public statsComponentsGetMy(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/my`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -83,7 +157,7 @@ export class StatsApiService {
     }
 
 
-    public statsComponentsScansGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsComponentsScansGetOrganization(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -109,7 +183,81 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/scans`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/scans/organization`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public statsComponentsScansGetCommunity(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/scans/community`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public statsComponentsScansGetMy(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/scans/my`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -193,7 +341,7 @@ export class StatsApiService {
             }
         );
     }
-    public statsLicenseOnComplianceGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsLicenseOnComplianceGetOrganization(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -219,7 +367,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/licensenoncompliance/index`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/licensenoncompliance/index/organization`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -229,7 +377,7 @@ export class StatsApiService {
             }
         );
     }
-    public statsHighVulnerabilityGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsLicenseOnComplianceGetCommunity(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -255,7 +403,151 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/highvulnerability/index`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/licensenoncompliance/index/community`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+    public statsLicenseOnComplianceGetMy(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/licensenoncompliance/index/my`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+    public statsHighVulnerabilityGetOrganization(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/highvulnerability/index/organization`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+    public statsHighVulnerabilityGetCommunity(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/highvulnerability/index/community`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+    public statsHighVulnerabilityGetMy(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/highvulnerability/index/my`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

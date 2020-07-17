@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   isLoggedIn: boolean;
   topComponentLicenseData: any;
   topComponentScansData: any;
+  topVulnerabilities: any;
   projectsAddedMonthly: any;
   monthlyProjectScans: any;
   highVulnerability: any;
@@ -33,6 +34,10 @@ export class HomeComponent implements OnInit {
 
     this.statsApi.statsComponentsGet().subscribe((response) => {
       this.topComponentLicenseData = response;
+    });
+
+    this.statsApi.statsVulnerabilitiesGet().subscribe((response) => {
+      this.topVulnerabilities= response;
     });
 
     this.statsApi.statsComponentsScansGet().subscribe((response) => {

@@ -4,8 +4,8 @@
         <div class="image">
             <img src="assets/images/barista_logo_text_removed.png">
         </div>
-        <div class="mat-headline banner_text">
-          Open Source Governance: To Ensure You Always Have a Great Brew
+        <div class="mat-headline banner_text" style="text-align: center;">
+          Open Source Governance <br> Ensuring You Always Have a Great Brew
         </div>
         <div class="button">
             <a mat-raised-button [href]="'https://optum.github.io/barista/'" target="_blank">Learn More</a>
@@ -129,16 +129,14 @@
         <mat-card>
           <mat-card-title>
             <div>
-                Top 10 Components Scanned
+                Top 10 Vulnerabale Components (by count)
                 <span style="float:right;">
                   <a class="info">
                     <img src="assets/images/help-circle-outline.svg"/>
                     <span>
                       <mat-card>
                         <mat-card-content>
-                          This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                          This chart displays the top vulnerabilities in order of count, and not by severity. The higher the count, the more prevelant that vulnerability is in our database.
                         </mat-card-content>
                       </mat-card>
                     </span>
@@ -147,12 +145,12 @@
             </div>
           </mat-card-title>
           <mat-card-content>
-          <div *ngIf="!topComponentScansData || topComponentScansData.length < 1">
+          <div *ngIf="!topVulnerabilities || topVulnerabilities.length < 1">
               <h2> No data. </h2>
           </div>
             <app-horizontal-bar-chart
-                *ngIf="topComponentScansData"
-                [data]="topComponentScansData"
+                *ngIf="topVulnerabilities"
+                [data]="topVulnerabilities"
                 [legend]="true"
                 [legendTitle]="'Components:'"
                 [xAxisLabel]="'Count'"
@@ -174,9 +172,7 @@
                     <span>
                       <mat-card>
                         <mat-card-content>
-                          This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                          How many projects have been created by month. Sorted by month, not by count.
                         </mat-card-content>
                       </mat-card>
                     </span>
@@ -213,9 +209,7 @@
                     <span>
                       <mat-card>
                         <mat-card-content>
-                          This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                          Number of scans done by month. Sorted by month, not by count.
                         </mat-card-content>
                       </mat-card>
                     </span>

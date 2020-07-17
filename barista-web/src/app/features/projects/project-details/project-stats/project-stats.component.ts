@@ -75,10 +75,6 @@ export class ProjectStatsComponent implements OnInit {
             const data: ChartElementDto[] = _.map(items, (item: any) => {
               return {'name': item.severity, 'value': Number(item.count)};
             });
-            data.sort((x, y) => {
-              // inverted so that higher numbers are first
-              return -(x.value - y.value);
-            });
             return data;
           }),
         )

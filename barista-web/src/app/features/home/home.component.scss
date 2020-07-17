@@ -18,6 +18,23 @@
     padding-bottom: 3%;
 }
 
+/* 3x3 Grid */
+.flex-grid .thirds {
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 33%;
+    margin: 2%;
+    padding-bottom: 3%;
+}
+
+.flex-grid .thirds .mat-card {
+    display: block;
+    height: auto;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: $accent-color; // from variables
+}
+
 .flex-grid .col .mat-card {
     display: block;
     height: auto;
@@ -70,6 +87,7 @@
     color: $accent-color;
 }
 
+$hover-elevation: 5;
 .info {
     text-decoration:none;
     position:relative;
@@ -79,20 +97,15 @@
 }
 .info:hover span {
     display: block;
-    //positioning
     position: absolute;
     left: -400px;
     overflow: auto;
     width: 400px;
-    //text
   	margin: 0px;
-  	padding: 10px;
-  	color: black;
-    text-align: left;
-    font-size: small;
-  	font-weight: normal;
-    //box
-  	background: #e5e5e5;
-  	border: 1px solid #666;
     z-index: 100;
+}
+.info:hover span .mat-card{
+    @include mat-elevation($hover-elevation);
+    margin:10px;
+    width: calc(100% - 20px);
 }

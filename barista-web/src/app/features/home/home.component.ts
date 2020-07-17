@@ -20,6 +20,9 @@ export class HomeComponent implements OnInit {
   monthlyProjectScans: any;
   highVulnerability: any;
   licenseOnCompliance: any;
+  low: number = 0.25;
+  med: number = 0.50;
+  high: number = 0.75;
 
   /**
    * All initialization of the datasets & graphs occurs here.
@@ -31,37 +34,37 @@ export class HomeComponent implements OnInit {
     this.statsApi.statsComponentsGet().subscribe((response) => {
       this.topComponentLicenseData = response;
     });
-    console.log(this.topComponentLicenseData);
+
     this.statsApi.statsComponentsScansGet().subscribe((response) => {
       this.topComponentScansData = response;
     })
-    console.log(this.topComponentScansData);
+
     this.statsApi.statsProjectsGet().subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
     })
-    console.log(this.projectsAddedMonthly);
+
     this.statsApi.statsProjectsScansGet().subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
     })
-    console.log(this.monthlyProjectScans);
+
     this.statsApi.statsHighVulnerabilityGet().subscribe((response) => {
-      var displayName = this.displaySeverity(0.25, 0.5, 0.75, response);
+      var displayName = this.displaySeverity(response);
       this.highVulnerability = [{"name": displayName, "value": response}];
     })
-    console.log(this.highVulnerability);
+
     this.statsApi.statsLicenseOnComplianceGet().subscribe((response) => {
-      var displayName = this.displaySeverity(0.25, 0.5, 0.75, response);
+      var displayName = this.displaySeverity(response);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
     })
-    console.log(this.licenseOnCompliance);
+
     }
 
-    displaySeverity(low: number, med: number, high: number, n: any){
-      if(n < low){ return 'LOW' }
-      else if(n < med){ return 'MEDIUM' }
-      else if(n < high){ return 'HIGH' }
+    displaySeverity(n: any){
+      if(n < this.low){ return 'LOW' }
+      else if(n < this.med){ return 'MEDIUM' }
+      else if(n < this.high){ return 'HIGH' }
       else { return 'CRITICAL' }
     }
 
@@ -69,55 +72,55 @@ export class HomeComponent implements OnInit {
       for (var item of data){
         switch (item.name.substring(5, 7)) {
           case "01": {
-            item.name = "January";
+            item.name = "Jan" + " '" + item.name.substring(2, 4);
             break;
           }
           case "02": {
-            item.name = "February";
+            item.name = "Feb" + " '" + item.name.substring(2, 4);
             break;
           }
           case "03": {
-            item.name = "March";
+            item.name = "Mar" + " '" + item.name.substring(2, 4);
             break;
           }
           case "04": {
-            item.name = "April";
+            item.name = "Apr" + " '" + item.name.substring(2, 4);
             break;
           }
           case "05": {
-            item.name = "May";
+            item.name = "May" + " '" + item.name.substring(2, 4);
             break;
           }
           case "06": {
-            item.name = "June";
+            item.name = "Jun" + " '" + item.name.substring(2, 4);
             break;
           }
           case "07": {
-            item.name = "July";
+            item.name = "Jul" + " '" + item.name.substring(2, 4);
             break;
           }
           case "08": {
-            item.name = "August";
+            item.name = "Aug" + " '" + item.name.substring(2, 4);
             break;
           }
           case "09": {
-            item.name = "September";
+            item.name = "Sep" + " '" + item.name.substring(2, 4);
             break;
           }
           case "10": {
-            item.name = "October";
+            item.name = "Oct" + " '" + item.name.substring(2, 4);
             break;
           }
           case "11": {
-            item.name = "November";
+            item.name = "Nov" + " '" + item.name.substring(2, 4);
             break;
           }
           case "12": {
-            item.name = "December";
+            item.name = "Dec" + " '" + item.name.substring(2, 4);
             break;
           }
           default: {
-            item.name = "Unknown";
+            item.name = "Unknown" + " '" + item.name.substring(2, 4);
             break;
           }
         }

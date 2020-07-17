@@ -17,6 +17,68 @@
         <mat-card>
           <mat-card-title>
             <div>
+                High Vulnerability Index
+                <span style="float:right;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>
+                      <h2>Index Thresholds</h2><br>
+                      Low: <{{low}}<br>
+                      Medium: <{{med}}<br>
+                      High: <{{high}}<br>
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!highVulnerability || highVulnerability.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-gauge-chart
+              *ngIf="highVulnerability"
+              [data]="highVulnerability"
+          >
+          </app-gauge-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <!-- End of Column 1 -->
+    <!-- Column 2 -->
+    <div class="col">
+        <mat-card>
+          <mat-card-title>
+            <div>
+                License Risk Index
+                <span style="float:right;">
+                  <a class="info">
+                    <img src="assets/images/help-circle-outline.svg"/>
+                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
+                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
+                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                    </span>
+                  </a>
+                </span>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+          <div *ngIf="!licenseOnCompliance || licenseOnCompliance.length < 1">
+              <h2> No data. </h2>
+          </div>
+          <app-gauge-chart
+              *ngIf="licenseOnCompliance"
+              [data]="licenseOnCompliance"
+          >
+          </app-gauge-chart>
+          </mat-card-content>
+        </mat-card>
+    </div>
+    <!-- End of Column 2 -->
+    <!-- Column 3 -->
+    <div class="col">
+        <mat-card>
+          <mat-card-title>
+            <div>
                 Top 10 Component Licenses
                 <span style="float:right;">
                   <a class="info">
@@ -44,8 +106,8 @@
           </mat-card-content>
         </mat-card>
     </div>
-    <!-- End of Column 1-->
-    <!-- Column 2 -->
+    <!-- End of Column 3-->
+    <!-- Column 4 -->
     <div class="col">
         <mat-card>
           <mat-card-title>
@@ -77,8 +139,8 @@
           </mat-card-content>
         </mat-card>
     </div>
-    <!-- End of Column 2 -->
-    <!-- Column 3 -->
+    <!-- End of Column 4 -->
+    <!-- Column 5 -->
     <div class="col">
         <mat-card>
           <mat-card-title>
@@ -111,8 +173,8 @@
           </mat-card-content>
         </mat-card>
     </div>
-    <!-- End of Column 3 -->
-    <!-- Column 4 -->
+    <!-- End of Column 5 -->
+    <!-- Column 6 -->
     <div class="col">
         <mat-card>
           <mat-card-title>
@@ -142,66 +204,6 @@
               [yAxisLabel]="'Count'"
           >
           </app-bar-chart>
-          </mat-card-content>
-        </mat-card>
-    </div>
-    <!-- End of Column 4 -->
-    <!-- Column 5 -->
-    <div class="col">
-        <mat-card>
-          <mat-card-title>
-            <div>
-                High Vulnerability Index
-                <span style="float:right;">
-                  <a class="info">
-                    <img src="assets/images/help-circle-outline.svg"/>
-                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
-                    </span>
-                  </a>
-                </span>
-            </div>
-          </mat-card-title>
-          <mat-card-content>
-          <div *ngIf="!highVulnerability || highVulnerability.length < 1">
-              <h2> No data. </h2>
-          </div>
-          <app-gauge-chart
-              *ngIf="highVulnerability"
-              [data]="highVulnerability"
-          >
-          </app-gauge-chart>
-          </mat-card-content>
-        </mat-card>
-    </div>
-    <!-- End of Column 5 -->
-    <!-- Column 6 -->
-    <div class="col">
-        <mat-card>
-          <mat-card-title>
-            <div>
-                License Compliance Index
-                <span style="float:right;">
-                  <a class="info">
-                    <img src="assets/images/help-circle-outline.svg"/>
-                    <span>This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
-                    </span>
-                  </a>
-                </span>
-            </div>
-          </mat-card-title>
-          <mat-card-content>
-          <div *ngIf="!licenseOnCompliance || licenseOnCompliance.length < 1">
-              <h2> No data. </h2>
-          </div>
-          <app-gauge-chart
-              *ngIf="licenseOnCompliance"
-              [data]="licenseOnCompliance"
-          >
-          </app-gauge-chart>
           </mat-card-content>
         </mat-card>
     </div>

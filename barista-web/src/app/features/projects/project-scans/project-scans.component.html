@@ -1,13 +1,23 @@
-
 <mat-card class="content-card" fxFill>
   <mat-card-header class="content-header">
     <mat-card-title>
       Projects Scans
-<!--      <button class="add-button" [routerLink]="['/project/new']" mat-icon-button><mat-icon>add</mat-icon></button>-->
-      <button *ngIf="showScanButton" class="scan-btn" type="button" mat-button color="warn" (click)="scan()">
-        <mat-icon>add</mat-icon>
-        <span>Scan</span>
-      </button>
+      <!--      <button class="add-button" [routerLink]="['/project/new']" mat-icon-button><mat-icon>add</mat-icon></button>-->
+      <div *ngIf="showScanButton">
+        <button class="scan-btn" mat-raised-button color="primary" (click)="scan()">
+          <mat-icon>add</mat-icon>
+          <span>Scan</span>
+        </button>
+        <mat-form-field class="branch-select">
+          <mat-label>Select a Branch</mat-label>
+          <mat-select [(value)]="selectedBranch">
+            <mat-option value="Default Branch">Default Branch</mat-option>
+            <mat-option *ngFor="let branch of branches | async" [value]="branch.branch">
+              {{ branch.branch }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content class="dashboard-card-content">
@@ -22,7 +32,7 @@
       [selectionType]="'single'"
       (select)="onSelect($event)"
       [getPageResults]="getPageResults.bind(this)"
-      >
+    >
     </app-datatable>
 
     <ng-template #dateCellTmpl let-value="value" ngx-datatable-cell-template>
@@ -30,9 +40,8 @@
     </ng-template>
 
     <ng-template #scanProgressTmpl let-row="row" let-value="value" ngx-datatable-cell-template>
-      {{value}}
+      {{ value }}
       <span *ngIf="row.isScanning" class="scan-progress">Scanning... <i class="material-icons animate">loop</i></span>
     </ng-template>
-
   </mat-card-content>
 </mat-card>

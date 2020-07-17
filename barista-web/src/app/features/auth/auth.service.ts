@@ -117,7 +117,7 @@ export class AuthService implements OnDestroy {
 
   async logout() {
     localStorage.removeItem('accessToken');
-    await this.router.navigate(['/home']);
+    await this.router.navigate(['/signin']);
   }
 
   ngOnDestroy(): void {}

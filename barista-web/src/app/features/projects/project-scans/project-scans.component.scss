@@ -4,28 +4,31 @@
   .content-header {
     width: 100%;
 
-     ::ng-deep .mat-card-header-text {
+    ::ng-deep .mat-card-header-text {
       display: flex;
       width: 100%;
     }
   }
 
+  mat-card-title {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 
-    mat-card-title {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-
-      .scan-btn {
-        display: inline-flex;
-        margin-left: auto;
-        justify-content: center;
-      }
+    .scan-btn {
+      display: inline-flex;
+      margin-left: auto;
+      justify-content: center;
+      margin-right: 0.5rem;
     }
+    .branch-select {
+      width: 400px;
+    }
+  }
 }
 
 .scan-progress {
-  margin-left: .5rem;
+  margin-left: 0.5rem;
   display: inline-flex;
 
   .animate {

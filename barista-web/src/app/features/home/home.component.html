@@ -28,6 +28,7 @@
                           Low: <{{low}}<br>
                           Medium: <{{med}}<br>
                           High: <{{high}}<br>
+                          Critical: {{high}}+
                         </mat-card-content>
                       </mat-card>
                     </span>
@@ -60,9 +61,11 @@
                     <span>
                       <mat-card>
                         <mat-card-content>
-                          This graph shows the 10 licenses that are most widely used across our organization's scanned projects.
-                    From this, we can see the kinds of open source development, and potentially even the kinds of projects being worked on.
-                    If our organization has a high number of non-permissive licenses in our projects, there could be some changes needed to adopt a more open-source development strategy.
+                          <h3>Index Thresholds</h3>
+                          Low: <{{low}}<br>
+                          Medium: <{{med}}<br>
+                          High: <{{high}}<br>
+                          Critical: {{high}}+
                         </mat-card-content>
                       </mat-card>
                     </span>

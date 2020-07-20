@@ -15,7 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
       // navigate /delete cookies or whatever
       this.authService.logout();
       if(this.router.url.endsWith('/signin')){
-        this.router.navigate(['/singin'])
+        this.router.navigate(['/signin'])
       }
       else{
         this.router.navigate(['/home']);

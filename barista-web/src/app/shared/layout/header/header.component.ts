@@ -61,11 +61,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.isVisible = true;
   }
   isSignIn(){
-    if(this.router.url.endsWith('/signin')){
-      return true;
-    }
-    else{
-      return false;
-    }
+    return this.router.url.endsWith('/signin');
   }
 }

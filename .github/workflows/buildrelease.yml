@@ -26,6 +26,10 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      - name: "Echo variables"
+        run: |
+          echo "REF:  ${{ GITHUB_REF }}, SHA: ${{ GITHUB_SHA }}, ACTION:  ${{ GITHUB_ACTION }} "
       
       - name: "Overwrite Symlinks"
         run: rm -fr barista-scan/src/{models,services,shared} && cp -r barista-api/src/{models,services,shared} barista-scan/src;
@@ -43,6 +47,7 @@ jobs:
   publishtest:
     needs: login
     runs-on: ubuntu-latest
+    if:
     steps:
       - name: "Tag and push images"
         run: |

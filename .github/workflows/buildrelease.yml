@@ -7,10 +7,11 @@ name: buildrelease
 on:
   push:
     branches:
-      - $default-branch
+#      - $default-branch
+      - rolinge/gitactions
     # Publish `v1.2.3` tags as releases.
-    tags:
-      - P/*
+#    tags:
+#      - P/*
 
 #  pull_request:
 #    branches: [ master ]
@@ -30,7 +31,7 @@ jobs:
       - name: "Echo variables"
         run: |
           echo "REF:  ${{ GITHUB_REF }}, SHA: ${{ GITHUB_SHA }}, ACTION:  ${{ GITHUB_ACTION }} "
-      
+
       - name: "Overwrite Symlinks"
         run: rm -fr barista-scan/src/{models,services,shared} && cp -r barista-api/src/{models,services,shared} barista-scan/src;
 

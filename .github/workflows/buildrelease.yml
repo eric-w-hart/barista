@@ -48,12 +48,14 @@ jobs:
   publishtest:
     needs: login
     runs-on: ubuntu-latest
-    if:
+    if: ${{ GITHUB_REF }} == 'refs/heads/rolinge/gitactions'
     steps:
       - name: "Tag and push images"
         run: |
           for i in api web scan base scanbase
             do
               docker tag barista-${i}:compose optumopensource/barista-${i}:testcompose
+              docker tag barista-${i}:compose optumopensource/barista-${i}:testlatest
               docker push optumopensource/barista-${i}:testcompose
+              docker push optumopensource/barista-${i}:testlatest
             done

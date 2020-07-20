@@ -48,7 +48,7 @@ jobs:
   publishtest:
     needs: login
     runs-on: ubuntu-latest
-    if: $GITHUB_REF == 'refs/heads/rolinge/gitactions'
+    if: GITHUB_REF == 'refs/heads/rolinge/gitactions'
     steps:
       - name: "Tag and push images"
         run: |

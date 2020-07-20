@@ -38,6 +38,19 @@ jobs:
       - name: "Build with compose"
         run:  cp -f docker-compose/docker-compose-build.yaml ./docker-compose.yaml &&  docker-compose build
 
+      - name: "Log into Registry"
+        run:  echo "${{ secrets.DOCKERIO_TOKEN}}" | docker login -u ospo4optum --password-stdin
+
+      - name: "Tag and push images"
+        run: |
+          for i in api web scan base scanbase
+            do
+              docker tag barista-${i}:compose optumopensource/barista-${i}:testcompose
+              docker tag barista-${i}:compose optumopensource/barista-${i}:testlatest
+              docker push optumopensource/barista-${i}:testcompose
+              docker push optumopensource/barista-${i}:testlatest
+            done
+
   login:
     needs: build
     runs-on: ubuntu-latest
@@ -54,8 +67,19 @@ jobs:
         run: |
           for i in api web scan base scanbase
             do
-              docker tag barista-${i}:compose optumopensource/barista-${i}:testcompose
-              docker tag barista-${i}:compose optumopensource/barista-${i}:testlatest
-              docker push optumopensource/barista-${i}:testcompose
-              docker push optumopensource/barista-${i}:testlatest
+              echo "This is where I would have pushed $i"
+            done
+  publish:
+    needs: login
+    runs-on: ubuntu-latest
+    if: ${{ github.ref }} == 'master'
+    steps:
+      - name: "Tag and push images"
+        run: |
+          for i in api web scan base scanbase
+            do
+              docker tag barista-${i}:compose optumopensource/barista-${i}:compose
+              docker tag barista-${i}:compose optumopensource/barista-${i}:latest
+              docker push optumopensource/barista-${i}:compose
+              docker push optumopensource/barista-${i}:latest
             done

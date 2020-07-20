@@ -37,7 +37,7 @@
   </form>
 </mat-toolbar>
 
-  <div id="error" *ngIf="!!message && !isLoggedIn">
+  <div id="error" *ngIf="!!message && !isLoggedIn && !isSignIn()">
     {{message}}
   </div>
 </div>

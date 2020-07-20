@@ -8,7 +8,9 @@ on:
   push:
     branches:
 #      - $default-branch
-      - rolinge/gitactions
+      - 'master'
+      - 'rolinge/gitactions'
+
     # Publish `v1.2.3` tags as releases.
 #    tags:
 #      - P/*
@@ -35,45 +37,19 @@ jobs:
       - name: "Overwrite Symlinks"
         run: rm -fr barista-scan/src/{models,services,shared} && cp -r barista-api/src/{models,services,shared} barista-scan/src;
 
+      - name: "Pull existing images"
+        run: |
+          for i in base scanbase api web scan
+            do
+              docker pull optumopensource/barista-${i}:compose
+            done
+
       - name: "Build with compose"
         run:  cp -f docker-compose/docker-compose-build.yaml ./docker-compose.yaml &&  docker-compose build
 
       - name: "Log into Registry"
         run:  echo "${{ secrets.DOCKERIO_TOKEN}}" | docker login -u ospo4optum --password-stdin
 
-      - name: "Tag and push images"
-        run: |
-          for i in api web scan base scanbase
-            do
-              docker tag barista-${i}:compose optumopensource/barista-${i}:testcompose
-              docker tag barista-${i}:compose optumopensource/barista-${i}:testlatest
-              docker push optumopensource/barista-${i}:testcompose
-              docker push optumopensource/barista-${i}:testlatest
-            done
-
-  login:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Log into Registry"
-        run:  echo "${{ secrets.DOCKERIO_TOKEN}}" | docker login -u ospo4optum --password-stdin
-
-  publishtest:
-    needs: login
-    runs-on: ubuntu-latest
-    if: ${{ github.ref }} == 'refs/heads/rolinge/gitactions'
-    steps:
-      - name: "Tag and push images"
-        run: |
-          for i in api web scan base scanbase
-            do
-              echo "This is where I would have pushed $i"
-            done
-  publish:
-    needs: login
-    runs-on: ubuntu-latest
-    if: ${{ github.ref }} == 'master'
-    steps:
       - name: "Tag and push images"
         run: |
           for i in api web scan base scanbase

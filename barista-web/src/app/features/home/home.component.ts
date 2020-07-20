@@ -4,6 +4,12 @@ import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service'
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
 import { observable } from 'rxjs';
 
+interface Threshold{
+  low: number,
+  medium: number,
+  high: number,
+};
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -21,9 +27,16 @@ export class HomeComponent implements OnInit {
   monthlyProjectScans: any;
   highVulnerability: any;
   licenseOnCompliance: any;
-  low: number = 0.25;
-  med: number = 0.50;
-  high: number = 0.75;
+  vulnerabilityThreshold: Threshold = {
+    low: 2.5,
+    medium: 5,
+    high: 7.5,
+  }
+  licenseThreshold: Threshold = {
+    low: 1,
+    medium: 2.5,
+    high: 5,
+  }
 
   /**
    * All initialization of the datasets & graphs occurs here.
@@ -55,21 +68,20 @@ export class HomeComponent implements OnInit {
     })
 
     this.statsApi.statsHighVulnerabilityGet().subscribe((response) => {
-      var displayName = this.displaySeverity(response);
+      var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       this.highVulnerability = [{"name": displayName, "value": response}];
     })
 
     this.statsApi.statsLicenseOnComplianceGet().subscribe((response) => {
-      var displayName = this.displaySeverity(response);
+      var displayName = this.displaySeverity(response, this.licenseThreshold);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
     })
+  }
 
-    }
-
-    displaySeverity(n: any){
-      if(n < this.low){ return 'LOW' }
-      else if(n < this.med){ return 'MEDIUM' }
-      else if(n < this.high){ return 'HIGH' }
+    displaySeverity(n: any, t: Threshold){
+      if(n < t.low){ return 'LOW' }
+      else if(n < t.medium){ return 'MEDIUM' }
+      else if(n < t.high){ return 'HIGH' }
       else { return 'CRITICAL' }
     }
 

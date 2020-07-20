@@ -26,6 +26,10 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: "Overwrite Symlinks"
+        run: rm -fr barista-scan/src/{models,services,shared} && cp -r barista-api/src/{models,services,shared} barista-scan/src;
+
       - name: "Build with compose"
         run:  cp -f docker-compose/docker-compose-build.yaml ./docker-compose.yaml &&  docker-compose build
 

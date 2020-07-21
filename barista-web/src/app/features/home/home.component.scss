@@ -88,6 +88,15 @@
     color: $accent-color;
 }
 
+.mat-card-title {
+  color: $brown-text;
+}
+
+.mat-card-content {
+  color: $brown-text;
+  fill: $brown-text;
+}
+
 $hover-elevation: 5;
 .info {
     text-decoration:none;

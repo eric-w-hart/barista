@@ -34,3 +34,15 @@ main app-home{
   background-attachment: fixed;
   background-size: cover;
 }
+
+// adjusts ngx charts legend text color
+.chart-legend > div {
+  .legend-label {
+    color: #888;
+    .active {
+      .legend-label-text {
+        color: #000;
+      }
+    }
+  }
+}

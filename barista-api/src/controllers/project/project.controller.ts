@@ -6,6 +6,7 @@ import { LicenseModuleDto } from '@app/models/DTOs/LicenseModuleDto';
 import { ObligationSearchDto } from '@app/models/DTOs/ObligationSearchDto';
 import { ProjectDistinctSeverityDto } from '@app/models/DTOs/ProjectDistinctSeverityDto';
 import { ProjectScanStateDto } from '@app/models/DTOs/ProjectScanStateDto';
+import { ScanBranchDto } from '@app/models/DTOs/ScanBranchDto';
 import { Project } from '@app/models/Project';
 import { LicenseScanResultItemService } from '@app/services/license-scan-result-item/license-scan-result-item.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
@@ -26,6 +27,7 @@ import {
   ParsedBody,
   ParsedRequest,
 } from '@nestjsx/crud';
+import gitP, { SimpleGit } from 'simple-git/promise';
 
 @UseGuards(AuthGuard('jwt'))
 @ApiOAuth2Auth()
@@ -84,6 +86,7 @@ export class ProjectController implements CrudController<Project> {
   get base(): CrudController<Project> {
     return this;
   }
+  private git: SimpleGit = gitP();
 
   @Get('/:id/bill-of-materials/licenses')
   @UseInterceptors(CrudRequestInterceptor)
@@ -206,6 +209,38 @@ export class ProjectController implements CrudController<Project> {
       });
 
     return await PaginateArrayResult(query, +page, +pageSize);
+  }
+
+  @Get('/:id/gitbranches')
+  @UseInterceptors(CrudRequestInterceptor)
+  @ApiResponse({ status: 200, type: [ScanBranchDto] })
+  async getGitBranches(@Param('id') id: string): Promise<ScanBranchDto[]> {
+    const project = await this.service.db.findOne(Number(id));
+    if (project) {
+      const gitUrl = await this.service.gitUrlAuthForProject(project);
+      const gitOptions = [];
+      gitOptions.push(gitUrl);
+
+      const branches = this.git.listRemote(gitOptions);
+      const array = (await branches).substring(1, (await branches).length - 1).split('\n');
+      const branchesAndTags = [];
+      array.forEach(element => {
+        const branch = element.indexOf('refs/heads/');
+        const branchName = element.substring(branch + 11);
+        const scanBranchDto = new ScanBranchDto();
+        if (branch > 0) {
+          scanBranchDto.branch = branchName;
+          branchesAndTags.push(scanBranchDto);
+        }
+        // const tag = element.indexOf('refs/tags/');
+        // const tagName = element.substring(tag + 12);
+        // if (tag > 0) {
+        //   scanBranchDto.branch = tagName;
+        //   branchesAndTags.push(scanBranchDto);
+        // }
+      });
+      return branchesAndTags;
+    }
   }
 
   @Get('/:id/stats/licenses')

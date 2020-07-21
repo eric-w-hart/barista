@@ -4,10 +4,14 @@ import { AuthService } from '@app/features/auth/auth.service';
 import { ProjectService } from '@app/shared/+state/project/project.service';
 import { ScanService } from '@app/shared/+state/scan/scan.service';
 import { ScanApiService } from '@app/shared/api';
+import { ProjectApiService } from '@app/shared/api';
 import { ComponentWithMessage } from '@app/shared/app-components/ComponentWithMessage';
 import IDataTableColumns from '@app/shared/interfaces/IDataTableColumns';
 import { Observable, Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { ScanBranchDto } from '@app/shared/api/model/scan-branch';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-project-scans',
@@ -19,12 +23,15 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     private authService: AuthService,
     private projectService: ProjectService,
     private scanApiService: ScanApiService,
+    private projectApiSerice: ProjectApiService,
     private scanService: ScanService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
     super();
   }
+  selectedBranch = 'Default Branch';
+  branches: Observable<ScanBranchDto[]>;
 
   columns: IDataTableColumns[];
   currentPagedData: any = {
@@ -60,7 +67,7 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
         query.page,
         query.cache,
       )
-      .subscribe(results => {
+      .subscribe((results) => {
         this.currentPagedData = results || { count: 0, data: [], page: 1, total: 0 };
         this.pageResults$.next(this.currentPagedData);
       });
@@ -76,9 +83,11 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
 
   ngOnInit() {
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
+    this.branches = this.projectApiSerice.projectBranches(this.projectId);
 
     this.columns = [
       { name: 'Scan Id', prop: 'id', flexGrow: 1, cellTemplate: this.scanProgressTmpl },
+      { name: 'Branch', prop: 'tag', flexGrow: 1 },
       {
         name: 'Date',
         prop: 'createdAt',
@@ -90,7 +99,7 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     this.projectService
       .getByKey(this.projectId)
       .pipe(first())
-      .subscribe(project => {
+      .subscribe((project) => {
         this.showScanButton = this.authService.isProjectOwner(project);
       });
   }
@@ -103,19 +112,23 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
 
   scan() {
     this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
-
+    let scanBranch = this.selectedBranch;
+    if (this.selectedBranch === 'Default Branch') {
+      scanBranch = '';
+    }
+    console.log(scanBranch);
     this.scanService.apiService
-      .scanProjectIdPost(this.projectId)
+      .scanProjectIdBranchPost(this.projectId, { branch: scanBranch })
       .pipe(first())
       .subscribe(
-        result => {
+        (result) => {
           this.trackScanStatus(result.id);
 
           this.trackScan(result.id, 0);
 
           this.showMessage('Scan successfully started.');
         },
-        response => {
+        (response) => {
           this.showMessage(response.error.error);
         },
       );
@@ -136,7 +149,7 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
   }
 
   trackScanStatus(scanId: number) {
-    this.scanService.apiService.scanIdGet(scanId).subscribe(scanDetail => {
+    this.scanService.apiService.scanIdGet(scanId).subscribe((scanDetail) => {
       if (!scanDetail.completedAt) {
         const API_RATE_LIMIT = 1000;
 

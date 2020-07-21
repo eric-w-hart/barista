@@ -17,8 +17,10 @@ interface Threshold{
 export class HomeComponent implements OnInit {
   constructor(private statsApi: StatsApiService) {}
 
-  /* Data Variables */
   isLoggedIn: boolean;
+  dataset: string;
+
+  /* Data Variables */
   topComponentLicenseData: any;
   topComponentScansData: any;
   topVulnerabilities: any;
@@ -43,8 +45,9 @@ export class HomeComponent implements OnInit {
    */
   ngOnInit(): void {
     this.isLoggedIn = AuthService.isLoggedIn;
+    this.dataset = 'organization';
 
-    this.statsApi.statsComponentsGet('organization').subscribe((response) => {
+    this.statsApi.statsComponentsGet(this.dataset).subscribe((response) => {
       this.topComponentLicenseData = response;
     });
 
@@ -52,7 +55,7 @@ export class HomeComponent implements OnInit {
       this.topVulnerabilities = response;
     });
 
-    this.statsApi.statsComponentsScansGet('organization').subscribe((response) => {
+    this.statsApi.statsComponentsScansGet(this.dataset).subscribe((response) => {
       this.topComponentScansData = response;
     })
 
@@ -66,12 +69,12 @@ export class HomeComponent implements OnInit {
       this.monthlyProjectScans = response;
     })
 
-    this.statsApi.statsHighVulnerabilityGet('organization').subscribe((response) => {
+    this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       this.highVulnerability = [{"name": displayName, "value": response}];
     })
 
-    this.statsApi.statsLicenseOnComplianceGet('organization').subscribe((response) => {
+    this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
     })
@@ -142,5 +145,10 @@ export class HomeComponent implements OnInit {
       }
 
       return data;
+    }
+
+    changeDataset(dataset: string){
+      this.dataset = dataset;
+      
     }
 }

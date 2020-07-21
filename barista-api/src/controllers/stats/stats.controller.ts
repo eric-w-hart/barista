@@ -249,7 +249,7 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getTopVulnerabilities() {
     const query =
-      'select ssri."path" as "package" ,Upper(ssri.severity) as severity , ssri."displayIdentifier" ,ssri.description ,count(*) from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id group by package, ssri."path" ,Upper(ssri.severity) ,ssri."displayIdentifier" ,ssri.description order by count(*) desc, package, Upper(ssri.severity)';
+      'select ssri."path" as "name",count(*) as value from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id group by name, ssri."path" ,Upper(ssri.severity) ,ssri."displayIdentifier" ,ssri.description order by count(*) desc, name, Upper(ssri.severity) limit 10';
     const stats = await this.service.db.manager.query(query);
 
     return stats;

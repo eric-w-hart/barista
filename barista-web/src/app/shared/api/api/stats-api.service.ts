@@ -94,7 +94,6 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
-
         let headers = this.defaultHeaders;
 
         // to determine the Accept header

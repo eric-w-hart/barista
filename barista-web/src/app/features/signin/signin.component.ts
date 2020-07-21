@@ -26,4 +26,7 @@ export class SigninComponent implements OnInit {
   async signin() {
     await this.authService.login(this.username, this.password);
   }
+  async homeLink(){
+    await this.router.navigate(['/home']);
+  }
 }

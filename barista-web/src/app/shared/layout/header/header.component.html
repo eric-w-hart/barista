@@ -1,13 +1,10 @@
 <div>
 <mat-toolbar color="primary">
-  <button  mat-button (click)="homeLink()" title="Home">
-    <img class="ml-1" src="assets/images/barista-icon.png"/>
+  <button  class="logo" mat-button (click)="homeLink()" title="Home">
+    <img src="assets/images/barista_logo_coffee_left.png" width="100%">
   </button>
-  &nbsp;
-  &nbsp;
-  <h1><span class="mat-h1" >Barista</span></h1>
   <span class="fill-space"></span>
-  <button *ngIf="isLoggedIn" mat-button (click)="dashboardLink()" type="submit">Dashboard</button>
+  <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit">Home</button>
   <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>
   <app-help-menu title="Help"></app-help-menu>
   <span *ngIf="isLoggedIn && isAdmin">
@@ -32,15 +29,15 @@
     </span>
   </span>
   <form>
-    <span *ngIf="!isLoggedIn">
+    <span *ngIf="!isLoggedIn && !isSignIn()">
       <input matInput placeholder="Username" [(ngModel)]="username" name="username" ><br>
       <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password">
     </span>
-    <button *ngIf="!isLoggedIn" mat-button (click)="signin()" type="submit">Login</button>
+    <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Login</button>
   </form>
 </mat-toolbar>
 
-  <div id="error" *ngIf="!!message && !isLoggedIn">
+  <div id="error" *ngIf="!!message && !isLoggedIn && !isSignIn()">
     {{message}}
   </div>
 </div>

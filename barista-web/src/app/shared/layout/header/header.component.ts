@@ -55,8 +55,12 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
   async homeLink(){
     await this.router.navigate(['/home']);
+    window.location.reload();
   }
   profileBtn(){
     this.isVisible = true;
+  }
+  isSignIn(){
+    return this.router.url.endsWith('/signin');
   }
 }

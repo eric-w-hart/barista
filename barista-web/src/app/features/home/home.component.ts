@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
-import { observable } from 'rxjs';
 
 interface Threshold{
   low: number,

@@ -34,7 +34,11 @@ export class HomeComponent implements OnInit {
 
     this.statsApi.statsComponentsGet('organization').subscribe((response) => {
       this.topComponentLicenseData = response;
-    })
+    });
+
+    this.statsApi.statsVulnerabilitiesGet().subscribe((response) => {
+      this.topVulnerabilities = response;
+    });
 
     this.statsApi.statsComponentsScansGet('organization').subscribe((response) => {
       this.topComponentScansData = response;
@@ -43,17 +47,19 @@ export class HomeComponent implements OnInit {
     this.statsApi.statsProjectsGet().subscribe((response) => {
       this.projectsAddedMonthly = response;
     })
-    
+
     this.statsApi.statsProjectsScansGet().subscribe((response) => {
       this.monthlyProjectScans = response;
     })
 
     this.statsApi.statsHighVulnerabilityGet('organization').subscribe((response) => {
-      this.highVulnerability = [{"name": "High Vulnerability Index", "value": response}];
+      var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
+      this.highVulnerability = [{"name": displayName, "value": response}];
     })
 
     this.statsApi.statsLicenseOnComplianceGet('organization').subscribe((response) => {
-      this.licenseOnCompliance = [{"name": "License Compliance Index", "value": response}];
+      var displayName = this.displaySeverity(response, this.licenseThreshold);
+      this.licenseOnCompliance = [{"name": displayName, "value": response}];
     })
   }
 }

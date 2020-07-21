@@ -83,7 +83,7 @@ export class StatsApiService {
         );
     }
 
-    public statsComponentsScansGet(dev_type: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsVulnerabilitiesGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
             queryParameters = queryParameters.set('fields', <any>fields);
@@ -106,7 +106,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities)}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

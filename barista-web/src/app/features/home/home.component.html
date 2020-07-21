@@ -27,12 +27,12 @@
             </div>
           </mat-card-title>
           <mat-card-content>
-          <div *ngIf="!topComponentLicenseDataOrganization || topComponentLicenseDataOrganization.length < 1">
+          <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
               <h2> No data. </h2>
           </div>
           <app-bar-chart
-              *ngIf="topComponentLicenseDataOrganization"
-              [data]="topComponentLicenseDataOrganization"
+              *ngIf="topComponentLicenseData"
+              [data]="topComponentLicenseData"
               [legend]="true"
               [legendTitle]="'Data:'"
               [xAxisLabel]="'Licenses'"
@@ -61,12 +61,12 @@
             </div>
           </mat-card-title>
           <mat-card-content>
-          <div *ngIf="!topComponentLicenseDataOrganization || topComponentLicenseDataOrganization.length < 1">
+          <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
               <h2> No data. </h2>
           </div>
           <app-pie-chart
-              *ngIf="topComponentLicenseDataOrganization"
-              [data]="topComponentLicenseDataOrganization"
+              *ngIf="topComponentLicenseData"
+              [data]="topComponentLicenseData"
               [legend]="true"
               [legendTitle]="'Data:'"
               [xAxisLabel]="'Licenses'"

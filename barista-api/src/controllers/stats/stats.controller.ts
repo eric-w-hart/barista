@@ -16,6 +16,7 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
+  Logger,
 } from '@nestjs/common';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -46,6 +47,8 @@ export class StatsController implements CrudController<Project> {
   get base(): CrudController<Project> {
     return this;
   }
+
+  logger = new Logger('statController');
 
   @Override()
   async getMany(@ParsedRequest() req: CrudRequest) {
@@ -199,24 +202,22 @@ export class StatsController implements CrudController<Project> {
       .end();
   }
 
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/components')
+  @Get('/components/:developmentTypeCode')
   @ApiResponse({ status: 200 })
-  async getTopComponents() {
+  async getTopComponents(@Param('developmentTypeCode') developmentTypeCode: string) {
     const query =
       'select l2.name as "name", count(*) as "value" from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" group by 1 order by 2 desc limit 10';
-    const stats = await this.service.db.manager.query(query, ['organization']);
+    const stats = await this.service.db.manager.query(query, [developmentTypeCode]);
 
     return stats;
   }
 
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/components/scans')
+  @Get('/components/scans/:developmentTypeCode')
   @ApiResponse({ status: 200 })
-  async getTopComponentScans() {
+  async getTopComponentScans(@Param('developmentTypeCode') developmentTypeCode: string) {
     const query =
-    'select lsri."displayIdentifier" as name, count(*) as value from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id group by 1 order by count(*) desc, 1 limit 10';
-    const stats = await this.service.db.manager.query(query, ['organization']);
+      'select lsri."displayIdentifier" as name, count(*) as value from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id group by 1 order by count(*) desc, 1 limit 10';
+    const stats = await this.service.db.manager.query(query, [developmentTypeCode]);
 
     return stats;
   }
@@ -254,17 +255,16 @@ export class StatsController implements CrudController<Project> {
     return stats;
   }
 
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/licensenoncompliance/index')
+  @Get('/licensenoncompliance/index/:developmentTypeCode')
   @ApiResponse({ status: 200 })
-  async getLicenseComplianceIndex() {
+  async getLicenseComplianceIndex(@Param('developmentTypeCode') developmentTypeCode: string) {
     const query1 =
-      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" )s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and lsri.project_scan_status_type_code <> 'green'`;
-    const licenseProblemCount = await this.service.db.manager.query(query1);
+      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" )s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and lsri.project_scan_status_type_code <> 'green'`;
+    const licenseProblemCount = await this.service.db.manager.query(query1, [developmentTypeCode]);
   
     const query2 =
-      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from  scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`;
-    const licenseComponentCount = await this.service.db.manager.query(query2);
+      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from  scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`;
+    const licenseComponentCount = await this.service.db.manager.query(query2, [developmentTypeCode]);
 
     if (licenseProblemCount.length > 0 && licenseComponentCount.length > 0) { 
       const licenseComplianceIndex = (licenseProblemCount[0].count / licenseComponentCount[0].count * 100); 
@@ -275,17 +275,16 @@ export class StatsController implements CrudController<Project> {
     return 'no data found';  
   }
 
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/highvulnerability/index')
+  @Get('/highvulnerability/index/:developmentTypeCode')
   @ApiResponse({ status: 200})
-  async getHighVulnerabilityIndex() {
+  async getHighVulnerabilityIndex(@Param('developmentTypeCode') developmentTypeCode: string) {
     const query1 =
       `select count(*) from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id and ssri."severity" in ('CRITICAL','HIGH')`; 
     const highVulnerabilityCount = await this.service.db.manager.query(query1);
 
     const query2 =
-      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`; 
-    const licenseComponentCount = await this.service.db.manager.query(query2);
+      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`; 
+    const licenseComponentCount = await this.service.db.manager.query(query2, [developmentTypeCode]);
 
     if (highVulnerabilityCount.length > 0 && licenseComponentCount.length > 0) {
       const highVulnerabilityIndex = highVulnerabilityCount[0].count / licenseComponentCount[0].count * 100; 

@@ -20,10 +20,10 @@
       <div class="row" *ngIf="isLoggedIn" style="justify-content: center; align-items: center;">
         <mat-button-toggle-group>
           <div class="button">
-            <mat-button-toggle (click)="changeDataset('my')" value="Personal"><span>Personal</span></mat-button-toggle>
+            <mat-button-toggle (click)="changeDataset()" value="Personal"><span>Personal</span></mat-button-toggle>
           </div>
           <div class="button"> 
-            <mat-button-toggle (click)="changeDataset('organization')" value="Organization"><span>Organization</span></mat-button-toggle>
+            <mat-button-toggle (click)="changeDataset('*')" value="Organization"><span>Organization</span></mat-button-toggle>
           </div>
         </mat-button-toggle-group>
       </div>

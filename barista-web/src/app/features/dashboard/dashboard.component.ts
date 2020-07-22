@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private router: Router) {}
   lodash = _;
-  projectDataTableType = 'my';
+  projectDataTableType = 'user';
 
   ngOnDestroy(): void {}
 

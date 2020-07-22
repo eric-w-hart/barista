@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, OnDestroy, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { UserInfo } from '@app/shared/api/model/user-info';
@@ -22,11 +22,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     authService.statusChange.pipe(untilDestroyed(this)).subscribe((value: AuthServiceStatus) => {
       this.message = value.statusMessage;
     });
+    this.router.events.subscribe((routeData) => {
+      if (routeData instanceof NavigationEnd) {
+        if (routeData.urlAfterRedirects.startsWith('/home')) {
+          this.onHome = true;
+          this.onProj = false;
+        } else if (routeData.urlAfterRedirects.startsWith('/project')) {
+          this.onProj = true;
+          this.onHome = false;
+        } else {
+          this.onProj = false;
+          this.onHome = false;
+        }
+      }
+    });
   }
 
   private navItems: NavItem[];
   isLoggedIn: boolean;
   isAdmin: boolean;
+  onHome: boolean = false;
+  onProj: boolean = false;
   role: string;
   @Output() public sidenavToggle = new EventEmitter();
   userName: string;
@@ -69,6 +85,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   profileBtn() {
     this.isVisible = true;
   }
+
   isSignIn() {
     return this.router.url.endsWith('/signin');
   }

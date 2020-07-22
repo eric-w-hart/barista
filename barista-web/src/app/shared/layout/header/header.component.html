@@ -27,23 +27,23 @@
     </span>
     <span *ngIf="isLoggedIn">
       <span>
-        <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile">
-          <img src="assets/images/person-circle-outline.svg" />
+        <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
+          <img src="assets/images/person-circle-outline.svg" [class.profileClick]="t.menuOpen" />
         </button>
-        <mat-menu #profileMenu="matMenu">
+        <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
+          <div class="text mat-headline">Hello, {{ userName }}!</div>
           <button mat-menu-item>
-            <span type="button" mat-button (click)="logout()">Logout [{{ userName }} ({{ role }})]</span>
+            <span type="button" mat-button (click)="logout()">Logout</span>
           </button>
+          <mat-menu #profileMenu="matMenu">
+            <button mat-menu-item>
+              <span type="button" mat-button (click)="logout()">Logout [{{ userName }} ({{ role }})]</span>
+            </button>
+          </mat-menu>
         </mat-menu>
       </span>
     </span>
-    <form>
-      <span *ngIf="!isLoggedIn && !isSignIn()">
-        <input matInput placeholder="Username" [(ngModel)]="username" name="username" /><br />
-        <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" />
-      </span>
-      <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Login</button>
-    </form>
+    <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Sign In</button>
   </mat-toolbar>
 
   <div id="error" *ngIf="!!message && !isLoggedIn && !isSignIn()">

@@ -26,6 +26,15 @@ input {
   background-color : $accent-color; // from variables
 }
 
+
+.clicked {
+  color: $click-color;
+}
+
+.profileClick {
+  content: url("/assets/images/person-circle-outline-click.svg")
+}
+
 #error {
   visibility: visible;
   min-width: 250px; /* Set a default minimum width */

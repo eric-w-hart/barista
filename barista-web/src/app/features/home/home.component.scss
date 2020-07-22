@@ -61,6 +61,7 @@ $column-margin: 15px;
     text-align: center;
 
     mat-button-toggle {
+        color: $brown-text;
         display: flex;
         background-color: $accent-color;
         justify-content: center;
@@ -98,6 +99,15 @@ $column-margin: 15px;
     align-items: center;
     justify-content: center;
     color: $accent-color;
+}
+
+.mat-card-title {
+  color: $brown-text;
+}
+
+.mat-card-content {
+  color: $brown-text;
+  fill: $brown-text;
 }
 
 $hover-elevation: 5;

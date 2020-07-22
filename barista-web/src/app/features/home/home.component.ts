@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit, OnChanges {
       this.topComponentLicenseData = response;
     });
 
-    this.statsApi.statsVulnerabilitiesGet('organization').subscribe((response) => {
+    this.statsApi.statsVulnerabilitiesGet(this.dataset).subscribe((response) => {
       this.topVulnerabilities = response;
     });
 
@@ -71,12 +71,12 @@ export class HomeComponent implements OnInit, OnChanges {
       this.topComponentScansData = response;
     })
 
-    this.statsApi.statsProjectsGet('organization').subscribe((response) => {
+    this.statsApi.statsProjectsGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
     })
 
-    this.statsApi.statsProjectsScansGet('organization').subscribe((response) => {
+    this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
     })

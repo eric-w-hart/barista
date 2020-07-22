@@ -4,19 +4,33 @@
       <img src="assets/images/barista_logo_coffee_left.png" width="100%" />
     </button>
     <span class="fill-space"></span>
-    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit">Home</button>
+    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit">
+      <mat-icon class="routeIcon">home</mat-icon>
+      Home
+    </button>
 
-    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu">Projects</button>
+    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu">
+      <mat-icon class="routeIcon">source</mat-icon>
+      Projects
+    </button>
     <mat-menu #projectsMenu="matMenu">
-      <button mat-menu-item routerLink="/dashboard/user" type="submit">Personal</button>
-      <button mat-menu-item routerLink="/dashboard/organization" type="submit">Organization</button>
-      <button mat-menu-item routerLink="/dashboard/community" routerLinkActive="active">Community</button>
+      <button mat-menu-item routerLink="/dashboard/user" type="submit">
+        <mat-icon class="routeIcon">person</mat-icon>
+        User
+      </button>
+      <button mat-menu-item routerLink="/dashboard/organization" type="submit">
+        <mat-icon class="routeIcon">people</mat-icon>
+        Organization
+      </button>
+      <button mat-menu-item routerLink="/dashboard/community" routerLinkActive="active">
+        <mat-icon class="routeIcon">language</mat-icon>
+        Community
+      </button>
     </mat-menu>
 
-    <app-help-menu title="Help"></app-help-menu>
     <span *ngIf="isLoggedIn && isAdmin">
       <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">
-        <mat-icon class="routeIcon">how_to_reg</mat-icon>
+        <mat-icon class="routeIcon">how_to_reg</mat-icon> Admin
       </button>
       <mat-menu #adminMenu="matMenu">
         <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">
@@ -25,6 +39,7 @@
         </button>
       </mat-menu>
     </span>
+    <app-help-menu title="Help"></app-help-menu>
     <span *ngIf="isLoggedIn">
       <span>
         <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">

@@ -43,7 +43,13 @@
         </mat-menu>
       </span>
     </span>
-    <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Sign In</button>
+    <form>
+      <span *ngIf="!isLoggedIn && !isSignIn()">
+        <input matInput placeholder="Username" [(ngModel)]="username" name="username" /><br />
+        <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" />
+      </span>
+      <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Sign In</button>
+    </form>
   </mat-toolbar>
 
   <div id="error" *ngIf="!!message && !isLoggedIn && !isSignIn()">

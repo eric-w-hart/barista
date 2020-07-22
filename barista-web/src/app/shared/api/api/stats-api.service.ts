@@ -106,7 +106,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities/${dev_type}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities/${encodeURIComponent(String(dev_type))}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -177,7 +177,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/${dev_type}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/${encodeURIComponent(String(dev_type))}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -214,7 +214,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/scans/${dev_type}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/scans/${encodeURIComponent(String(dev_type))}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

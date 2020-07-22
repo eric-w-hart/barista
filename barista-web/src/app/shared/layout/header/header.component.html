@@ -23,9 +23,7 @@
       </button>
       <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
         <div class="text mat-headline">Hello, {{userName}}!</div>
-        <button mat-menu-item>
-          <span type="button" mat-button (click)="logout()">Logout</span>
-        </button>
+        <button mat-menu-item (click)="logout()">Sign Out</button>
       </mat-menu>
     </span>
   </span>

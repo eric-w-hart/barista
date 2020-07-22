@@ -8,8 +8,8 @@
 
     <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu">Projects</button>
     <mat-menu #projectsMenu="matMenu">
-      <button mat-menu-item (click)="myProjectLink()" type="submit">Personal</button>
-      <button mat-menu-item (click)="organzationLink()" type="submit">Organization</button>
+      <button mat-menu-item routerLink="/dashboard/my" type="submit">Personal</button>
+      <button mat-menu-item routerLink="/dashboard/organization" type="submit">Organization</button>
       <button mat-menu-item routerLink="/dashboard/community" routerLinkActive="active">Community</button>
     </mat-menu>
 

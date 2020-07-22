@@ -83,6 +83,23 @@ $column-margin: 15px;
             text-decoration: underline;
         }
     }
+
+    a {
+        color: $brown-text;
+        display: flex;
+        background-color: $accent-color;
+        justify-content: center;
+        align-items: center;
+        width: 15vw;
+        height: 6vh;
+        margin-left: $column-margin;
+        margin-right: $column-margin;
+        margin-top: $column-margin;
+        border-radius: 5px;
+        span {
+            font-size: large;
+        }
+    }
 }
 
 .image {

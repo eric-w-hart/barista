@@ -14,19 +14,23 @@ export abstract class ChartBaseComponent implements OnInit {
   customColors = [
    {
      name: "CRITICAL",
-     value: '#dd3333'
+     value: "#B44346"
    },
    {
      name: "HIGH",
-     value: '#ff8333'
+     value: "#DA8156"
    },
    {
      name: "MEDIUM",
-     value: '#eeee33'
+     value: "#FFBF66"
+   },
+   {
+     name: "MODERATE",
+     value: "#08C5D1"
    },
    {
      name: "LOW",
-     value: '#338833'
+     value: "#43AA8B" 
    },
    {
      name: "UNKNOWN",

@@ -1,19 +1,31 @@
 <div class="flex-grid" fxFlex>
   <div class="row">
     <!-- Banner -->
-    <div class="banner" *ngIf="!isLoggedIn">
-      <div class="image">
-        <img src="assets/images/barista_logo_text_removed.png">
+    <div class="banner">
+      <div *ngIf="!isLoggedIn">
+        <div class="image">
+          <img src="assets/images/barista_logo_text_removed.png">
+        </div>
+        <div class="mat-headline banner_text" style="text-align: center;">
+          Open Source Governance <br> Ensuring You Always Have a Great Brew
+        </div>
+        <div class="button">
+          <a mat-raised-button [href]="'https://optum.github.io/barista/'" target="_blank">
+            <span>
+              Learn More
+            </span>
+          </a>
+        </div>
       </div>
-      <div class="mat-headline banner_text" style="text-align: center;">
-        Open Source Governance <br> Ensuring You Always Have a Great Brew
-      </div>
-      <div class="button">
-        <a mat-raised-button [href]="'https://optum.github.io/barista/'" target="_blank">
-          <span>
-            Learn More
-          </span>
-        </a>
+      <div class="row" *ngIf="isLoggedIn" style="justify-content: center; align-items: center;">
+        <mat-button-toggle-group>
+          <div class="button">
+            <mat-button-toggle (click)="changeDataset('my')" value="Personal"><span>Personal</span></mat-button-toggle>
+          </div>
+          <div class="button"> 
+            <mat-button-toggle (click)="changeDataset('organization')" value="Organization"><span>Organization</span></mat-button-toggle>
+          </div>
+        </mat-button-toggle-group>
       </div>
     </div>
     <!-- End of Banner -->

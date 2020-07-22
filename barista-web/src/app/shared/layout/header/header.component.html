@@ -1,43 +1,52 @@
 <div>
-<mat-toolbar color="primary">
-  <button  class="logo" mat-button (click)="homeLink()" title="Home">
-    <img src="assets/images/barista_logo_coffee_left.png" width="100%">
-  </button>
-  <span class="fill-space"></span>
-  <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit">Home</button>
-  <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>
-  <app-help-menu title="Help"></app-help-menu>
-  <span *ngIf="isLoggedIn && isAdmin">
+  <mat-toolbar color="primary">
+    <button class="logo" mat-button (click)="homeLink()" title="Home">
+      <img src="assets/images/barista_logo_coffee_left.png" width="100%" />
+    </button>
+    <span class="fill-space"></span>
+    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit">Home</button>
+
+    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu">Projects</button>
+    <mat-menu #projectsMenu="matMenu">
+      <button mat-menu-item (click)="myProjectLink()" type="submit">Personal</button>
+      <button mat-menu-item (click)="organzationLink()" type="submit">Organization</button>
+      <button mat-menu-item routerLink="/dashboard/community" routerLinkActive="active">Community</button>
+    </mat-menu>
+
+    <app-help-menu title="Help"></app-help-menu>
+    <span *ngIf="isLoggedIn && isAdmin">
       <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">
-         <mat-icon class="routeIcon">how_to_reg</mat-icon>
+        <mat-icon class="routeIcon">how_to_reg</mat-icon>
       </button>
       <mat-menu #adminMenu="matMenu">
-        <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route"><mat-icon class="routeIcon">{{item.iconName}}</mat-icon>{{item.displayName}}
+        <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">
+          <mat-icon class="routeIcon">{{ item.iconName }}</mat-icon
+          >{{ item.displayName }}
         </button>
       </mat-menu>
     </span>
-  <span *ngIf="isLoggedIn">
-    <span>
-      <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile">
-        <img src="assets/images/person-circle-outline.svg"/>
-      </button>
-      <mat-menu #profileMenu="matMenu">
-        <button mat-menu-item>
-          <span type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</span>
+    <span *ngIf="isLoggedIn">
+      <span>
+        <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile">
+          <img src="assets/images/person-circle-outline.svg" />
         </button>
-      </mat-menu>
+        <mat-menu #profileMenu="matMenu">
+          <button mat-menu-item>
+            <span type="button" mat-button (click)="logout()">Logout [{{ userName }} ({{ role }})]</span>
+          </button>
+        </mat-menu>
+      </span>
     </span>
-  </span>
-  <form>
-    <span *ngIf="!isLoggedIn && !isSignIn()">
-      <input matInput placeholder="Username" [(ngModel)]="username" name="username" ><br>
-      <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password">
-    </span>
-    <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Login</button>
-  </form>
-</mat-toolbar>
+    <form>
+      <span *ngIf="!isLoggedIn && !isSignIn()">
+        <input matInput placeholder="Username" [(ngModel)]="username" name="username" /><br />
+        <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" />
+      </span>
+      <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Login</button>
+    </form>
+  </mat-toolbar>
 
   <div id="error" *ngIf="!!message && !isLoggedIn && !isSignIn()">
-    {{message}}
+    {{ message }}
   </div>
 </div>

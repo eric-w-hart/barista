@@ -8,8 +8,8 @@
   <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit" [class.clicked]="onProj">Projects</button>
   <app-help-menu title="Help"></app-help-menu>
   <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">
-         <mat-icon class="routeIcon">how_to_reg</mat-icon>
+      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools" #t="matMenuTrigger">
+         <mat-icon class="routeIcon" [class.clicked]="t.menuOpen">how_to_reg</mat-icon>
       </button>
       <mat-menu #adminMenu="matMenu">
         <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route"><mat-icon class="routeIcon">{{item.iconName}}</mat-icon>{{item.displayName}}
@@ -18,10 +18,10 @@
     </span>
   <span *ngIf="isLoggedIn">
     <span>
-      <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile">
-        <img src="assets/images/person-circle-outline.svg"/>
+      <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
+        <img src="assets/images/person-circle-outline.svg" [class.profileClick]="t.menuOpen"/>
       </button>
-      <mat-menu #profileMenu="matMenu">
+      <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
         <button mat-menu-item>
           <span type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</span>
         </button>

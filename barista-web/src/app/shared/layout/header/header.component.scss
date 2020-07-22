@@ -20,7 +20,11 @@ input {
 }
 
 .clicked {
-  color: #d0ac83;
+  color: $click-color;
+}
+
+.profileClick {
+  content: url("/assets/images/person-circle-outline-click.svg")
 }
 
 #error {

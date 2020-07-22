@@ -1,6 +1,8 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
+import { UserApiService } from '@app/shared/api/api/user-api.service';
+import { UserInfo } from '@app/shared/api/model/user-info';
 
 interface Threshold{
   low: number,
@@ -14,10 +16,11 @@ interface Threshold{
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnChanges {
-  constructor(private statsApi: StatsApiService) {}
+  constructor(private statsApi: StatsApiService, private userApi: UserApiService) {}
 
   isLoggedIn: boolean;
   dataset: string;
+  user: UserInfo;
 
   /* Data Variables */
   topComponentLicenseData: any;
@@ -51,8 +54,18 @@ export class HomeComponent implements OnInit, OnChanges {
     this.getDatasets();
   }
 
-  changeDataset(dataset: string){
-    this.dataset = dataset;
+  changeDataset(dataset?: string){
+    if(dataset){
+      // pass through generic selector
+      this.dataset = dataset;
+    } else {
+      // pass through userID
+      this.userApi.userMeGet().subscribe((response) => {
+        this.user = response;
+      })
+      this.dataset = this.user.id;
+    }
+    
     this.ngOnChanges();
   }
 

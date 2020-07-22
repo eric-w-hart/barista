@@ -18,17 +18,17 @@ export class HeaderComponent implements OnInit, OnDestroy{
     });
     this.router.events.subscribe((routeData) => {
       if (routeData instanceof NavigationEnd) {
-        if (routeData.urlAfterRedirects.startsWith('/dashboard')) {
-          this.onDash = true;
+        if (routeData.urlAfterRedirects.startsWith('/home')) {
+          this.onHome = true;
           this.onProj = false;
         }
         else if (routeData.urlAfterRedirects.startsWith('/project')) {
           this.onProj = true;
-          this.onDash = false;
+          this.onHome = false;
         }
         else {
-          this.onProj = false;;
-          this.onDash = false;
+          this.onHome = false;;
+          this.onProj = false;
         }
       }
     });
@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   private navItems: NavItem [];
   isLoggedIn: boolean;
   isAdmin: boolean;
-  onDash: boolean = false;
+  onHome: boolean = false;
   onProj: boolean = false;
   role: string;
   @Output() public sidenavToggle = new EventEmitter();
@@ -73,9 +73,12 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
   async homeLink(){
     await this.router.navigate(['/home']);
+    window.location.reload();
   }
   profileBtn(){
     this.isVisible = true;
   }
-
+  isSignIn(){
+    return this.router.url.endsWith('/signin');
+  }
 }

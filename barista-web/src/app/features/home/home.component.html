@@ -18,27 +18,14 @@
         </div>
       </div>
       <div class="row" *ngIf="isLoggedIn" style="justify-content: center; align-items: center;">
-        <div class="button">
-          <a mat-raised-button (click)="changeDataset('personal')">
-            <span>
-              Personal
-            </span>
-          </a>
-        </div>
-        <div class="button"> 
-          <a mat-raised-button (click)="changeDataset('organization')">
-            <span>
-              Organization
-            </span>
-          </a>
-        </div>
-        <div class="button">
-          <a mat-raised-button (click)="changeDataset('community')">
-            <span>
-              Community
-            </span>
-          </a>
-        </div>
+        <mat-button-toggle-group>
+          <div class="button">
+            <mat-button-toggle (click)="changeDataset('my')" value="Personal"><span>Personal</span></mat-button-toggle>
+          </div>
+          <div class="button"> 
+            <mat-button-toggle (click)="changeDataset('organization')" value="Organization"><span>Organization</span></mat-button-toggle>
+          </div>
+        </mat-button-toggle-group>
       </div>
     </div>
     <!-- End of Banner -->

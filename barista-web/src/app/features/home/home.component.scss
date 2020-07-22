@@ -1,59 +1,47 @@
 @import 'variables';
 
+$page-padding: 30px;
+$column-margin: 15px;
+
 .flex-grid{
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    padding-left:   $page-padding;
+    padding-right:  $page-padding;
+    padding-bottom: $page-padding;
+}
+
+.row {
     display: flex;
     flex-flow: row wrap;
-    flex: 1 1 100%;
-    justify-content: space-around;
-    align-items: flex-start;
-    padding: 30px;
+    flex: 1 0 0;
+    min-height: 0px;
 }
 
-/* 2x2 Grid */
-.flex-grid .col {
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 45%;
-    margin: 2%;
-    padding-bottom: 3%;
-}
+.col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; // allows shrinking & growing
+    flex: 1 0 0;
+    // 30px spacing between elements
+    margin: $column-margin;
 
-/* 3x3 Grid */
-.flex-grid .thirds {
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 33%;
-    margin: 2%;
-    padding-bottom: 3%;
-}
-
-.flex-grid .thirds .mat-card {
-    display: block;
-    height: auto;
-    width: 100%;
-    box-sizing: border-box;
-    background-color: $accent-color; // from variables
-}
-
-.flex-grid .col .mat-card {
-    display: block;
-    height: auto;
-    width: 100%;
-    box-sizing: border-box;
-    background-color: $accent-color; // from variables
-}
-
-/* Responsive, 1x1 Grid for pages <= 800px*/
-@media (max-width: 800px) {
-    .flex-grid .col {
-        flex: 100%;
-        max-width: 100%;
+    .mat-card {
+        justify-content: center;
+        align-items: center;
+        flex: 1 0 auto;
+        width: 100%;
+        height: vh;
+        background-color: $accent-color; // from variables
     }
 }
-@media (max-width: 800px) {
-    .flex-grid {
-        flex-flow: row-reverse wrap;
-    }
+
+/* Responsive For Smaller Screens */
+@media screen and (min-width: 800px) {
+   .col {
+       flex: 1;
+   }
 }
 
 .banner {
@@ -70,6 +58,30 @@
     justify-content: center;
     flex-direction: column;
     padding: 2%;
+    text-align: center;
+
+    mat-button-toggle {
+        display: flex;
+        background-color: $accent-color;
+        justify-content: center;
+        align-items: center;
+        width: 15vw;
+        height: 6vh;
+        margin-left: $column-margin;
+        margin-right: $column-margin;
+        margin-top: $column-margin;
+        border-radius: 5px;
+        span {
+            font-size: large;
+        }
+    }
+
+    .mat-button-toggle-checked {
+        color: #d0ac83;
+        span {
+            text-decoration: underline;
+        }
+    }
 }
 
 .image {

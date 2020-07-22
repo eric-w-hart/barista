@@ -15,9 +15,17 @@
   width: 150px;
 }
 
+.text {
+  font-size : 80%;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: center;
+}
+
 input {
   background-color : $accent-color; // from variables
 }
+
 
 .clicked {
   color: $click-color;

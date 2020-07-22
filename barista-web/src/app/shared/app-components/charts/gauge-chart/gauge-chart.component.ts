@@ -15,11 +15,10 @@ export class GaugeChartComponent extends ChartBaseComponent implements OnInit {
 
   //Options
   legendPosition: string = 'right';
-  @Input() max: any;
-  @Input() angleSpan: any;
-  @Input() startAngle:any;
-  @Input() bigSegments:any;
-  @Input() smallSegments:any;
+  max: number;
+  angleSpan: number = 360;
+  startAngle:number = -180;
+
   @Input() units;
 
   format(data) {

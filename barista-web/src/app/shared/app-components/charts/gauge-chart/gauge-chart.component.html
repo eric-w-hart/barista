@@ -1,6 +1,7 @@
 <div *ngIf="data && data.length >= 1" class="chart-container">
   <div class="chart">
     <ngx-charts-gauge
+      [view]="view"
       [scheme]="colorScheme"
       [results]="data"
       [legend]="legend"
@@ -13,8 +14,6 @@
       [angleSpan]="angleSpan"
       [startAngle]="startAngle"
       [showAxis]="false"
-      [bigSegments]="10"
-      [smallSegments]="5"
       >
     </ngx-charts-gauge>
   </div>

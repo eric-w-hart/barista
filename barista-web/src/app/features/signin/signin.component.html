@@ -1,8 +1,25 @@
 <div class="signin-page">
+  <mat-toolbar color="primary">
+    <span>Barista</span>
+    <span class="example-fill-remaining-space"></span>
+    <span class="align-center"></span>
+    <span class="example-spacer"></span>
+    <app-dynamic-menu
+      [menuBtnTitle]="'About'"
+      [menuItemConfigProp]="'aboutMenu'"
+    >
+    </app-dynamic-menu>
+    <app-dynamic-menu
+      [menuBtnTitle]="'Contact'"
+      [menuItemConfigProp]="'contactMenu'"
+    >
+    </app-dynamic-menu>
+  </mat-toolbar>
+
   <form>
     <mat-card class="signin-card">
       <mat-card-title>
-        <mat-card-title><strong>Sign In</strong></mat-card-title>
+        <mat-card-title><strong>Login</strong></mat-card-title>
       </mat-card-title>
 
       <mat-card-content>
@@ -17,7 +34,7 @@
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-raised-button (click)="signin()" color="primary" type="submit">Sign In</button>
+        <button mat-raised-button (click)="signin()" color="primary" type="submit">Login</button>
       </mat-card-actions>
 
       <mat-card-footer *ngIf="!!message">

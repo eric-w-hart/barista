@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
+import { observable } from 'rxjs';
 
 interface Threshold{
   low: number,
@@ -44,15 +45,15 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.isLoggedIn = AuthService.isLoggedIn;
 
-    this.statsApi.statsComponentsGet('organization').subscribe((response) => {
+    this.statsApi.statsComponentsGet().subscribe((response) => {
       this.topComponentLicenseData = response;
     });
 
     this.statsApi.statsVulnerabilitiesGet().subscribe((response) => {
-      this.topVulnerabilities = response;
+      this.topVulnerabilities= response;
     });
 
-    this.statsApi.statsComponentsScansGet('organization').subscribe((response) => {
+    this.statsApi.statsComponentsScansGet().subscribe((response) => {
       this.topComponentScansData = response;
     })
 
@@ -66,16 +67,17 @@ export class HomeComponent implements OnInit {
       this.monthlyProjectScans = response;
     })
 
-    this.statsApi.statsHighVulnerabilityGet('organization').subscribe((response) => {
+    this.statsApi.statsHighVulnerabilityGet().subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       this.highVulnerability = [{"name": displayName, "value": response}];
     })
 
-    this.statsApi.statsLicenseOnComplianceGet('organization').subscribe((response) => {
+    this.statsApi.statsLicenseOnComplianceGet().subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
     })
   }
+
     displaySeverity(n: any, t: Threshold){
       if(n < t.low){ return 'LOW' }
       else if(n < t.medium){ return 'MEDIUM' }

@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: 'signin',
     component: SigninComponent,
-    data: { showHeader: true, showSidebar: false },
+    data: { showHeader: false, showSidebar: false },
   },
   {
     path: 'signup',

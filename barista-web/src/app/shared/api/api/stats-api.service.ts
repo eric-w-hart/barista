@@ -83,7 +83,7 @@ export class StatsApiService {
         );
     }
 
-    public statsVulnerabilitiesGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsVulnerabilitiesGet(dev_type: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (fields !== undefined && fields !== null) {
             queryParameters = queryParameters.set('fields', <any>fields);
@@ -106,7 +106,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities/${dev_type}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -151,7 +151,7 @@ export class StatsApiService {
         );
     }
 
-    public statsProjectsGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsProjectsGet(dev_type: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -177,7 +177,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/${dev_type}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -188,7 +188,7 @@ export class StatsApiService {
         );
     }
 
-    public statsProjectsScansGet(fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsProjectsScansGet(dev_type: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -214,7 +214,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/scans`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/scans/${dev_type}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

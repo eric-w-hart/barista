@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
       this.topComponentLicenseData = response;
     });
 
-    this.statsApi.statsVulnerabilitiesGet().subscribe((response) => {
+    this.statsApi.statsVulnerabilitiesGet('organization').subscribe((response) => {
       this.topVulnerabilities = response;
     });
 
@@ -56,12 +56,12 @@ export class HomeComponent implements OnInit {
       this.topComponentScansData = response;
     })
 
-    this.statsApi.statsProjectsGet().subscribe((response) => {
+    this.statsApi.statsProjectsGet('organization').subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
     })
 
-    this.statsApi.statsProjectsScansGet().subscribe((response) => {
+    this.statsApi.statsProjectsScansGet('organization').subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
     })

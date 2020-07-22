@@ -4,8 +4,8 @@
     <img src="assets/images/barista_logo_coffee_left.png" width="100%">
   </button>
   <span class="fill-space"></span>
-  <button *ngIf="isLoggedIn" mat-button (click)="dashboardLink()" type="submit">Dashboard</button>
-  <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit">Projects</button>
+  <button *ngIf="isLoggedIn" mat-button (click)="dashboardLink()" type="submit" [class.clicked]="onDash">Dashboard</button>
+  <button *ngIf="isLoggedIn" mat-button (click)="myProjectLink()" type="submit" [class.clicked]="onProj">Projects</button>
   <app-help-menu title="Help"></app-help-menu>
   <span *ngIf="isLoggedIn && isAdmin">
       <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">

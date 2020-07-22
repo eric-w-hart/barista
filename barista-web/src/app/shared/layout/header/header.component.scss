@@ -19,6 +19,9 @@ input {
   background-color : $accent-color; // from variables
 }
 
+.clicked {
+  color: #d0ac83;
+}
 
 #error {
   visibility: visible;

@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit, OnChanges {
    * Handles subscribing of data async's into data vars.
    */
   ngOnInit(): void {
-    this.dataset = 'organization';
+    this.dataset = '%';
     this.getDatasets();
   }
 

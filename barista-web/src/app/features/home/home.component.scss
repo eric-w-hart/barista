@@ -61,7 +61,7 @@ $column-margin: 15px;
     text-align: center;
 
     mat-button-toggle {
-        color: $brown-text;
+        color: $primary-color;
         display: flex;
         background-color: $accent-color;
         justify-content: center;
@@ -78,14 +78,14 @@ $column-margin: 15px;
     }
 
     .mat-button-toggle-checked {
-        color: #d0ac83;
+        color: $secondary-color;
         span {
             text-decoration: underline;
         }
     }
 
     a {
-        color: $brown-text;
+        color: $primary-color;
         display: flex;
         background-color: $accent-color;
         justify-content: center;
@@ -119,12 +119,12 @@ $column-margin: 15px;
 }
 
 .mat-card-title {
-  color: $brown-text;
+  color: $primary-color;
 }
 
 .mat-card-content {
-  color: $brown-text;
-  fill: $brown-text;
+  color: $primary-color;
+  fill: $primary-color;
 }
 
 $hover-elevation: 5;

@@ -1,7 +1,7 @@
 @import 'variables';
 
 .content-container {
-  margin:20px;
+  margin: 20px;
 }
 
 .fill-space {
@@ -9,30 +9,28 @@
   // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
 }
-
 .logo {
   padding: 0px;
   width: 150px;
 }
 
 .text {
-  font-size : 80%;
+  font-size: 80%;
   padding-left: 15px;
   padding-right: 15px;
   text-align: center;
 }
 
 input {
-  background-color : $accent-color; // from variables
+  background-color: $accent-color; // from variables
 }
-
 
 .clicked {
   color: $secondary-color;
 }
 
 .profileClick {
-  content: url("/assets/images/person-circle-outline-click.svg")
+  content: url('/assets/images/person-circle-outline-click.svg');
 }
 
 #error {
@@ -53,23 +51,29 @@ input {
 }
 
 @keyframes shake {
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
 
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
 
-  20%, 80% {
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-4px, 0, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(4px, 0, 0);
   }
 }

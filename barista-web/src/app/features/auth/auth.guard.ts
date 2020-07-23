@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   checkLogin(url: string, isAdminRoute: boolean): boolean {
     if (AuthService.isLoggedIn) {
       if (isAdminRoute && !this.authService.isAdmin) {
-        this.router.navigate(['/project']);
+        this.router.navigate(['/projects/user']);
         return false;
       }
 

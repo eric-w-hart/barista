@@ -31,15 +31,11 @@ const dashboardRoutes: Routes = [
     canActivateChild: [AuthGuard],
     children: [
       {
-        path: 'dashboard',
+        path: 'projects',
         component: DashboardComponent,
       },
       {
-        path: 'dashboard/:projectDataTableType',
-        component: DashboardComponent,
-      },
-      {
-        path: 'project',
+        path: 'projects/:projectDataTableType',
         component: DashboardComponent,
       },
       {

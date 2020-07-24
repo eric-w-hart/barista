@@ -17,8 +17,8 @@
           </a>
         </div>
       </div>
-      <div class="row" *ngIf="isLoggedIn">
-        <mat-button-toggle-group value="Organization">
+      <div class="row button-toggle" *ngIf="isLoggedIn">
+        <mat-button-toggle-group>
           <div class="button">
             <mat-button-toggle (click)="changeDataset()" value="User" style="margin-right: 5px;"><span>User</span></mat-button-toggle>
           </div>

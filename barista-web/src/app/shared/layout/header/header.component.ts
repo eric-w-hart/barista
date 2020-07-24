@@ -24,10 +24,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     this.router.events.subscribe((routeData) => {
       if (routeData instanceof NavigationEnd) {
-        if (routeData.urlAfterRedirects.startsWith('/home')) {
+        const path = routeData.urlAfterRedirects;
+        if (path.startsWith('/home')) {
           this.onHome = true;
           this.onProj = false;
-        } else if (routeData.urlAfterRedirects.startsWith('/project')) {
+        } else if (path.startsWith('/projects') || path.startsWith('/project/')) {
           this.onProj = true;
           this.onHome = false;
         } else {

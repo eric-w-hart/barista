@@ -4,13 +4,13 @@
       <img src="assets/images/barista_logo_coffee_left.png" width="100%" />
     </button>
     <span class="fill-space"></span>
-    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit">
-      <mat-icon class="routeIcon">home</mat-icon>
+    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit" [class.clicked]="onHome">
+      <mat-icon class="routeIcon" [class.clicked]="onHome">home</mat-icon>
       Home
     </button>
 
-    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu">
-      <mat-icon class="routeIcon">source</mat-icon>
+    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu" [class.clicked]="onProj">
+      <mat-icon class="routeIcon" [class.clicked]="onProj">source</mat-icon>
       Projects
     </button>
     <mat-menu #projectsMenu="matMenu">
@@ -41,22 +41,15 @@
     </span>
     <app-help-menu title="Help"></app-help-menu>
     <span *ngIf="isLoggedIn">
-      <span>
-        <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
-          <img src="assets/images/person-circle-outline.svg" [class.profileClick]="t.menuOpen" />
+      <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
+        <img src="assets/images/person-circle-outline.svg" [class.profileClick]="t.menuOpen" />
+      </button>
+      <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
+        <div class="text mat-headline">Hello, {{ userName }}!</div>
+        <button mat-menu-item (click)="logout()">
+          <span type="button" mat-button >Sign Out</span>
         </button>
-        <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
-          <div class="text mat-headline">Hello, {{ userName }}!</div>
-          <button mat-menu-item>
-            <span type="button" mat-button (click)="logout()">Logout</span>
-          </button>
-          <mat-menu #profileMenu="matMenu">
-            <button mat-menu-item>
-              <span type="button" mat-button (click)="logout()">Logout [{{ userName }} ({{ role }})]</span>
-            </button>
-          </mat-menu>
-        </mat-menu>
-      </span>
+      </mat-menu>
     </span>
     <form>
       <span *ngIf="!isLoggedIn && !isSignIn()">

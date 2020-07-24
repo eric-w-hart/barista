@@ -27,10 +27,10 @@ export class GaugeChartComponent extends ChartBaseComponent implements OnInit {
     // checks if there are fewer than 2 decimal places
     if (data.toString().split(".").length === 1 || data.toString().split(".")[1].length < 2) {
       // returns the number with decimal places
-      return data.toFixed(2);
+      return data.toFixed(2) + '%';
     }
     // trunactes the number for 2 decimal places
-    return ((data * 100) - (data * 100) % 1) / 100;
+    return (((data * 100) - (data * 100) % 1) / 100) + '%';
   }
 
   ngOnInit(){}

@@ -17,6 +17,14 @@ $column-margin: 15px;
     flex-flow: row wrap;
     flex: 1 0 0;
     min-height: 0px;
+
+    .button-toggle {
+        justify-content: flex-start; 
+        align-items: center;
+        margin-left: $column-margin;
+        margin-right: $column-margin;
+        margin-top: $column-margin;
+    }
 }
 
 .col {
@@ -55,22 +63,16 @@ $column-margin: 15px;
     min-width: 20%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     padding: 2%;
     text-align: center;
 
     mat-button-toggle {
         color: $primary-color;
-        display: flex;
         background-color: $accent-color;
-        justify-content: center;
-        align-items: center;
         width: 15vw;
         height: 6vh;
-        margin-left: $column-margin;
-        margin-right: $column-margin;
-        margin-top: $column-margin;
         border-radius: 5px;
         span {
             font-size: large;
@@ -79,9 +81,7 @@ $column-margin: 15px;
 
     .mat-button-toggle-checked {
         color: $secondary-color;
-        span {
-            text-decoration: underline;
-        }
+        background-color: #785548;
     }
 
     a {

@@ -151,3 +151,15 @@ $hover-elevation: 5;
     margin:10px;
     width: calc(100% - 20px);
 }
+
+// adjusts ngx charts legend text color
+.chart-legend > div {
+  .legend-label {
+    color: #888;
+    .active {
+      .legend-label-text {
+        color: #000;
+      }
+    }
+  }
+}

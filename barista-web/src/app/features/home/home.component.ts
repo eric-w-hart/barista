@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
 import { UserApiService } from '@app/shared/api/api/user-api.service';
@@ -14,6 +14,7 @@ interface Threshold{
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit, OnChanges {
   constructor(private statsApi: StatsApiService, private userApi: UserApiService) {}
@@ -65,7 +66,7 @@ export class HomeComponent implements OnInit, OnChanges {
       })
       this.dataset = this.user.id;
     }
-    
+
     this.ngOnChanges();
   }
 

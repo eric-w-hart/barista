@@ -71,7 +71,7 @@ export class AuthService implements OnDestroy {
       !project.userId ||
       project.userId === this.userInfo.id ||
       this.isAdmin ||
-      _.findIndex(this.userInfo.groups, group => group.toLowerCase() === project.userId.toLowerCase()) !== -1
+      _.findIndex(this.userInfo.groups, (group) => group.toLowerCase() === project.userId.toLowerCase()) !== -1
     );
   }
 
@@ -89,15 +89,15 @@ export class AuthService implements OnDestroy {
       const userInfo = await this.userApiService.userMeGet().toPromise();
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       this.statusChange.next((status = { ...status, isLoggedIn: true, statusMessage: '' }));
-      await this.router.navigate([this.redirectUrl || '/project']);
+      await this.router.navigate([this.redirectUrl || '/projects/user']);
       window.location.reload();
     } catch (e) {
       // user/pass fields left empty - might be better in html file
-      if (!username || !password){
+      if (!username || !password) {
         this.statusChange.next(
           (status = {
             ...status,
-            statusMessage: "Please enter a username and password",
+            statusMessage: 'Please enter a username and password',
           }),
         );
       }
@@ -106,7 +106,7 @@ export class AuthService implements OnDestroy {
         this.statusChange.next(
           (status = {
             ...status,
-            statusMessage: e.message || "An unknown error occured",
+            statusMessage: e.message || 'An unknown error occured',
           }),
         );
       }

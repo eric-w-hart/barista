@@ -7,6 +7,7 @@ import { HomeComponent } from '@app/features/home/home.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'project', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'status',
     component: StatusComponent,
@@ -30,7 +31,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      onSameUrlNavigation: 'reload',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

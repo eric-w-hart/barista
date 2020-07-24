@@ -1,5 +1,5 @@
 <div class="content-container">
-  <h1 class="mat-h1">Dashboard</h1>
+  <h1 class="mat-h1">{{ lodash.startCase(projectDataTableType) }} Projects</h1>
   <mat-card>
     <mat-card-header>
       <div fxLayout="row" fxLayoutAlign="end center" fxFlex="grow">
@@ -9,21 +9,7 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-      <mat-tab-group>
-        <mat-tab label="My Projects">
-        <app-projects [projectDataTableType]="'user'"></app-projects>
-        </mat-tab>
-        <mat-tab label="Organization Projects">
-          <app-projects [projectDataTableType]="'organization'"></app-projects>
-        </mat-tab>
-        <mat-tab label="Community Projects">
-          <app-projects [projectDataTableType]="'community'"></app-projects>
-        </mat-tab>
-        <mat-tab label="Module Search">
-          <app-module-search ></app-module-search>
-        </mat-tab>
-
-      </mat-tab-group>
+      <app-projects [projectDataTableType]="projectDataTableType"></app-projects>
     </mat-card-content>
   </mat-card>
 </div>

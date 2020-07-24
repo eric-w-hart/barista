@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit, OnChanges {
   isLoggedIn: boolean;
   dataset: string;
   user: UserInfo;
+  isLoading: boolean;
 
   /* Data Variables */
   topComponentLicenseData: any;
@@ -46,11 +47,14 @@ export class HomeComponent implements OnInit, OnChanges {
    * Handles subscribing of data async's into data vars.
    */
   ngOnInit(): void {
+    this.isLoading = true;
     this.dataset = '%';
     this.getDatasets();
+    this.isLoading = false;
   }
 
   ngOnChanges():void {
+    this.isLoading = true;
     this.getDatasets();
   }
 
@@ -74,34 +78,41 @@ export class HomeComponent implements OnInit, OnChanges {
 
     this.statsApi.statsComponentsGet(this.dataset).subscribe((response) => {
       this.topComponentLicenseData = response;
+      this.isLoading = false;
     });
 
     this.statsApi.statsVulnerabilitiesGet(this.dataset).subscribe((response) => {
       this.topVulnerabilities = response;
+      this.isLoading = false;
     });
 
     this.statsApi.statsComponentsScansGet(this.dataset).subscribe((response) => {
       this.topComponentScansData = response;
+      this.isLoading = false;
     })
 
     this.statsApi.statsProjectsGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
+      this.isLoading = false;
     })
 
     this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
+      this.isLoading = false;
     })
 
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       this.highVulnerability = [{"name": displayName, "value": response}];
+      this.isLoading = false;
     })
 
     this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
+      this.isLoading = false;
     })
   }
 

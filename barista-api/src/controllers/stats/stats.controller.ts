@@ -202,6 +202,7 @@ export class StatsController implements CrudController<Project> {
       .end();
   }
 
+  // What are the top 10 component licenses in use and how many components are using each license?
   @Get('/components/:userId')
   @ApiResponse({ status: 200 })
   async getTopComponents(@Param('userId') userId: string) {
@@ -212,6 +213,7 @@ export class StatsController implements CrudController<Project> {
     return stats;
   }
 
+  // What are the top 10 components in use and how many times is each used across all projects scanned?
   @Get('/components/scans/:userId')
   @ApiResponse({ status: 200 })
   async getTopComponentScans(@Param('userId') userId: string) {
@@ -223,6 +225,7 @@ export class StatsController implements CrudController<Project> {
   }
 
 
+  // How many new projects are being added each month?
   @Get('/projects/:userId')
   @ApiResponse({ status: 200 })
   async getMonthlyProjects(@Param('userId') userId: string) {
@@ -233,6 +236,7 @@ export class StatsController implements CrudController<Project> {
     return stats;
   }
 
+  // How many project scans are being done each month?
   @Get('/projects/scans/:userId')
   @ApiResponse({ status: 200 })
   async getMonthlyScans(@Param('userId') userId: string) {
@@ -243,6 +247,7 @@ export class StatsController implements CrudController<Project> {
     return stats;
   }
 
+  // What are the top 10 critical vulnerabilities discovered across all projects scanned?
   @Get('/vulnerabilities/:userId')
   @ApiResponse({ status: 200 })
   async getTopVulnerabilities(@Param('userId') userId: string) {
@@ -253,6 +258,8 @@ export class StatsController implements CrudController<Project> {
     return stats;
   }
 
+  // What is our monthly license compliance index as defined by the formula:
+  // total number of not approved licenses detected in scans (i.e. yellow or red status) divided by total number of approved licenses found in scans (i.e. green status)
   @Get('/licensenoncompliance/index/:userId')
   @ApiResponse({ status: 200 })
   async getLicenseComplianceIndex(@Param('userId') userId: string) {
@@ -273,6 +280,8 @@ export class StatsController implements CrudController<Project> {
     return 'no data found';  
   }
 
+  // What is our monthly severe vulnerability index as defined by the formula: 
+  // total number of critical or high vulnerabilities detected in scans divided by total number of packages found in scans
   @Get('/highvulnerability/index/:userId')
   @ApiResponse({ status: 200})
   async getHighVulnerabilityIndex(@Param('userId') userId: string) {

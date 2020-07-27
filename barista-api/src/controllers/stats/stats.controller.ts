@@ -207,7 +207,13 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getTopComponents(@Param('userId') userId: string) {
     const query =
-      `select l2.name as "name", count(*) as "value" from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" group by 1 order by 2 desc limit 10`;
+      `SELECT l2.name AS "name", COUNT(*) AS "value"
+         FROM license l2, license_scan_result_item lsri, license_scan_result lsr,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2, project p2
+             WHERE p2.id = s2."projectId" AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE scan.id = lsr."scanId" AND lsri."licenseScanId" = lsr.id AND l2.id = lsri."licenseId"
+        GROUP BY 1 ORDER BY 2 DESC LIMIT 10`;
     const stats = await this.service.db.manager.query(query, [userId]);
 
     return stats;
@@ -218,7 +224,13 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getTopComponentScans(@Param('userId') userId: string) {
     const query =
-      `select lsri."displayIdentifier" as name, count(*) as value from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id group by 1 order by count(*) desc, 1 limit 10`;
+      `SELECT lsri."displayIdentifier" AS name, COUNT(*) AS value
+         FROM license l2, license_scan_result_item lsri, license_scan_result lsr, project p3,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2, project p2
+             WHERE p2.id = s2."projectId" AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE scan.id = lsr."scanId" AND lsri."licenseScanId" = lsr.id AND l2.id = lsri."licenseId" AND scan."projectId" = p3.id
+        GROUP BY 1 ORDER BY COUNT(*) DESC, 1 LIMIT 10`;
     const stats = await this.service.db.manager.query(query, [userId]);
 
     return stats;
@@ -230,7 +242,10 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getMonthlyProjects(@Param('userId') userId: string) {
     const query =
-      `SELECT date_trunc('month', p2.created_at::date)::date AS name, COUNT(*) as value FROM project p2 WHERE p2.development_type_code = 'organization' and p2."userId" like $1 GROUP BY 1 ORDER BY 1 limit 12;`;
+      `SELECT date_trunc('month', p2.created_at::date)::date AS name, COUNT(*) AS value
+         FROM project p2
+        WHERE p2.development_type_code = 'organization' AND p2."userId" LIKE $1
+        GROUP BY 1 ORDER BY 1 LIMIT 12;`;
     const stats = await this.service.db.manager.query(query, [userId]);
 
     return stats;
@@ -241,7 +256,10 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getMonthlyScans(@Param('userId') userId: string) {
     const query =
-      `SELECT date_trunc('month', ssr.created_at::date)::date AS name, COUNT(*) AS value FROM security_scan_result ssr, project p2 WHERE p2.development_type_code = 'organization' and p2."userId" like $1 GROUP BY 1 ORDER BY 1 limit 12;`;
+      `SELECT date_trunc('month', ssr.created_at::date)::date AS name, COUNT(*) AS value
+         FROM security_scan_result ssr, project p2
+        WHERE p2.development_type_code = 'organization' AND p2."userId" LIKE $1
+        GROUP BY 1 ORDER BY 1 LIMIT 12;`;
     const stats = await this.service.db.manager.query(query, [userId]);
 
     return stats;
@@ -252,7 +270,12 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getTopVulnerabilities(@Param('userId') userId: string) {
     const query =
-      `select ssri."path" as "name",count(*) as value from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id and p2.development_type_code = 'organization' and p2."userId" like $1 group by name, ssri."path" ,Upper(ssri.severity) ,ssri."displayIdentifier" ,ssri.description order by count(*) desc, name, Upper(ssri.severity) limit 10`;
+      `SELECT ssri."path" AS "name", COUNT(*) AS value
+         FROM project p2, security_scan_result_item ssri, security_scan_result ssr,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE ssr."scanId" = scan.id AND ssri."securityScanId" = ssr."scanId" AND scan."projectId" = p2.id AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1
+        GROUP BY name, ssri."path", UPPER(ssri.severity), ssri."displayIdentifier", ssri.description ORDER BY COUNT(*) DESC, name, UPPER(ssri.severity) LIMIT 10`;
     const stats = await this.service.db.manager.query(query, [userId]);
 
     return stats;
@@ -264,11 +287,21 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getLicenseComplianceIndex(@Param('userId') userId: string) {
     const query1 =
-      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, (select distinct on (s2."projectId" )s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and lsri.project_scan_status_type_code <> 'green'`;
+      `SELECT COUNT(*)
+         FROM license l2, license_scan_result_item lsri, license_scan_result lsr,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2, project p2
+             WHERE p2.id = s2."projectId" AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE scan.id = lsr."scanId" AND lsri."licenseScanId" = lsr.id AND l2.id = lsri."licenseId" AND lsri.project_scan_status_type_code <> 'green'`;
     const licenseProblemCount = await this.service.db.manager.query(query1, [userId]);
   
     const query2 =
-      `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from  scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`;
+      `SELECT COUNT(*)
+         FROM license l2, license_scan_result_item lsri, license_scan_result lsr, project p3,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2, project p2
+             WHERE p2.id = s2."projectId" AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE scan.id = lsr."scanId" AND lsri."licenseScanId" = lsr.id AND l2.id = lsri."licenseId" AND scan."projectId" = p3.id`;
     const licenseComponentCount = await this.service.db.manager.query(query2, [userId]);
 
     if (licenseProblemCount.length > 0 && licenseComponentCount.length > 0) { 
@@ -286,11 +319,20 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200})
   async getHighVulnerabilityIndex(@Param('userId') userId: string) {
     const query1 =
-      `select count(*) from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id and p2.development_type_code = 'organization' and p2."userId" like $1 and ssri."severity" in ('CRITICAL','HIGH')`; 
+      `SELECT COUNT(*)
+         FROM project p2, security_scan_result_item ssri, security_scan_result ssr,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE ssr."scanId" = scan.id AND ssri."securityScanId" = ssr."scanId" AND scan."projectId" = p2.id AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1 AND ssri."severity" IN ('CRITICAL','HIGH')`; 
     const highVulnerabilityCount = await this.service.db.manager.query(query1, [userId]);
 
     const query2 =
-      `select count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`; 
+      `SELECT COUNT(*)
+         FROM license l2, license_scan_result_item lsri, license_scan_result lsr, project p3,
+           (SELECT DISTINCT ON (s2."projectId") s2.id, s2."projectId"
+              FROM scan s2, project p2
+             WHERE p2.id = s2."projectId" AND p2.development_type_code = 'organization' AND p2."userId" LIKE $1 ORDER BY s2."projectId", s2.completed_at DESC) scan
+        WHERE scan.id = lsr."scanId" AND lsri."licenseScanId" = lsr.id AND l2.id = lsri."licenseId" AND scan."projectId" = p3.id`; 
     const licenseComponentCount = await this.service.db.manager.query(query2, [userId]);
 
     if (highVulnerabilityCount.length > 0 && licenseComponentCount.length > 0) {

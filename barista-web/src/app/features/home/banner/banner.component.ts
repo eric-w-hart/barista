@@ -9,7 +9,7 @@ import { UserInfo } from '@app/shared/api/model/user-info';
       <div class="image">
         <img src="assets/images/barista_logo_text_removed.png">
       </div>
-      <div class="mat-headline banner-text" style="text-align: center;">
+      <div class="mat-headline banner-text">
         Open Source Governance <br> Ensuring You Always Have a Great Brew
       </div>
       <div class="button">
@@ -20,7 +20,7 @@ import { UserInfo } from '@app/shared/api/model/user-info';
         </a>
       </div>
     </div>
-    <div class="button-toggle" *ngIf="isLoggedIn">
+    <div *ngIf="isLoggedIn" class="row button-toggle">
       <mat-button-toggle-group value="Organization">
         <div class="button">
           <mat-button-toggle (click)="changeDataset()" value="User" style="margin-right: 5px;"><span>User</span></mat-button-toggle>
@@ -35,10 +35,10 @@ import { UserInfo } from '@app/shared/api/model/user-info';
 })
 export class BannerComponent implements OnInit {
   // Member Variables:
-  @Input() isLoggedIn: boolean;
-  dataset: string;
-  @Output() changeDatasetEvent = new EventEmitter<string>();
   user: UserInfo;
+  dataset: string;
+  @Input() isLoggedIn: boolean;
+  @Output() changeDatasetEvent = new EventEmitter<string>();
 
   constructor(private userApi: UserApiService) { this.dataset = ''; }
   ngOnInit(): void { 
@@ -61,8 +61,6 @@ export class BannerComponent implements OnInit {
     } else {
       this.dataset = this.user.id;
     }
-
     this.sendDataset(this.dataset);
   }
-
 }

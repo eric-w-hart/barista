@@ -189,4 +189,16 @@ $hover-elevation: 5;
     }
 
 }
- 
+
+// adjusts ngx charts legend text color
+.chart-legend > div {
+  .legend-label {
+    color: #888;
+    .active {
+      .legend-label-text {
+        color: #000;
+      }
+    }
+  }
+}
+

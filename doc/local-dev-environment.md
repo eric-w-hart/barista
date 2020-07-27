@@ -3,7 +3,7 @@ Follow these steps on your Macintosh to load a development instance of the syste
 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
 2. Install [Brew](https://brew.sh/)
 3. Install [NVM](https://github.com/nvm-sh/nvm) using `brew install nvm` and don't forget to update your `.bash_profile`
-4. Install [Node 10.x LTS](https://nodejs.org) using NVM: `nvm install v10.16.0` and ensure that it is the version in use by checking ith the `node -v` command.
+4. Install [Node 12.x LTS](https://nodejs.org) using NVM: `nvm install v12.16.1` and ensure that it is the version in use by checking ith the `node -v` command.
 5. Install the [Yarn](https://yarnpkg.com/) dependency manager using the `npm i -g yarn` command.
 3. Clone the [repository](../)
 4. From within each application subdirectory (`barista-api`, `barista-scan`, `barista-web`) load dependencies using the `yarn install` command.

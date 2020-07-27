@@ -232,12 +232,12 @@ export class ProjectController implements CrudController<Project> {
           scanBranchDto.branch = branchName;
           branchesAndTags.push(scanBranchDto);
         }
-        const tag = element.indexOf('refs/tags/');
-        const tagName = element.substring(tag + 12);
-        if (tag > 0) {
-          scanBranchDto.branch = tagName;
-          branchesAndTags.push(scanBranchDto);
-        }
+        // const tag = element.indexOf('refs/tags/');
+        // const tagName = element.substring(tag + 12);
+        // if (tag > 0) {
+        //   scanBranchDto.branch = tagName;
+        //   branchesAndTags.push(scanBranchDto);
+        // }
       });
       return branchesAndTags;
     }

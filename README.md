@@ -1,3 +1,6 @@
+![buildcontainers](https://github.com/optum/barista/workflows/buildcontainers/badge.svg?branch=develop)
+![buildrelease](https://github.com/optum/barista/workflows/buildrelease/badge.svg?branch=master)
+
 # Barista ![alt text](./barista-web/src/assets/images/barista-icon.png)
 
 Project Barista is a developer focused, cloud native, pure open source solution for open source license and vulnerability management.  

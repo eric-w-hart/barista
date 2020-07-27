@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit, OnChanges {
   projectsAddedMonthly: any;
   monthlyProjectScans: any;
   highVulnerability: any;
-  licenseOnCompliance: any;
+  licenseNonCompliance: any;
   vulnerabilityThreshold: Threshold = {
     low: 2.5,
     medium: 5,
@@ -57,6 +57,16 @@ export class HomeComponent implements OnInit, OnChanges {
 
   getDatasets(){
     this.isLoggedIn = AuthService.isLoggedIn;
+    
+    this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
+      var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
+      this.highVulnerability = [{"name": displayName, "value": response}];
+    })
+
+    this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
+      var displayName = this.displaySeverity(response, this.licenseThreshold);
+      this.licenseNonCompliance = [{"name": displayName, "value": response}];
+    })
 
     this.statsApi.statsComponentsGet(this.dataset).subscribe((response) => {
       this.topComponentLicenseData = response;
@@ -78,16 +88,6 @@ export class HomeComponent implements OnInit, OnChanges {
     this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
-    })
-
-    this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
-      var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
-      this.highVulnerability = [{"name": displayName, "value": response}];
-    })
-
-    this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
-      var displayName = this.displaySeverity(response, this.licenseThreshold);
-      this.licenseOnCompliance = [{"name": displayName, "value": response}];
     })
   }
 
@@ -150,7 +150,7 @@ export class HomeComponent implements OnInit, OnChanges {
           break;
         }
         default: {
-          item.name = "Unknown" + " '" + item.name.substring(2, 4);
+          item.name = "Unknown";
           break;
         }
       }

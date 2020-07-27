@@ -56,13 +56,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="isLoadingStatsHighVulnerability">
+          <div *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
           <div *ngIf="!highVulnerability || highVulnerability.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-gauge-chart *ngIf="highVulnerability && !isLoadingStatsHighVulnerability" 
+          <app-gauge-chart *ngIf="highVulnerability && !isLoading" 
             [data]="highVulnerability"
             [max]="100"
             [angleSpan]="240"
@@ -99,13 +99,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="isLoadingStatsLicenseOnCompliance">
+          <div *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
           <div *ngIf="!licenseOnCompliance || licenseOnCompliance.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-gauge-chart *ngIf="licenseOnCompliance && !isLoadingStatsLicenseOnCompliance" 
+          <app-gauge-chart *ngIf="licenseOnCompliance && !isLoading" 
             [data]="licenseOnCompliance"
             [angleSpan]="240"
             [startAngle]="-120"
@@ -140,13 +140,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="isLoadingStatsVulnerabilities">
+          <div *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
           <div *ngIf="!topVulnerabilities || topVulnerabilities.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-horizontal-bar-chart *ngIf="topVulnerabilities && !isLoadingStatsVulnerabilities" [data]="topVulnerabilities" [legend]="true"
+          <app-horizontal-bar-chart *ngIf="topVulnerabilities && !isLoading" [data]="topVulnerabilities" [legend]="true"
             [legendTitle]="'Components:'" [xAxisLabel]="'Count'">
           </app-horizontal-bar-chart>
         </mat-card-content>
@@ -179,13 +179,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="isLoadingStatsComponent">
+          <div *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
           <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-horizontal-bar-chart *ngIf="topComponentLicenseData && !isLoadingStatsComponent" [data]="topComponentLicenseData" [legend]="true"
+          <app-horizontal-bar-chart *ngIf="topComponentLicenseData && !isLoading" [data]="topComponentLicenseData" [legend]="true"
             [legendTitle]="'Licenses:'" [xAxisLabel]="'Count'">
           </app-horizontal-bar-chart>
         </mat-card-content>
@@ -216,13 +216,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="isLoadingStatsProjects">
+          <div *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
           <div *ngIf="!projectsAddedMonthly || projectsAddedMonthly.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-bar-chart *ngIf="projectsAddedMonthly && !isLoadingStatsProjects" [data]="projectsAddedMonthly" [legend]="true"
+          <app-bar-chart *ngIf="projectsAddedMonthly && !isLoading" [data]="projectsAddedMonthly" [legend]="true"
             [legendTitle]="'Months:'" [xAxisLabel]="'Month'" [yAxisLabel]="'Count'">
           </app-bar-chart>
         </mat-card-content>
@@ -250,13 +250,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="isLoadingStatsProjectsScans">
+          <div *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
           <div *ngIf="!monthlyProjectScans || monthlyProjectScans.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-bar-chart *ngIf="monthlyProjectScans && !isLoadingStatsProjectsScans" [data]="monthlyProjectScans" [legend]="true"
+          <app-bar-chart *ngIf="monthlyProjectScans && !isLoading" [data]="monthlyProjectScans" [legend]="true"
             [legendTitle]="'Months:'" [xAxisLabel]="'Month'" [yAxisLabel]="'Count'">
           </app-bar-chart>
         </mat-card-content>

@@ -32,7 +32,11 @@
               </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile>
-              <mat-form-field class="field">
+              <mat-form-field
+                class="field"
+                [matTooltipDisabled]="!project.pathToUploadFileForScanning ? '' : null"
+                [matTooltip]="tooltips['gitUrl']"
+              >
                 <input
                   matInput
                   placeholder="GitHub Repo"
@@ -42,6 +46,7 @@
                   name="gitUrl"
                   [attr.required]="project.developmentType && project.developmentType.code != 'community'"
                   [matTooltip]="tooltips['gitUrl']"
+                  [disabled]="project.pathToUploadFileForScanning ? '' : null"
                 />
               </mat-form-field>
             </mat-grid-tile>
@@ -140,13 +145,18 @@
             </mat-grid-tile>
 
             <mat-grid-tile>
-              <mat-form-field class="field">
+              <mat-form-field
+                class="field"
+                [matTooltip]="tooltips['pathToUploadFileForScanning']"
+                [matTooltipDisabled]="!project.gitUrl ? '' : null"
+              >
                 <input
                   matInput
                   placeholder="Path to upload file for scanning"
                   [(ngModel)]="project.pathToUploadFileForScanning"
                   name="pathToUploadFileForScanning"
                   [matTooltip]="tooltips['pathToUploadFileForScanning']"
+                  [disabled]="project.gitUrl ? '' : null"
                 />
               </mat-form-field>
             </mat-grid-tile>

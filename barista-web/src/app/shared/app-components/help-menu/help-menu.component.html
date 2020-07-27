@@ -4,6 +4,6 @@
   </mat-menu>
 
   <button mat-button [matMenuTriggerFor]="helpMenu" #t="matMenuTrigger">
-    <img src="assets/images/information-circle-outline.svg" [class.infoClick]="t.menuOpen"/>
+    <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">info_outline</mat-icon>
   </button>
 </span>

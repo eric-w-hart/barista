@@ -22,18 +22,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
     authService.statusChange.pipe(untilDestroyed(this)).subscribe((value: AuthServiceStatus) => {
       this.message = value.statusMessage;
     });
+
     this.router.events.subscribe((routeData) => {
       if (routeData instanceof NavigationEnd) {
+        var route = this.router.routerState.root;
+        while (route.firstChild) {
+          route = route.firstChild;
+        }
+        const adminRoute = route.snapshot.data['isAdminRoute'];
         const path = routeData.urlAfterRedirects;
-        if (path.startsWith('/home')) {
+        if (adminRoute) {
+          this.onHome = false;
+          this.onProj = false;
+          this.onAdmin = true;
+        } else if (path.startsWith('/home')) {
           this.onHome = true;
           this.onProj = false;
-        } else if (path.startsWith('/projects') || path.startsWith('/project/')) {
+          this.onAdmin = false;
+        } else if (path.startsWith('/project')) {
+          this.onHome = false;
           this.onProj = true;
-          this.onHome = false;
+          this.onAdmin = false;
         } else {
-          this.onProj = false;
           this.onHome = false;
+          this.onProj = false;
+          this.onAdmin = false;
         }
       }
     });
@@ -44,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAdmin: boolean;
   onHome: boolean = false;
   onProj: boolean = false;
+  onAdmin: boolean = false;
   role: string;
   @Output() public sidenavToggle = new EventEmitter();
   userName: string;

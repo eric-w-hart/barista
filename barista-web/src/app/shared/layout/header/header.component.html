@@ -29,8 +29,8 @@
     </mat-menu>
 
     <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools">
-        <mat-icon class="routeIcon">how_to_reg</mat-icon> Admin
+      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools" [class.clicked]="onAdmin">
+        <mat-icon class="routeIcon" [class.clicked]="onAdmin">how_to_reg</mat-icon> Admin
       </button>
       <mat-menu #adminMenu="matMenu">
         <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">

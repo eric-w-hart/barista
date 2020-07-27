@@ -9,7 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
     {{ title }}
     <span style="float:right;">
         <a class="info">
-          <mat-icon style="cursor:default" [inline]="true">help_outline</mat-icon>
+          <mat-icon [inline]="true">help_outline</mat-icon>
           <span>
             <mat-card>
               <mat-card-content>

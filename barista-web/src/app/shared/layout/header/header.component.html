@@ -42,7 +42,7 @@
     <app-help-menu title="Help"></app-help-menu>
     <span *ngIf="isLoggedIn">
       <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
-        <img src="assets/images/person-circle-outline.svg" [class.profileClick]="t.menuOpen" />
+        <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">account_circle</mat-icon>
       </button>
       <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
         <div class="text mat-headline">Hello, {{ userName }}!</div>

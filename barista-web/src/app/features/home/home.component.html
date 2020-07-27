@@ -12,6 +12,7 @@
         [threshold]= "vulnerabilityThreshold"
         [dataset]="highVulnerability"
         [title]="'High Vulnerability Index'"
+        [isLoading]="isLoadingStatsHighVulnerability"
       >
       </app-chart-gauge>
     </div>
@@ -20,6 +21,7 @@
         [threshold]= "licenseThreshold"
         [dataset]="licenseNonCompliance"
         [title]="'License Risk Index'"
+        [isLoading]="isLoadingStatsLicenseNonCompliance"
       >
       </app-chart-gauge>
     </div>
@@ -31,6 +33,7 @@
         [title]="'Top 10 Vulnerabilities'"
         [description]="'This chart displays the top vulnerabilities in order of count, and not by severity. The higher the
         count, the more prevelant that vulnerability is in our database.'"
+        [isLoading]="isLoadingStatsVulnerabilities"
       >
       </app-chart-bar-horizontal>
     </div>
@@ -44,6 +47,7 @@
         projects being worked on.
         If our organization has a high number of non-permissive licenses in our projects, there could be
         some changes needed to adopt a more open-source development strategy.'"
+        [isLoading]="isLoadingStatsComponentsScans"
       >
       </app-chart-bar-horizontal>
     </div>
@@ -55,6 +59,7 @@
         [dataset]="projectsAddedMonthly"
         [title]="'Monthly Projects'"
         [description]="'How many projects have been created by month. Sorted by month, not by count.'"
+        [isLoading]="isLoadingStatsProjects"
       >
       </app-chart-bar-vertical>
     </div>
@@ -63,6 +68,7 @@
         [dataset]="monthlyProjectScans"
         [title]="'Monthly Scans'"
         [description]="'Number of scans done by month. Sorted by month, not by count.'"
+        [isLoading]="isLoadingStatsProjectsScans"
       >
       </app-chart-bar-vertical>
     </div>

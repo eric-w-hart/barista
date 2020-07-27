@@ -27,10 +27,13 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div class="spinner" *ngIf="isLoading">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!dataset || dataset.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-gauge-chart *ngIf="dataset" 
+          <app-gauge-chart *ngIf="dataset && !isLoading" 
             [data]="dataset"
             [angleSpan]="240"
             [startAngle]="-120"
@@ -47,6 +50,7 @@ export class ChartGaugeComponent implements OnInit {
   @Input() threshold: Threshold;
   @Input() dataset: any;
   @Input() title: string;
+  @Input() isLoading: boolean;
   
   constructor() { }
 

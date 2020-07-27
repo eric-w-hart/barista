@@ -22,10 +22,13 @@ import { Component, OnInit, Input } from '@angular/core';
     </div>
   </mat-card-title>
   <mat-card-content>
+    <div class="spinner" *ngIf="isLoading">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
     <div *ngIf="!dataset || dataset.length < 1">
       <h2> No data. </h2>
     </div>
-    <app-horizontal-bar-chart *ngIf="dataset" 
+    <app-horizontal-bar-chart *ngIf="dataset  && !isLoading" 
       [data]="dataset" 
       [legend]="true"
       [legendTitle]="'Components:'" 
@@ -41,6 +44,8 @@ export class ChartBarHorizontalComponent implements OnInit {
   @Input() dataset: any;
   @Input() title: string;
   @Input() description: string;
+  @Input() isLoading: boolean;
+
   constructor() { }
 
   ngOnInit(): void {

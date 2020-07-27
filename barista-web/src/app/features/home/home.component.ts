@@ -1,26 +1,22 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
-import { UserApiService } from '@app/shared/api/api/user-api.service';
-import { UserInfo } from '@app/shared/api/model/user-info';
+import { Threshold } from '@app/shared/interfaces/Threshold';
 
-interface Threshold{
-  low: number,
-  medium: number,
-  high: number,
-};
+// Sub-Component Imports:
+import { BannerComponent } from './banner/banner.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit, OnChanges {
-  constructor(private statsApi: StatsApiService, private userApi: UserApiService) {}
+  constructor(private statsApi: StatsApiService, ) {}
 
   isLoggedIn: boolean;
   dataset: string;
-  user: UserInfo;
 
   /* Data Variables */
   topComponentLicenseData: any;
@@ -54,18 +50,8 @@ export class HomeComponent implements OnInit, OnChanges {
     this.getDatasets();
   }
 
-  changeDataset(dataset?: string){
-    if(dataset){
-      // pass through generic selector
-      this.dataset = dataset;
-    } else {
-      // pass through userID
-      this.userApi.userMeGet().subscribe((response) => {
-        this.user = response;
-      })
-      this.dataset = this.user.id;
-    }
-    
+  receiveDataset($event){
+    this.dataset = $event;
     this.ngOnChanges();
   }
 

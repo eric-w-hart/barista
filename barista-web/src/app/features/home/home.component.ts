@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     this.ngOnChanges();
+    this.isLoading = false;
   }
 
   getDatasets(){
@@ -84,36 +85,30 @@ export class HomeComponent implements OnInit, OnChanges {
 
     this.statsApi.statsVulnerabilitiesGet(this.dataset).subscribe((response) => {
       this.topVulnerabilities = response;
-      this.isLoading = false;
     });
 
     this.statsApi.statsComponentsScansGet(this.dataset).subscribe((response) => {
       this.topComponentScansData = response;
-      this.isLoading = false;
     })
 
     this.statsApi.statsProjectsGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
-      this.isLoading = false;
     })
 
     this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
-      this.isLoading = false;
     })
 
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       this.highVulnerability = [{"name": displayName, "value": response}];
-      this.isLoading = false;
     })
 
     this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
-      this.isLoading = false;
     })
   }
 

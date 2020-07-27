@@ -22,7 +22,13 @@ export class HomeComponent implements OnInit, OnChanges {
   isLoggedIn: boolean;
   dataset: string;
   user: UserInfo;
-  isLoading: boolean;
+  isLoadingStatsComponent: boolean;
+  isLoadingStatsVulnerabilities: boolean;
+  isLoadingStatsComponentsScans: boolean;
+  isLoadingStatsProjects: boolean;
+  isLoadingStatsProjectsScans: boolean;
+  isLoadingStatsHighVulnerability: boolean;
+  isLoadingStatsLicenseOnCompliance: boolean;
 
   /* Data Variables */
   topComponentLicenseData: any;
@@ -48,14 +54,13 @@ export class HomeComponent implements OnInit, OnChanges {
    * Handles subscribing of data async's into data vars.
    */
   ngOnInit(): void {
-    this.isLoading = true;
+    this.isLoadingStatsComponent, this.isLoadingStatsVulnerabilities, this.isLoadingStatsComponentsScans, this.isLoadingStatsProjects, this.isLoadingStatsProjectsScans, this.isLoadingStatsHighVulnerability, this.isLoadingStatsLicenseOnCompliance = true;
     this.dataset = '%';
     this.getDatasets();
-    this.isLoading = false;
   }
 
   ngOnChanges():void {
-    this.isLoading = true;
+    this.isLoadingStatsComponent, this.isLoadingStatsVulnerabilities, this.isLoadingStatsComponentsScans, this.isLoadingStatsProjects, this.isLoadingStatsProjectsScans, this.isLoadingStatsHighVulnerability, this.isLoadingStatsLicenseOnCompliance = true;
     this.getDatasets();
   }
 
@@ -79,41 +84,41 @@ export class HomeComponent implements OnInit, OnChanges {
 
     this.statsApi.statsComponentsGet(this.dataset).subscribe((response) => {
       this.topComponentLicenseData = response;
-      this.isLoading = false;
+      this.isLoadingStatsComponent = false;
     });
 
     this.statsApi.statsVulnerabilitiesGet(this.dataset).subscribe((response) => {
       this.topVulnerabilities = response;
-      this.isLoading = false;
+      this.isLoadingStatsVulnerabilities = false;
     });
 
     this.statsApi.statsComponentsScansGet(this.dataset).subscribe((response) => {
       this.topComponentScansData = response;
-      this.isLoading = false;
+      this.isLoadingStatsComponentsScans = false;
     })
 
     this.statsApi.statsProjectsGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
-      this.isLoading = false;
+      this.isLoadingStatsProjects = false;
     })
 
     this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
-      this.isLoading = false;
+      this.isLoadingStatsProjectsScans = false;
     })
 
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       this.highVulnerability = [{"name": displayName, "value": response}];
-      this.isLoading = false;
+      this.isLoadingStatsHighVulnerability = false;
     })
 
     this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
       this.licenseOnCompliance = [{"name": displayName, "value": response}];
-      this.isLoading = false;
+      this.isLoadingStatsLicenseOnCompliance = false;
     })
   }
 

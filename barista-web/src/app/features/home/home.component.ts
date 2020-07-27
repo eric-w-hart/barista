@@ -14,7 +14,8 @@ export class HomeComponent implements OnInit, OnChanges {
 
   isLoggedIn: boolean;
   dataset: string;
-  user: UserInfo;
+
+  /* Loading Variables */
   isLoadingStatsComponent: boolean;
   isLoadingStatsVulnerabilities: boolean;
   isLoadingStatsComponentsScans: boolean;
@@ -47,14 +48,24 @@ export class HomeComponent implements OnInit, OnChanges {
    * Handles subscribing of data async's into data vars.
    */
   ngOnInit(): void {
-    this.isLoadingStatsComponent, this.isLoadingStatsVulnerabilities, this.isLoadingStatsComponentsScans, this.isLoadingStatsProjects, this.isLoadingStatsProjectsScans, this.isLoadingStatsHighVulnerability, this.isLoadingStatsLicenseOnCompliance = true;
+    this.initializeLoads();
     this.dataset = '%';
     this.getDatasets();
   }
 
   ngOnChanges():void {
-    this.isLoadingStatsComponent, this.isLoadingStatsVulnerabilities, this.isLoadingStatsComponentsScans, this.isLoadingStatsProjects, this.isLoadingStatsProjectsScans, this.isLoadingStatsHighVulnerability, this.isLoadingStatsLicenseOnCompliance = true;
+    this.initializeLoads();
     this.getDatasets();
+  }
+
+  initializeLoads(){
+    this.isLoadingStatsComponent = true; 
+    this.isLoadingStatsVulnerabilities = true; 
+    this.isLoadingStatsComponentsScans = true; 
+    this.isLoadingStatsProjects = true; 
+    this.isLoadingStatsProjectsScans = true; 
+    this.isLoadingStatsHighVulnerability = true; 
+    this.isLoadingStatsLicenseNonCompliance = true;
   }
 
   receiveDataset($event){

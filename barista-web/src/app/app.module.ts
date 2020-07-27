@@ -97,6 +97,10 @@ import { LicenseScanResultItemDetailsComponent } from './features/projects/proje
 import { SecurityScanResultItemDetailsComponent } from './features/projects/project-scans/project-scan-details/security-scan-result/security-scan-result-items/security-scan-result-item-details/security-scan-result-item-details.component';
 import { StatusComponent } from './features/status/status.component';
 import { HomeComponent } from './features/home/home.component';
+import { BannerComponent } from './features/home/banner/banner.component';
+import { ChartGaugeComponent } from './features/home/chart-gauge/chart-gauge.component';
+import { ChartBarHorizontalComponent } from './features/home/chart-bar-horizontal/chart-bar-horizontal.component';
+import { ChartBarVerticalComponent } from './features/home/chart-bar-vertical/chart-bar-vertical.component';
 
 // tslint:enable:max-line-length
 
@@ -172,6 +176,10 @@ export function apiConfigFactory(): Configuration {
     TooltipDetailsComponent,
     VulnerabilityStatusDeploymentTypesComponent,
     VulnerabilityStatusDeploymentTypesDetailsComponent,
+    BannerComponent,
+    ChartGaugeComponent,
+    ChartBarHorizontalComponent,
+    ChartBarVerticalComponent,
   ],
   imports: [
     StoreModule.forRoot(

@@ -56,10 +56,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div *ngIf="isLoadingStatsHighVulnerability">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!highVulnerability || highVulnerability.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-gauge-chart *ngIf="highVulnerability" 
+          <app-gauge-chart *ngIf="highVulnerability && !isLoadingStatsHighVulnerability" 
             [data]="highVulnerability"
             [max]="100"
             [angleSpan]="240"
@@ -96,10 +99,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div *ngIf="isLoadingStatsLicenseOnCompliance">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!licenseOnCompliance || licenseOnCompliance.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-gauge-chart *ngIf="licenseOnCompliance" 
+          <app-gauge-chart *ngIf="licenseOnCompliance && !isLoadingStatsLicenseOnCompliance" 
             [data]="licenseOnCompliance"
             [angleSpan]="240"
             [startAngle]="-120"
@@ -134,10 +140,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div *ngIf="isLoadingStatsVulnerabilities">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!topVulnerabilities || topVulnerabilities.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-horizontal-bar-chart *ngIf="topVulnerabilities" [data]="topVulnerabilities" [legend]="true"
+          <app-horizontal-bar-chart *ngIf="topVulnerabilities && !isLoadingStatsVulnerabilities" [data]="topVulnerabilities" [legend]="true"
             [legendTitle]="'Components:'" [xAxisLabel]="'Count'">
           </app-horizontal-bar-chart>
         </mat-card-content>
@@ -170,10 +179,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div *ngIf="isLoadingStatsComponent">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!topComponentLicenseData || topComponentLicenseData.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-horizontal-bar-chart *ngIf="topComponentLicenseData" [data]="topComponentLicenseData" [legend]="true"
+          <app-horizontal-bar-chart *ngIf="topComponentLicenseData && !isLoadingStatsComponent" [data]="topComponentLicenseData" [legend]="true"
             [legendTitle]="'Licenses:'" [xAxisLabel]="'Count'">
           </app-horizontal-bar-chart>
         </mat-card-content>
@@ -204,10 +216,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div *ngIf="isLoadingStatsProjects">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!projectsAddedMonthly || projectsAddedMonthly.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-bar-chart *ngIf="projectsAddedMonthly" [data]="projectsAddedMonthly" [legend]="true"
+          <app-bar-chart *ngIf="projectsAddedMonthly && !isLoadingStatsProjects" [data]="projectsAddedMonthly" [legend]="true"
             [legendTitle]="'Months:'" [xAxisLabel]="'Month'" [yAxisLabel]="'Count'">
           </app-bar-chart>
         </mat-card-content>
@@ -235,10 +250,13 @@
           </div>
         </mat-card-title>
         <mat-card-content>
+          <div *ngIf="isLoadingStatsProjectsScans">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+          </div>
           <div *ngIf="!monthlyProjectScans || monthlyProjectScans.length < 1">
             <h2> No data. </h2>
           </div>
-          <app-bar-chart *ngIf="monthlyProjectScans" [data]="monthlyProjectScans" [legend]="true"
+          <app-bar-chart *ngIf="monthlyProjectScans && !isLoadingStatsProjectsScans" [data]="monthlyProjectScans" [legend]="true"
             [legendTitle]="'Months:'" [xAxisLabel]="'Month'" [yAxisLabel]="'Count'">
           </app-bar-chart>
         </mat-card-content>

@@ -3,9 +3,6 @@ import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service'
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
 import { Threshold } from '@app/shared/interfaces/Threshold';
 
-// Sub-Component Imports:
-import { BannerComponent } from './banner/banner.component';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

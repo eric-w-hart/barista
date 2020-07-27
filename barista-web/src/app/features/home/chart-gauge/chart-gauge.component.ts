@@ -1,0 +1,57 @@
+import { Component, OnInit, Input } from '@angular/core';
+import { Threshold } from '@app/shared/interfaces/Threshold';
+
+@Component({
+  selector: 'app-chart-gauge',
+  template: `
+  <mat-card>
+        <mat-card-title>
+          <div>
+            {{ title }}
+            <span style="float:right;">
+              <a class="info">
+                <img src="assets/images/help-circle-outline.svg" />
+                <span>
+                  <mat-card>
+                    <mat-card-content>
+                      <h3>Index Thresholds</h3>
+                      Low: < {{ threshold.low }}<br>
+                      Medium: < {{ threshold.medium }}<br>
+                      High: < {{ threshold.high }}<br>
+                      Critical: > {{ threshold.high }}
+                    </mat-card-content>
+                  </mat-card>
+                </span>
+              </a>
+            </span>
+          </div>
+        </mat-card-title>
+        <mat-card-content>
+          <div *ngIf="!dataset || dataset.length < 1">
+            <h2> No data. </h2>
+          </div>
+          <app-gauge-chart *ngIf="dataset" 
+            [data]="dataset"
+            [angleSpan]="240"
+            [startAngle]="-120"
+            [max]="this.threshold.high"
+            >
+          </app-gauge-chart>
+        </mat-card-content>
+      </mat-card>
+  `,
+  styles: ['chart-gauge.component.scss',],
+})
+export class ChartGaugeComponent implements OnInit {
+  // Member Variables:
+  @Input() threshold: Threshold;
+  @Input() dataset: any;
+  @Input() title: string;
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+

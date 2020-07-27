@@ -10,7 +10,7 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
             {{ title }}
             <span style="float:right;">
               <a class="info">
-                <img src="assets/images/help-circle-outline.svg" />
+                <mat-icon style="cursor:default" [inline]="true">help_outline</mat-icon>
                 <span>
                   <mat-card>
                     <mat-card-content>

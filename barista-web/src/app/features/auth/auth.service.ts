@@ -117,6 +117,7 @@ export class AuthService implements OnDestroy {
 
   async logout() {
     localStorage.removeItem('accessToken');
+    this.statusChange.next({ isLoggedIn: false });
     await this.router.navigate(['/signin']);
     window.location.reload();
   }

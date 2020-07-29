@@ -17,7 +17,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   async ngOnInit() {
-    console.log('route = ' + this.route.snapshot.paramMap.get('projectDataTableType'));
     if (this.route.snapshot.paramMap.get('projectDataTableType')) {
       this.projectDataTableType = this.route.snapshot.paramMap.get('projectDataTableType');
     }

@@ -75,6 +75,10 @@ export class AuthService implements OnDestroy {
     );
   }
 
+  isProjectOwnerNonAdmin(project: Project): boolean {
+    return project.userId === this.userInfo.id;
+  }
+
   async login(username: string, password: string) {
     let status: AuthServiceStatus = {
       isLoggingIn: true,

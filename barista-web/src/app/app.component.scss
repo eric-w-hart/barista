@@ -54,6 +54,7 @@ main app-home {
   background-position: center top;
   background-attachment: fixed;
   background-size: cover;
+  min-height: 100%;
 }
 
 ::-webkit-scrollbar {

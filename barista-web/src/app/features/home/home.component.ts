@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit, OnChanges {
     
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
-      if (response == -1){
+      if (Number(response) == -1){
         this.highVulnerability = [];
       } else {
         this.highVulnerability = [{"name": displayName, "value": response}];
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit, OnChanges {
 
     this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
-      if (response == -1){
+      if (Number(response) == -1){
         this.licenseNonCompliance = [];
       } else {
         this.licenseNonCompliance = [{"name": displayName, "value": response}];

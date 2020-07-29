@@ -80,7 +80,7 @@ const CommandHandlers = [LogProjectChangeCommandHandler];
     CqrsModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '28800s' },
     }),
   ],
   exports: services,

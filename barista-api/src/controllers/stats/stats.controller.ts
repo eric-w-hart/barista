@@ -247,7 +247,7 @@ export class StatsController implements CrudController<Project> {
   @ApiResponse({ status: 200 })
   async getTopVulnerabilities(@Param('userId') userId: string) {
     const query =
-      `select ssri."path" as "name",count(*) as value from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id and p2.development_type_code = 'organization' and p2."userId" like $1 group by name, ssri."path" ,Upper(ssri.severity) ,ssri."displayIdentifier" ,ssri.description order by count(*) desc, name, Upper(ssri.severity) limit 10`;
+          `select distinct ssri."path" as "name", count(*) as value from project p2 , security_scan_result_item ssri , security_scan_result ssr , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2 order by s2."projectId" , s2.completed_at desc) scan where ssr."scanId" = scan.id and ssri."securityScanId" = ssr."scanId" and scan."projectId" = p2.id and p2.development_type_code = 'organization' and p2."userId" like $1 and ssri."severity" in ('CRITICAL','HIGH') group by ssri."path" order by count(*) desc limit 10`;
     const stats = await this.service.db.manager.query(query, [userId]);
 
     return stats;

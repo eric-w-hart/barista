@@ -1,27 +1,29 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
-import { UserApiService } from '@app/shared/api/api/user-api.service';
-import { UserInfo } from '@app/shared/api/model/user-info';
-
-interface Threshold{
-  low: number,
-  medium: number,
-  high: number,
-};
+import { Threshold } from '@app/shared/interfaces/Threshold';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit, OnChanges {
-  constructor(private statsApi: StatsApiService, private userApi: UserApiService) {}
+  constructor(private statsApi: StatsApiService, ) {}
 
   isLoggedIn: boolean;
   dataset: string;
-  user: UserInfo;
 
+  /* Loading Variables */
+  isLoadingStatsComponent: boolean;
+  isLoadingStatsVulnerabilities: boolean;
+  isLoadingStatsComponentsScans: boolean;
+  isLoadingStatsProjects: boolean;
+  isLoadingStatsProjectsScans: boolean;
+  isLoadingStatsHighVulnerability: boolean;
+  isLoadingStatsLicenseNonCompliance: boolean;
+  
   /* Data Variables */
   topComponentLicenseData: any;
   topComponentScansData: any;
@@ -29,7 +31,7 @@ export class HomeComponent implements OnInit, OnChanges {
   projectsAddedMonthly: any;
   monthlyProjectScans: any;
   highVulnerability: any;
-  licenseOnCompliance: any;
+  licenseNonCompliance: any;
   vulnerabilityThreshold: Threshold = {
     low: 2.5,
     medium: 5,
@@ -46,62 +48,71 @@ export class HomeComponent implements OnInit, OnChanges {
    * Handles subscribing of data async's into data vars.
    */
   ngOnInit(): void {
+    this.initializeLoads();
     this.dataset = '%';
     this.getDatasets();
   }
 
   ngOnChanges():void {
+    this.initializeLoads();
     this.getDatasets();
   }
 
-  changeDataset(dataset?: string){
-    if(dataset){
-      // pass through generic selector
-      this.dataset = dataset;
-    } else {
-      // pass through userID
-      this.userApi.userMeGet().subscribe((response) => {
-        this.user = response;
-      })
-      this.dataset = this.user.id;
-    }
-    
+  initializeLoads(){
+    this.isLoadingStatsComponent = true; 
+    this.isLoadingStatsVulnerabilities = true; 
+    this.isLoadingStatsComponentsScans = true; 
+    this.isLoadingStatsProjects = true; 
+    this.isLoadingStatsProjectsScans = true; 
+    this.isLoadingStatsHighVulnerability = true; 
+    this.isLoadingStatsLicenseNonCompliance = true;
+  }
+
+  receiveDataset($event){
+    this.dataset = $event;
     this.ngOnChanges();
   }
 
   getDatasets(){
     this.isLoggedIn = AuthService.isLoggedIn;
+    
+    this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
+      var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
+      this.highVulnerability = [{"name": displayName, "value": response}];
+      this.isLoadingStatsHighVulnerability = false;
+    })
+
+    this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
+      var displayName = this.displaySeverity(response, this.licenseThreshold);
+      this.licenseNonCompliance = [{"name": displayName, "value": response}];
+      this.isLoadingStatsLicenseNonCompliance = false;
+    })
 
     this.statsApi.statsComponentsGet(this.dataset).subscribe((response) => {
       this.topComponentLicenseData = response;
+      this.isLoadingStatsComponent = false;
     });
 
     this.statsApi.statsVulnerabilitiesGet(this.dataset).subscribe((response) => {
       this.topVulnerabilities = response;
+      this.isLoadingStatsVulnerabilities = false;
     });
 
     this.statsApi.statsComponentsScansGet(this.dataset).subscribe((response) => {
       this.topComponentScansData = response;
+      this.isLoadingStatsComponentsScans = false;
     })
 
     this.statsApi.statsProjectsGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
+      this.isLoadingStatsProjects = false;
     })
 
     this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
-    })
-
-    this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
-      var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
-      this.highVulnerability = [{"name": displayName, "value": response}];
-    })
-
-    this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
-      var displayName = this.displaySeverity(response, this.licenseThreshold);
-      this.licenseOnCompliance = [{"name": displayName, "value": response}];
+      this.isLoadingStatsProjectsScans = false;
     })
   }
 
@@ -164,7 +175,7 @@ export class HomeComponent implements OnInit, OnChanges {
           break;
         }
         default: {
-          item.name = "Unknown" + " '" + item.name.substring(2, 4);
+          item.name = "Unknown";
           break;
         }
       }

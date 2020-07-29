@@ -99,6 +99,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     return res;
   }
 
+  get adminChildItems(): NavItem[] {
+    let res = this.adminNavItems[0].children;
+    return res;
+  }
+
   showFooter = true;
   showHeader = true;
   showSidebar = true;

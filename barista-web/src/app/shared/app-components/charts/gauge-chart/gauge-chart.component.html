@@ -1,0 +1,21 @@
+<div *ngIf="data && data.length >= 1" class="chart-container">
+  <div class="chart">
+    <ngx-charts-gauge
+      [scheme]="colorScheme"
+      [results]="data"
+      [legend]="legend"
+      [legendPosition]="legendPosition"
+      [legendTitle]="legendTitle"
+      [units]="units"
+      [valueFormatting]="format"
+      [max]="max"
+      [customColors]="customColors"
+      [angleSpan]="angleSpan"
+      [startAngle]="startAngle"
+      [showAxis]="false"
+      [bigSegments]="10"
+      [smallSegments]="5"
+      >
+    </ngx-charts-gauge>
+  </div>
+</div>

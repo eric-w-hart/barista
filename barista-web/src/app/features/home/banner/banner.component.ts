@@ -21,7 +21,7 @@ import { UserInfo } from '@app/shared/api/model/user-info';
       </div>
     </div>
     <div *ngIf="isLoggedIn" class="row button-toggle">
-      <mat-button-toggle-group value="User">
+      <mat-button-toggle-group value="Organization">
         <div class="button">
           <mat-button-toggle (click)="changeDataset()" value="User" style="margin-right: 5px;"><span>User</span></mat-button-toggle>
         </div>

@@ -20,7 +20,7 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
                       High: < {{ threshold.high }}<br>
                       Critical: > {{ threshold.high }} <br>
                       <div *ngIf=isLoggedIn>
-                        <h2> Help </h2>
+                        <h3> Help: </h3>
                         {{ help }}
                       </div>
                     </mat-card-content>

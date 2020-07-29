@@ -13,11 +13,12 @@ import { Component, OnInit, Input } from '@angular/core';
           <span>
             <mat-card>
               <mat-card-content>
+                <h3> About:</h3>
                 {{ description }} <br>
                 <div *ngIf=isLoggedIn>
-                        <h2> Help </h2>
-                        {{ help }}
-                      </div>
+                  <h3> Help: </h3>
+                  {{ help }}
+                </div>
               </mat-card-content>
             </mat-card>
           </span>

@@ -9,8 +9,8 @@
       Home
     </button>
 
-    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu" [class.clicked]="onProj">
-      <mat-icon class="routeIcon" [class.clicked]="onProj">source</mat-icon>
+    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu" #t="matMenuTrigger" [class.clicked]="onProj || t.menuOpen">
+      <mat-icon class="routeIcon" [class.clicked]="onProj || t.menuOpen">source</mat-icon>
       Projects
     </button>
     <mat-menu #projectsMenu="matMenu">
@@ -29,8 +29,8 @@
     </mat-menu>
 
     <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button [matMenuTriggerFor]="adminMenu" title="Admin Tools" [class.clicked]="onAdmin">
-        <mat-icon class="routeIcon" [class.clicked]="onAdmin">how_to_reg</mat-icon> Admin
+      <button mat-button [matMenuTriggerFor]="adminMenu" #t="matMenuTrigger" title="Admin Tools" [class.clicked]="onAdmin || t.menuOpen">
+        <mat-icon class="routeIcon" [class.clicked]="onAdmin || t.menuOpen">how_to_reg</mat-icon> Admin
       </button>
       <mat-menu #adminMenu="matMenu">
         <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">

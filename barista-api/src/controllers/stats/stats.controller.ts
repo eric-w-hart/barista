@@ -16,7 +16,6 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
-  Logger,
 } from '@nestjs/common';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -47,8 +46,6 @@ export class StatsController implements CrudController<Project> {
   get base(): CrudController<Project> {
     return this;
   }
-
-  logger = new Logger('statController');
 
   @Override()
   async getMany(@ParsedRequest() req: CrudRequest) {
@@ -264,13 +261,13 @@ export class StatsController implements CrudController<Project> {
       `select  count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from  scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`;
     const licenseComponentCount = await this.service.db.manager.query(query2, [userId]);
 
-    if (licenseProblemCount.length > 0 && licenseComponentCount.length > 0) { 
+    if (licenseProblemCount.length > 0 && licenseComponentCount.length > 0 && licenseComponentCount[0].count > 0) { 
       const licenseComplianceIndex = (licenseProblemCount[0].count / licenseComponentCount[0].count * 100); 
 
       return licenseComplianceIndex;
     } 
 
-    return 'no data found';  
+    return -1;  
   }
 
   @Get('/highvulnerability/index/:userId')
@@ -284,12 +281,12 @@ export class StatsController implements CrudController<Project> {
       `select count(*) from license l2, license_scan_result_item lsri , license_scan_result lsr, project p3 , (select distinct on (s2."projectId" ) s2.id, s2."projectId" from scan s2, project p2 where p2.id = s2."projectId" and p2.development_type_code = 'organization' and p2."userId" like $1 order by s2."projectId" , s2.completed_at desc ) scan where scan.id = lsr."scanId" and lsri."licenseScanId" = lsr.id and l2.id = lsri."licenseId" and scan."projectId" = p3.id`; 
     const licenseComponentCount = await this.service.db.manager.query(query2, [userId]);
 
-    if (highVulnerabilityCount.length > 0 && licenseComponentCount.length > 0) {
+    if (highVulnerabilityCount.length > 0 && licenseComponentCount.length > 0 && licenseComponentCount[0].count > 0) {
       const highVulnerabilityIndex = highVulnerabilityCount[0].count / licenseComponentCount[0].count * 100; 
 
       return highVulnerabilityIndex; 
     } 
 
-    return 'no data found'; 
+    return -1; 
   }
 }

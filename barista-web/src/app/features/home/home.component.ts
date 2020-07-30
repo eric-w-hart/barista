@@ -50,7 +50,6 @@ export class HomeComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.isLoggedIn = AuthService.isLoggedIn;
     const { userInfo } = this.authService;
-    console.log(userInfo.id)
     this.initializeLoads();
     this.isLoggedIn ? this.dataset = userInfo.id : this.dataset = '%';
     this.getDatasets();

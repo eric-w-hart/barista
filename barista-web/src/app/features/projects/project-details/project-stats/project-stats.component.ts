@@ -78,10 +78,10 @@ export class ProjectStatsComponent implements OnInit {
             var data: ChartElementDto[] = _.map(items, (item: any) => {
               return {'name': item.severity, 'value': Number(item.count)};
             });
-            let severityNames: string[] = severityLabels.map((item) => item.toUpperCase());
-            let resultArray: string[] = severityNames.filter(item => severityLabels.indexOf(item) < 0);
+            let dataNames: string[] = data.map((item) => item.name.toUpperCase());
+            let result: string[] = severityLabels.filter(item => dataNames.indexOf(item) < 0);
             return data
-            .concat(resultArray.map((item) => {
+            .concat(result.map((item) => {
               return {'name': item.toUpperCase(), 'value': 0}
             }))
             .sort((a, b) => {

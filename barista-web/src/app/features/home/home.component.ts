@@ -78,13 +78,21 @@ export class HomeComponent implements OnInit, OnChanges {
     
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
-      this.highVulnerability = [{"name": displayName, "value": response}];
+      if (Number(response) == -1){
+        this.highVulnerability = [];
+      } else {
+        this.highVulnerability = [{"name": displayName, "value": response}];
+      }
       this.isLoadingStatsHighVulnerability = false;
     })
 
     this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
-      this.licenseNonCompliance = [{"name": displayName, "value": response}];
+      if (Number(response) == -1){
+        this.licenseNonCompliance = [];
+      } else {
+        this.licenseNonCompliance = [{"name": displayName, "value": response}];
+      }
       this.isLoadingStatsLicenseNonCompliance = false;
     })
 

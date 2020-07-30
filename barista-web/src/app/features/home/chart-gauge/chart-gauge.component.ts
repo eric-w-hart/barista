@@ -18,7 +18,11 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
                       Low: < {{ threshold.low }}<br>
                       Medium: < {{ threshold.medium }}<br>
                       High: < {{ threshold.high }}<br>
-                      Critical: > {{ threshold.high }}
+                      Critical: > {{ threshold.high }} <br>
+                      <div *ngIf=isLoggedIn>
+                        <h3> Help: </h3>
+                        {{ help }}
+                      </div>
                     </mat-card-content>
                   </mat-card>
                 </span>
@@ -47,10 +51,12 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
 })
 export class ChartGaugeComponent implements OnInit {
   // Member Variables:
+  @Input() isLoggedIn: boolean;
   @Input() threshold: Threshold;
   @Input() dataset: any;
   @Input() title: string;
   @Input() isLoading: boolean;
+  @Input() help: string;
   
   constructor() { }
 

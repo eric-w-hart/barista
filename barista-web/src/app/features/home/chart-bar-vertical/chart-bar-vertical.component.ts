@@ -13,7 +13,12 @@ import { Component, OnInit, Input } from '@angular/core';
             <span>
               <mat-card>
                 <mat-card-content>
-                  {{ description }}
+                <h3> About:</h3>
+                  {{ description }} <br>
+                  <div *ngIf=isLoggedIn>
+                    <h3> Help: </h3>
+                    {{ help }}
+                  </div>
                 </mat-card-content>
               </mat-card>
             </span>
@@ -42,10 +47,12 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ChartBarVerticalComponent implements OnInit {
   // Member Variables:
+  @Input() isLoggedIn: boolean;
   @Input() dataset: any;
   @Input() title: string;
   @Input() description: string;
   @Input() isLoading: boolean;
+  @Input() help: string;
 
   constructor() { }
 

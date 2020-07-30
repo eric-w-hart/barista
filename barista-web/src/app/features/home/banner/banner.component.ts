@@ -21,11 +21,11 @@ import { UserInfo } from '@app/shared/api/model/user-info';
       </div>
     </div>
     <div *ngIf="isLoggedIn" class="row button-toggle">
-      <mat-button-toggle-group value="Organization">
+      <mat-button-toggle-group value="User">
         <div class="button">
           <mat-button-toggle (click)="changeDataset()" value="User" style="margin-right: 5px;"><span>User</span></mat-button-toggle>
         </div>
-        <div class="button"> 
+        <div class="button">
           <mat-button-toggle (click)="changeDataset('%')" value="Organization" style="margin-left: 5px;"><span>Organization</span></mat-button-toggle>
         </div>
       </mat-button-toggle-group>
@@ -41,7 +41,7 @@ export class BannerComponent implements OnInit {
   @Output() changeDatasetEvent = new EventEmitter<string>();
 
   constructor(private userApi: UserApiService) { this.dataset = ''; }
-  ngOnInit(): void { 
+  ngOnInit(): void {
     if(this.isLoggedIn){
       // pass through userID
       this.userApi.userMeGet().subscribe((response) => {

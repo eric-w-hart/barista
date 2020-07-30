@@ -4,13 +4,13 @@
       <img src="assets/images/barista_logo_coffee_left.png" width="100%" />
     </button>
     <span class="fill-space"></span>
-    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit" [class.clicked]="onHome">
-      <mat-icon class="routeIcon" [class.clicked]="onHome">home</mat-icon>
+    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit" [class.clicked]="onHome && !menuClicked">
+      <mat-icon class="routeIcon">home</mat-icon>
       Home
     </button>
 
-    <button *ngIf="isLoggedIn" mat-button [matMenuTriggerFor]="projectsMenu" #t="matMenuTrigger" [class.clicked]="onProj || t.menuOpen">
-      <mat-icon class="routeIcon" [class.clicked]="onProj || t.menuOpen">source</mat-icon>
+    <button *ngIf="isLoggedIn" mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="projectsMenu" #t="matMenuTrigger" [class.clicked]="onProj && !menuClicked || t.menuOpen">
+      <mat-icon class="routeIcon">source</mat-icon>
       Projects
     </button>
     <mat-menu #projectsMenu="matMenu">
@@ -29,8 +29,8 @@
     </mat-menu>
 
     <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button [matMenuTriggerFor]="adminMenu" #t="matMenuTrigger" title="Admin Tools" [class.clicked]="onAdmin || t.menuOpen">
-        <mat-icon class="routeIcon" [class.clicked]="onAdmin || t.menuOpen">how_to_reg</mat-icon> Admin
+      <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="adminMenu" #t="matMenuTrigger" title="Admin Tools" [class.clicked]="onAdmin && !menuClicked || t.menuOpen">
+        <mat-icon class="routeIcon">how_to_reg</mat-icon> Admin
       </button>
       <mat-menu #adminMenu="matMenu">
         <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">
@@ -39,9 +39,9 @@
         </button>
       </mat-menu>
     </span>
-    <app-help-menu title="Help"></app-help-menu>
+    <app-help-menu (menuClick)="receiveHelpEvent($event)" title="Help"></app-help-menu>
     <span *ngIf="isLoggedIn">
-      <button mat-button [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
+      <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
         <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">account_circle</mat-icon>
       </button>
       <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">

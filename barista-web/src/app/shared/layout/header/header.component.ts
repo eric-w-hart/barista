@@ -58,6 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onHome: boolean = false;
   onProj: boolean = false;
   onAdmin: boolean = false;
+  menuClicked: boolean = false;
   role: string;
   @Output() public sidenavToggle = new EventEmitter();
   userName: string;
@@ -103,5 +104,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isSignIn() {
     return this.router.url.endsWith('/signin');
+  }
+
+  menuOpened() {
+    this.menuClicked = true;
+  }
+
+  menuClosed() {
+    this.menuClicked = false;
+  }
+
+  receiveHelpEvent($event){
+    $event ? this.menuOpened() : this.menuClosed();
   }
 }

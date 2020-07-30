@@ -3,7 +3,7 @@
     <a *ngFor="let menuItem of helpMenuItems" [href]="menuItem.url" target="_blank" mat-menu-item>{{ menuItem.title }}</a>
   </mat-menu>
 
-  <button mat-button [matMenuTriggerFor]="helpMenu" #t="matMenuTrigger">
+  <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="helpMenu" #t="matMenuTrigger">
     <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">info_outline</mat-icon>
   </button>
 </span>

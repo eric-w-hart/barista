@@ -12,7 +12,7 @@
           </div>
           <div class="chart">
             <app-pie-chart
-            *ngIf="licenseData"
+            *ngIf="licenseData && !isLoadingLicenseData"
             [data]="licenseData"
             [legend]="true"
             [legendTitle]="'Licenses:'"
@@ -36,7 +36,7 @@
           </div>
           <div class="chart">
             <app-pie-chart
-            *ngIf="severityData"
+            *ngIf="severityData && !isLoadingSeverityData"
             [data]="severityData"
             [legend]="true"
             [legendTitle]="'Severities:'"
@@ -60,7 +60,7 @@
           </div>
           <div class="chart">
             <app-pie-chart
-            *ngIf="vulnerabilityData"
+            *ngIf="vulnerabilityData && !isLoadingVulnerabilityData"
             [data]="vulnerabilityData"
             [legend]="true"
             [legendTitle]="'Vulnerabilities:'"

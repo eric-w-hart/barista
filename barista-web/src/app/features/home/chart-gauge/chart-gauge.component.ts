@@ -34,7 +34,7 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
           <div class="spinner" *ngIf="isLoading">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
-          <div *ngIf="!dataset || dataset.length < 1">
+          <div *ngIf="(!dataset || dataset.length < 1) && !isLoading">
             <h2> No data. </h2>
           </div>
           <app-gauge-chart *ngIf="dataset && !isLoading" 

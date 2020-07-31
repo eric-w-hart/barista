@@ -7,7 +7,7 @@
           <div class="spinner" *ngIf="isLoadingLicenseData">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
-          <div *ngIf="!licenseData || licenseData.length < 1">
+          <div *ngIf="(!licenseData || licenseData.length < 1) && !isLoadingLicenseData">
             <h2>No license data to display.</h2>
           </div>
           <div class="chart">
@@ -31,7 +31,7 @@
           <div class="spinner" *ngIf="isLoadingSeverityData">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
-          <div *ngIf="!severityData || severityData.length < 1">
+          <div *ngIf="(!severityData || severityData.length < 1) && !isLoadingSeverityData">
             <h2>No severity data to display.</h2>
           </div>
           <div class="chart">
@@ -55,7 +55,7 @@
           <div class="spinner" *ngIf="isLoadingVulnerabilityData">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
           </div>
-          <div *ngIf="!vulnerabilityData || vulnerabilityData.length < 1">
+          <div *ngIf="(!vulnerabilityData || vulnerabilityData.length < 1) && !isLoadingVulnerabilityData">
             <h2>No vulnerability data to display.</h2>
           </div>
           <div class="chart">

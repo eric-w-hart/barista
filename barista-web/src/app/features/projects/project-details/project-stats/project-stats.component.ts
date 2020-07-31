@@ -20,15 +20,21 @@ export class ProjectStatsComponent implements OnInit {
   constructor() {}
 
   licenseData;
+  isLoadingLicenseData: boolean;
   @Input() licenseData$: Observable<ProjectDistinctLicenseDto>;
 
   severityData;
+  isLoadingSeverityData: boolean;
   @Input() severityData$: Observable<ProjectDistinctSeverityDto>;
 
   vulnerabilityData;
+  isLoadingVulnerabilityData: boolean;
   @Input() vulnerabilityData$: Observable<ProjectDistinctVulnerabilityDto>;
 
   ngOnInit() {
+    this.isLoadingLicenseData = true;
+    this.isLoadingSeverityData = true;
+    this.isLoadingVulnerabilityData = true;
     if (this.licenseData$) {
       this.licenseData$
         .pipe(
@@ -46,6 +52,7 @@ export class ProjectStatsComponent implements OnInit {
         )
         .subscribe(data => {
           this.licenseData = data;
+          this.isLoadingLicenseData = false;
         });
     }
 
@@ -66,6 +73,7 @@ export class ProjectStatsComponent implements OnInit {
         )
         .subscribe(data => {
           this.vulnerabilityData = data;
+          this.isLoadingVulnerabilityData = false;
         });
     }
 
@@ -93,6 +101,7 @@ export class ProjectStatsComponent implements OnInit {
         )
         .subscribe(data => {
           this.severityData = data;
+          this.isLoadingSeverityData = false;
         });
     }
   }

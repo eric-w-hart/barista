@@ -25,6 +25,9 @@ $column-margin: 15px;
     }
 
     .mat-card-content{
+        h2 {
+            text-align: center;
+        }
         .spinner{
             display: flex;
             width: 100%;

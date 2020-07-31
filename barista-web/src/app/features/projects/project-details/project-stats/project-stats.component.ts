@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ProjectDistinctLicenseDto,
   ProjectDistinctSeverityDto,
@@ -13,6 +13,7 @@ import { first, map } from 'rxjs/operators';
   selector: 'app-project-stats',
   templateUrl: './project-stats.component.html',
   styleUrls: ['./project-stats.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProjectStatsComponent implements OnInit {
   constructor() {}

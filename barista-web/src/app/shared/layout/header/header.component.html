@@ -1,6 +1,8 @@
 <div>
   <mat-toolbar color="primary">
-      <img class="logo" src="assets/images/barista_logo_coffee_left.png" width="100%" />
+    <button class="logo" mat-button (click)="homeLink()" title="Home">
+      <img src="assets/images/barista_logo_coffee_left.png" width="100%" />
+    </button>
     <span class="fill-space"></span>
     <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit" [class.clicked]="onHome && !menuClicked">
       <mat-icon class="routeIcon">home</mat-icon>
@@ -51,8 +53,8 @@
     </span>
     <form>
       <span *ngIf="!isLoggedIn && !isSignIn()">
-        <input matInput placeholder="Username" [(ngModel)]="username" name="username" /><br />
-        <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" />
+        <input placeholder="Username" [(ngModel)]="username" name="username" /><br />
+        <input placeholder="Password" [(ngModel)]="password" type="password" name="password" />
       </span>
       <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Sign In</button>
     </form>

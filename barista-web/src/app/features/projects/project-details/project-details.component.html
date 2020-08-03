@@ -3,12 +3,12 @@
   <mat-card-header>
     <mat-card-title>
       <h1>{{ project?.name || '*New Project' }}</h1>
-      <app-project-status [project]="project" *ngIf="!newProject && project.id"></app-project-status>
+      <app-project-status [project]="project" *ngIf="!newProject && project?.id"></app-project-status>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="onTabChanged($event)">
-      <mat-tab label="Project Overview" *ngIf="!newProject && project.id">
+      <mat-tab label="Project Overview" *ngIf="!newProject && project?.id">
         <app-project-stats
           [licenseData$]="licenseData$"
           [severityData$]="severityData$"
@@ -211,7 +211,7 @@
                 color="primary"
                 type="”button”"
                 (click)="addManualLicense()"
-                [disabled]="project.developmentType.code != 'community' || project.id == undefined"
+                [disabled]="project.developmentType.code != 'community' || project?.id == undefined"
                 *ngIf="!defaultManualLicense && project?.developmentType?.code == 'community'"
               >
                 Add Manual License
@@ -252,16 +252,16 @@
           </button>
         </form>
       </mat-tab>
-      <mat-tab label="Scans" *ngIf="!newProject && project.id">
+      <mat-tab label="Scans" *ngIf="!newProject && project?.id">
         <app-project-scans></app-project-scans>
       </mat-tab>
-      <mat-tab label="Obligations" *ngIf="!newProject && project.id">
+      <mat-tab label="Obligations" *ngIf="!newProject && project?.id">
         <app-obligations [project]="project"></app-obligations>
       </mat-tab>
-      <mat-tab label="Bill of Materials" *ngIf="!newProject && project.id">
+      <mat-tab label="Bill of Materials" *ngIf="!newProject && project?.id">
         <app-bill-of-materials [project]="project"></app-bill-of-materials>
       </mat-tab>
-      <mat-tab label="Notes" *ngIf="!newProject && project.id">
+      <mat-tab label="Notes" *ngIf="!newProject && project?.id">
         <app-project-notes [project]="project"></app-project-notes>
       </mat-tab>
     </mat-tab-group>

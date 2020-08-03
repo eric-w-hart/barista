@@ -200,14 +200,18 @@ $hover-elevation: 5;
 
 }
 
-// adjusts ngx charts legend text color
+// adjusts ngx charts legends
 .chart-legend > div {
   height: auto !important;
-  .legend-label {
-    color: #888;
-    .active {
-      .legend-label-text {
-        color: #000;
+  .legend-labels {
+    max-height: 240px;
+    overflow-y: visible !important;
+    .legend-label {
+      color: #888;
+      .active {
+        .legend-label-text {
+          color: #000;
+        }
       }
     }
   }

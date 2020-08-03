@@ -70,9 +70,13 @@ $column-margin: 15px;
 }
 
 ::ng-deep.chart-legend > div {
-  height: 200px;
+  // 10 legend items
+  height: calc(10 * 27px);
   .legend-labels {
-    max-height: 200px !important;
+    max-height: calc(10 * 27px - 20px) !important;
     overflow-y: scroll;
+    .legend-label {
+      color: #888;
+    }
   }
 }

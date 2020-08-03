@@ -36,31 +36,7 @@ export class ProjectScanDetailsComponent implements OnInit, OnDestroy {
         .subscribe((projects) => {
           if (projects.length > 0) {
             const projectDetail = { ...projects[0] };
-            let projectListType = [
-              {
-                url: '/projects/organization',
-                title: 'Organization Projects',
-              },
-            ];
-
-            if (projectDetail.developmentType.code === 'community') {
-              projectListType = [
-                {
-                  url: '/projects/community',
-                  title: 'Community Projects',
-                },
-              ];
-            }
-            if (projectDetail.userId) {
-              if (this.authService.isProjectOwnerNonAdmin(projectDetail)) {
-                projectListType = [
-                  {
-                    url: '/projects/user',
-                    title: 'User Projects',
-                  },
-                ];
-              }
-            }
+            const projectListType = this.projectService.breadcrumbProjectType(projectDetail);
             this.breadcrumbs = [
               ...projectListType,
               { url: `/project/${projectId}`, title: `${projectDetail.name}` },

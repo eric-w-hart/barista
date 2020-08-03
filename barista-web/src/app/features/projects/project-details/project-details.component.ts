@@ -325,34 +325,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   setupBreadcrumbs() {
-    let previous = [
-      {
-        url: '/projects/organization',
-        title: 'Organization Projects',
-      },
-    ];
-
-    if (this.project.developmentType.code === 'community') {
-      previous = [
-        {
-          url: '/projects/community',
-          title: 'Community Projects',
-        },
-      ];
-    }
-    if (this.project.userId) {
-      if (this.authService.isProjectOwnerNonAdmin(this.project)) {
-        previous = [
-          {
-            url: '/projects/user',
-            title: 'User Projects',
-          },
-        ];
-      }
-    }
-
+    const projectListType = this.projectService.breadcrumbProjectType(this.project);
     this.breadcrumbs = [
-      ...previous,
+      ...projectListType,
       {
         url: '',
         title: this.project && this.project.name ? this.project.name : '*New Project',

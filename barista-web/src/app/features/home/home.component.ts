@@ -10,7 +10,7 @@ import { Threshold } from '@app/shared/interfaces/Threshold';
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit, OnChanges {
-  constructor(private statsApi: StatsApiService, ) {}
+  constructor(private statsApi: StatsApiService, private authService: AuthService) {}
 
   isLoggedIn: boolean;
   dataset: string;
@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit, OnChanges {
   isLoadingStatsProjectsScans: boolean;
   isLoadingStatsHighVulnerability: boolean;
   isLoadingStatsLicenseNonCompliance: boolean;
-  
+
   /* Data Variables */
   topComponentLicenseData: any;
   topComponentScansData: any;
@@ -48,8 +48,10 @@ export class HomeComponent implements OnInit, OnChanges {
    * Handles subscribing of data async's into data vars.
    */
   ngOnInit(): void {
+    this.isLoggedIn = AuthService.isLoggedIn;
+    const { userInfo } = this.authService;
     this.initializeLoads();
-    this.dataset = '%';
+    this.isLoggedIn ? this.dataset = userInfo.id : this.dataset = '%';
     this.getDatasets();
   }
 
@@ -59,12 +61,12 @@ export class HomeComponent implements OnInit, OnChanges {
   }
 
   initializeLoads(){
-    this.isLoadingStatsComponent = true; 
-    this.isLoadingStatsVulnerabilities = true; 
-    this.isLoadingStatsComponentsScans = true; 
-    this.isLoadingStatsProjects = true; 
-    this.isLoadingStatsProjectsScans = true; 
-    this.isLoadingStatsHighVulnerability = true; 
+    this.isLoadingStatsComponent = true;
+    this.isLoadingStatsVulnerabilities = true;
+    this.isLoadingStatsComponentsScans = true;
+    this.isLoadingStatsProjects = true;
+    this.isLoadingStatsProjectsScans = true;
+    this.isLoadingStatsHighVulnerability = true;
     this.isLoadingStatsLicenseNonCompliance = true;
   }
 
@@ -74,8 +76,7 @@ export class HomeComponent implements OnInit, OnChanges {
   }
 
   getDatasets(){
-    this.isLoggedIn = AuthService.isLoggedIn;
-    
+
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
       if (Number(response) == -1){

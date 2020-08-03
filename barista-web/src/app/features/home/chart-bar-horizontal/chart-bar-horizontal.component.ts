@@ -30,8 +30,8 @@ import { Component, OnInit, Input } from '@angular/core';
     <div class="spinner" *ngIf="isLoading">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
-    <div *ngIf="!dataset || dataset.length < 1">
-      <h2> No data. </h2>
+    <div *ngIf="(!dataset || dataset.length < 1) && !isLoading">
+          <h2> No data. </h2>
     </div>
     <app-horizontal-bar-chart *ngIf="dataset  && !isLoading" 
       [data]="dataset" 

@@ -100,24 +100,12 @@ export class AuthService implements OnDestroy {
       await this.router.navigate([this.redirectUrl || '/projects/user']);
       window.location.reload();
     } catch (e) {
-      // user/pass fields left empty - might be better in html file
-      if (!username || !password) {
-        this.statusChange.next(
-          (status = {
-            ...status,
-            statusMessage: 'Please enter a username and password',
-          }),
-        );
-      }
-      // still needs a check for when an actual unknown error occurs
-      else {
         this.statusChange.next(
           (status = {
             ...status,
             statusMessage: e.message || 'An unknown error occured',
           }),
         );
-      }
     } finally {
       this.statusChange.next({ ...status, isLoggingIn: false });
     }

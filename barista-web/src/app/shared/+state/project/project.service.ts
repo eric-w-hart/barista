@@ -21,14 +21,15 @@ export class ProjectService extends EntityCollectionServiceBase<Project> impleme
         title: 'Organization Projects',
       },
     ];
-
-    if (project.developmentType.code === 'community') {
-      projectListType = [
-        {
-          url: '/projects/community',
-          title: 'Community Projects',
-        },
-      ];
+    if (project.developmentType) {
+      if (project.developmentType.code === 'community') {
+        projectListType = [
+          {
+            url: '/projects/community',
+            title: 'Community Projects',
+          },
+        ];
+      }
     }
     if (project.userId) {
       if (this.authService.isProjectOwnerNonAdmin(project)) {

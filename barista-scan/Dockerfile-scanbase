@@ -55,7 +55,7 @@ RUN apt-get install -y make \
                        unar
 
 #Install Angular
-npm install -g @angular/cli
+RUN npm install -g @angular/cli
 
 USER 1011
 RUN     curl https://pyenv.run | bash

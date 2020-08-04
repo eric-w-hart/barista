@@ -24,10 +24,6 @@ export class SigninComponent implements OnInit {
   ngOnInit() {}
 
   async signin() {
-    if (!this.username || !this.password) {
-      this.message = "Please enter a username and password";
-      return;
-    }
     await this.authService.login(this.username, this.password);
   }
   async homeLink(){

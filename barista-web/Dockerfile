@@ -8,7 +8,8 @@ ARG BARISTA_VERSION=unspecified
 # It is the setting which tells the browser where to contact the API server.
 ARG BARISTA_API_BASE_PATH=/api/v1
 
-RUN apt-get -y install nginx
+RUN apt-get update \
+  && apt-get -y install nginx
 RUN cd /usr/src/app
 COPY . .
 RUN   yarn install   && yarn run build:prod

@@ -63,9 +63,8 @@ export class StatsApiService {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
         if (userInfo?.id){
-          userInfo.groups.push(userInfo.id);
-            queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
-        }
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -101,10 +100,8 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
-
         if (userInfo?.id){
-          userInfo.groups.push(userInfo.id);
-          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
       }
         let headers = this.defaultHeaders;
 
@@ -148,8 +145,7 @@ export class StatsApiService {
         }
 
         if (userInfo?.id){
-          userInfo.groups.push(userInfo.id);
-          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
       }
 
         let headers = this.defaultHeaders;
@@ -189,10 +185,9 @@ export class StatsApiService {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
 
-        if (userInfo?.id) {
-          userInfo.groups.push(userInfo.id);
-          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
-        }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -230,10 +225,9 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
-        if (userInfo?.id) {
-          userInfo.groups.push(userInfo.id);
-          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
-        }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -271,10 +265,9 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
-        if (userInfo?.id) {
-          userInfo.groups.push(userInfo.id);
-          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
-        }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -317,9 +310,8 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
-        if (userInfo?.id) {
-          userInfo.groups.push(userInfo.id);
-          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString());
+        if (userInfo?.id){
+            queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
         }
 
         let headers = this.defaultHeaders;

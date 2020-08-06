@@ -2,7 +2,8 @@
 <mat-card class="content-card">
   <mat-card-header>
     <mat-card-title>
-      <h1>{{ project?.name || '*New Project' }}</h1>
+      <h1 *ngIf="!newProject">{{ project?.name }}</h1>
+      <h1 *ngIf="newProject">*New Project</h1>
       <app-project-status [project]="project" *ngIf="!newProject && project?.id"></app-project-status>
     </mat-card-title>
   </mat-card-header>

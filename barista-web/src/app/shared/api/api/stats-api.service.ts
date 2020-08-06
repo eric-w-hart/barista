@@ -1,3 +1,4 @@
+import { UserInfo } from './../model/user-info';
 import { ChartElementDto } from '@app/shared/api/model/chart-element-dto';
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
@@ -23,7 +24,8 @@ export class StatsApiService {
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
-    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string,
+    @Optional() configuration: Configuration) {
         if (configuration) {
             this.configuration = configuration;
         }
@@ -46,7 +48,8 @@ export class StatsApiService {
      * @param reportProgress flag to report request and response progress.
      * @param userId
      */
-    public statsComponentsGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsComponentsGet(userInfo: UserInfo, fields?: string, join?: string, cache?: number,
+      observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -59,6 +62,9 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -72,7 +78,44 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/${encodeURIComponent(String(userId))}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components`,
+            {
+              params: queryParameters,
+              withCredentials: this.configuration.withCredentials,
+              headers: headers,
+              observe: observe,
+              reportProgress: reportProgress
+            }
+        );
+    }
+
+    public statsVulnerabilitiesGet(userInfo: UserInfo, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -83,50 +126,27 @@ export class StatsApiService {
         );
     }
 
-    public statsVulnerabilitiesGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
-        let queryParameters = new HttpParams({encoder: this.encoder});
+    public statsComponentsScansGet(userInfo: UserInfo,
+      fields?: string,
+      join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+
+      let queryParameters = new HttpParams({encoder: this.encoder});
+
         if (fields !== undefined && fields !== null) {
             queryParameters = queryParameters.set('fields', <any>fields);
         }
+
         if (join !== undefined && join !== null) {
             queryParameters = queryParameters.set('join[]', <any>join);
         }
+
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
-        let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/vulnerabilities/${encodeURIComponent(String(userId))}`,
-            {
-                params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-    public statsComponentsScansGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields !== undefined && fields !== null) {
-            queryParameters = queryParameters.set('fields', <any>fields);
-        }
-        if (join !== undefined && join !== null) {
-            queryParameters = queryParameters.set('join[]', <any>join);
-        }
-        if (cache !== undefined && cache !== null) {
-            queryParameters = queryParameters.set('cache', <any>cache);
-        }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -140,7 +160,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/scans/${encodeURIComponent(String(userId))}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/components/scans`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -151,7 +171,7 @@ export class StatsApiService {
         );
     }
 
-    public statsProjectsGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsProjectsGet(userInfo: UserInfo, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -165,6 +185,10 @@ export class StatsApiService {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
 
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
+
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
@@ -177,7 +201,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/${encodeURIComponent(String(userId))}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -188,7 +212,7 @@ export class StatsApiService {
         );
     }
 
-    public statsProjectsScansGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsProjectsScansGet(userInfo: UserInfo, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -201,6 +225,9 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -214,7 +241,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/scans/${encodeURIComponent(String(userId))}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/projects/scans`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -225,7 +252,7 @@ export class StatsApiService {
         );
     }
 
-    public statsLicenseOnComplianceGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsLicenseOnComplianceGet(userInfo: UserInfo, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -238,6 +265,9 @@ export class StatsApiService {
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
         }
+        if (userInfo?.id){
+          queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
+      }
 
         let headers = this.defaultHeaders;
 
@@ -251,7 +281,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/licensenoncompliance/index/${encodeURIComponent(String(userId))}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/licensenoncompliance/index/`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -262,7 +292,12 @@ export class StatsApiService {
         );
     }
 
-    public statsHighVulnerabilityGet(userId: string, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ChartElementDto>> {
+    public statsHighVulnerabilityGet(userInfo: UserInfo,
+      fields?: string,
+      join?: string,
+      cache?: number,
+      observe?: 'body',
+      reportProgress?: boolean): Observable<Array<ChartElementDto>> {
 
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -274,6 +309,9 @@ export class StatsApiService {
         }
         if (cache !== undefined && cache !== null) {
             queryParameters = queryParameters.set('cache', <any>cache);
+        }
+        if (userInfo?.id){
+            queryParameters = queryParameters.set('filterbyuser', userInfo.groups.toString()+ ','+userInfo.id);
         }
 
         let headers = this.defaultHeaders;
@@ -288,7 +326,7 @@ export class StatsApiService {
         }
 
 
-        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/highvulnerability/index/${encodeURIComponent(String(userId))}`,
+        return this.httpClient.get<Array<ChartElementDto>>(`${this.configuration.basePath}/stats/highvulnerability/index`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,

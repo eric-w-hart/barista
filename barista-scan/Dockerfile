@@ -15,6 +15,7 @@ COPY . .
 
 
 RUN  yarn install && yarn build
+RUN yarn global add @angular/cli
 
 RUN mkdir -p -v -m 770  /usr/src/app/tools/scancode-toolkit/lib \
     /.cache/scancode-tk  \

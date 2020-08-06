@@ -1,3 +1,4 @@
+import { HttpCancelService } from './shared/services/httpcancel.service';
 // tslint:disable:max-line-length
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -22,6 +23,7 @@ import { AppMaterialModule } from '@app/shared/app-material.module';
 import { FooterComponent } from '@app/shared/layout/footer/footer.component';
 import { HeaderComponent } from '@app/shared/layout/header/header.component';
 import { SideNavComponent } from '@app/shared/layout/side-nav/side-nav.component';
+import { ManageHttpInterceptor } from '@app/shared/helpers/managehttp.interceptor';
 
 import { ProjectDetailsComponent } from '@app/features/projects/project-details/project-details.component';
 import { ProjectScanDetailsComponent } from '@app/features/projects/project-scans/project-scan-details/project-scan-details.component';
@@ -222,6 +224,8 @@ export function apiConfigFactory(): Configuration {
     AppServicesModule,
   ],
   providers: [
+    HttpCancelService,
+    { provide: HTTP_INTERCEPTORS, useClass: ManageHttpInterceptor, multi: true },
     { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
     NavService,
     {

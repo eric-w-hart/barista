@@ -1,3 +1,4 @@
+import { UserInfo } from './../../shared/api/model/user-info';
 import { Component, OnInit, OnChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService, AuthServiceStatus } from '@app/features/auth/auth.service';
 import { StatsApiService } from '@app/shared/api/api/stats-api.service';
@@ -13,7 +14,7 @@ export class HomeComponent implements OnInit, OnChanges {
   constructor(private statsApi: StatsApiService, private authService: AuthService) {}
 
   isLoggedIn: boolean;
-  dataset: string;
+  dataset: UserInfo;
 
   /* Loading Variables */
   isLoadingStatsComponent: boolean;
@@ -36,12 +37,12 @@ export class HomeComponent implements OnInit, OnChanges {
     low: 2.5,
     medium: 5,
     high: 7.5,
-  }
+  };
   licenseThreshold: Threshold = {
     low: 1,
     medium: 2.5,
     high: 5,
-  }
+  };
 
   /**
    * All initialization of the datasets & graphs occurs here.
@@ -51,16 +52,16 @@ export class HomeComponent implements OnInit, OnChanges {
     this.isLoggedIn = AuthService.isLoggedIn;
     const { userInfo } = this.authService;
     this.initializeLoads();
-    this.isLoggedIn ? this.dataset = userInfo.id : this.dataset = '%';
+    this.isLoggedIn ? (this.dataset = userInfo) : (this.dataset = null);
     this.getDatasets();
   }
 
-  ngOnChanges():void {
+  ngOnChanges(): void {
     this.initializeLoads();
     this.getDatasets();
   }
 
-  initializeLoads(){
+  initializeLoads() {
     this.isLoadingStatsComponent = true;
     this.isLoadingStatsVulnerabilities = true;
     this.isLoadingStatsComponentsScans = true;
@@ -70,32 +71,31 @@ export class HomeComponent implements OnInit, OnChanges {
     this.isLoadingStatsLicenseNonCompliance = true;
   }
 
-  receiveDataset($event){
+  receiveDataset($event) {
     this.dataset = $event;
     this.ngOnChanges();
   }
 
-  getDatasets(){
-
+  getDatasets() {
     this.statsApi.statsHighVulnerabilityGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.vulnerabilityThreshold);
-      if (Number(response) == -1){
+      if (Number(response) == -1) {
         this.highVulnerability = [];
       } else {
-        this.highVulnerability = [{"name": displayName, "value": response}];
+        this.highVulnerability = [{ name: displayName, value: response }];
       }
       this.isLoadingStatsHighVulnerability = false;
-    })
+    });
 
     this.statsApi.statsLicenseOnComplianceGet(this.dataset).subscribe((response) => {
       var displayName = this.displaySeverity(response, this.licenseThreshold);
-      if (Number(response) == -1){
+      if (Number(response) == -1) {
         this.licenseNonCompliance = [];
       } else {
-        this.licenseNonCompliance = [{"name": displayName, "value": response}];
+        this.licenseNonCompliance = [{ name: displayName, value: response }];
       }
       this.isLoadingStatsLicenseNonCompliance = false;
-    })
+    });
 
     this.statsApi.statsComponentsGet(this.dataset).subscribe((response) => {
       this.topComponentLicenseData = response;
@@ -110,81 +110,86 @@ export class HomeComponent implements OnInit, OnChanges {
     this.statsApi.statsComponentsScansGet(this.dataset).subscribe((response) => {
       this.topComponentScansData = response;
       this.isLoadingStatsComponentsScans = false;
-    })
+    });
 
     this.statsApi.statsProjectsGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.projectsAddedMonthly = response;
       this.isLoadingStatsProjects = false;
-    })
+    });
 
     this.statsApi.statsProjectsScansGet(this.dataset).subscribe((response) => {
       response = this.parseMonth(response);
       this.monthlyProjectScans = response;
       this.isLoadingStatsProjectsScans = false;
-    })
+    });
   }
 
-  displaySeverity(n: any, t: Threshold){
-    if(n < t.low){ return 'LOW' }
-    else if(n < t.medium){ return 'MEDIUM' }
-    else if(n < t.high){ return 'HIGH' }
-    else { return 'CRITICAL' }
+  displaySeverity(n: any, t: Threshold) {
+    if (n < t.low) {
+      return 'LOW';
+    } else if (n < t.medium) {
+      return 'MEDIUM';
+    } else if (n < t.high) {
+      return 'HIGH';
+    } else {
+      return 'CRITICAL';
+    }
   }
 
-  parseMonth(data: any){
-    for (var item of data){
+  parseMonth(data: any) {
+    for (var item of data) {
       switch (item.name.substring(5, 7)) {
-        case "01": {
-          item.name = "Jan" + " '" + item.name.substring(2, 4);
+        case '01': {
+          item.name = 'Jan' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "02": {
-          item.name = "Feb" + " '" + item.name.substring(2, 4);
+        case '02': {
+          item.name = 'Feb' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "03": {
-          item.name = "Mar" + " '" + item.name.substring(2, 4);
+        case '03': {
+          item.name = 'Mar' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "04": {
-          item.name = "Apr" + " '" + item.name.substring(2, 4);
+        case '04': {
+          item.name = 'Apr' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "05": {
-          item.name = "May" + " '" + item.name.substring(2, 4);
+        case '05': {
+          item.name = 'May' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "06": {
-          item.name = "Jun" + " '" + item.name.substring(2, 4);
+        case '06': {
+          item.name = 'Jun' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "07": {
-          item.name = "Jul" + " '" + item.name.substring(2, 4);
+        case '07': {
+          item.name = 'Jul' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "08": {
-          item.name = "Aug" + " '" + item.name.substring(2, 4);
+        case '08': {
+          item.name = 'Aug' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "09": {
-          item.name = "Sep" + " '" + item.name.substring(2, 4);
+        case '09': {
+          item.name = 'Sep' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "10": {
-          item.name = "Oct" + " '" + item.name.substring(2, 4);
+        case '10': {
+          item.name = 'Oct' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "11": {
-          item.name = "Nov" + " '" + item.name.substring(2, 4);
+        case '11': {
+          item.name = 'Nov' + " '" + item.name.substring(2, 4);
           break;
         }
-        case "12": {
-          item.name = "Dec" + " '" + item.name.substring(2, 4);
+        case '12': {
+          item.name = 'Dec' + " '" + item.name.substring(2, 4);
           break;
         }
         default: {
-          item.name = "Unknown";
+          item.name = 'Unknown';
           break;
         }
       }

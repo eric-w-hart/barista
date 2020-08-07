@@ -1,3 +1,4 @@
+import { HttpCancelService } from './shared/services/httpcancel.service';
 // tslint:disable:max-line-length
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -22,6 +23,7 @@ import { AppMaterialModule } from '@app/shared/app-material.module';
 import { FooterComponent } from '@app/shared/layout/footer/footer.component';
 import { HeaderComponent } from '@app/shared/layout/header/header.component';
 import { SideNavComponent } from '@app/shared/layout/side-nav/side-nav.component';
+import { ManageHttpInterceptor } from '@app/shared/helpers/managehttp.interceptor';
 
 import { ProjectDetailsComponent } from '@app/features/projects/project-details/project-details.component';
 import { ProjectScanDetailsComponent } from '@app/features/projects/project-scans/project-scan-details/project-scan-details.component';
@@ -96,6 +98,11 @@ import { ProjectStatusComponent } from './features/projects/project-details/proj
 import { LicenseScanResultItemDetailsComponent } from './features/projects/project-scans/project-scan-details/license-scan-result/license-scan-result-items/license-scan-result-item-details/license-scan-result-item-details.component';
 import { SecurityScanResultItemDetailsComponent } from './features/projects/project-scans/project-scan-details/security-scan-result/security-scan-result-items/security-scan-result-item-details/security-scan-result-item-details.component';
 import { StatusComponent } from './features/status/status.component';
+import { HomeComponent } from './features/home/home.component';
+import { BannerComponent } from './features/home/banner/banner.component';
+import { ChartGaugeComponent } from './features/home/chart-gauge/chart-gauge.component';
+import { ChartBarHorizontalComponent } from './features/home/chart-bar-horizontal/chart-bar-horizontal.component';
+import { ChartBarVerticalComponent } from './features/home/chart-bar-vertical/chart-bar-vertical.component';
 
 // tslint:enable:max-line-length
 
@@ -130,6 +137,7 @@ export function apiConfigFactory(): Configuration {
     FlexLayoutTypeComponent,
     FooterComponent,
     HeaderComponent,
+    HomeComponent,
     LicenseDetailsComponent,
     LicenseObligationComponent,
     LicenseScanResultComponent,
@@ -170,6 +178,10 @@ export function apiConfigFactory(): Configuration {
     TooltipDetailsComponent,
     VulnerabilityStatusDeploymentTypesComponent,
     VulnerabilityStatusDeploymentTypesDetailsComponent,
+    BannerComponent,
+    ChartGaugeComponent,
+    ChartBarHorizontalComponent,
+    ChartBarVerticalComponent,
   ],
   imports: [
     StoreModule.forRoot(
@@ -212,6 +224,8 @@ export function apiConfigFactory(): Configuration {
     AppServicesModule,
   ],
   providers: [
+    HttpCancelService,
+    { provide: HTTP_INTERCEPTORS, useClass: ManageHttpInterceptor, multi: true },
     { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
     NavService,
     {

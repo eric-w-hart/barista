@@ -1,17 +1,66 @@
 <div>
-<mat-toolbar color="primary">
-  <button
-    type = "button"
-    mat-icon-button
-    (click)="navService.changeState()">
-    <mat-icon >menu</mat-icon>
-  </button>
-  <h1><span [routerLink]="['/dashboard']">Barista</span></h1>
-  <img class="ml-1" src="assets/images/barista-icon.png"/>
-  <span class="fill-space"></span>
-  <app-help-menu></app-help-menu>
-  <span *ngIf="isLoggedIn">
-    <button type="button" mat-button (click)="logout()">Logout [{{userName}} ({{role}})]</button>
-  </span>
-</mat-toolbar>
+  <mat-toolbar color="primary">
+    <button class="logo" mat-button (click)="homeLink()" title="Home">
+      <img src="assets/images/barista_logo_coffee_left.png" width="100%" />
+    </button>
+    <span class="fill-space"></span>
+    <button *ngIf="isLoggedIn" mat-button (click)="homeLink()" type="submit" [class.clicked]="onHome && !menuClicked">
+      <mat-icon class="routeIcon">home</mat-icon>
+      Home
+    </button>
+
+    <button *ngIf="isLoggedIn" mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="projectsMenu" #t="matMenuTrigger" [class.clicked]="onProj && !menuClicked || t.menuOpen">
+      <mat-icon class="routeIcon">source</mat-icon>
+      Projects
+    </button>
+    <mat-menu #projectsMenu="matMenu">
+      <button mat-menu-item routerLink="/projects/user" type="submit">
+        <mat-icon class="routeIcon">person</mat-icon>
+        User
+      </button>
+      <button mat-menu-item routerLink="/projects/organization" type="submit">
+        <mat-icon class="routeIcon">people</mat-icon>
+        Organization
+      </button>
+      <button mat-menu-item routerLink="/projects/community" routerLinkActive="active">
+        <mat-icon class="routeIcon">language</mat-icon>
+        Community
+      </button>
+    </mat-menu>
+
+    <span *ngIf="isLoggedIn && isAdmin">
+      <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="adminMenu" #t="matMenuTrigger" title="Admin Tools" [class.clicked]="onAdmin && !menuClicked || t.menuOpen">
+        <mat-icon class="routeIcon">how_to_reg</mat-icon> Admin
+      </button>
+      <mat-menu #adminMenu="matMenu">
+        <button mat-menu-item *ngFor="let item of navItems" [item]="item" [routerLink]="item.route">
+          <mat-icon class="routeIcon">{{ item.iconName }}</mat-icon
+          >{{ item.displayName }}
+        </button>
+      </mat-menu>
+    </span>
+    <app-help-menu (menuClick)="receiveHelpEvent($event)" title="Help"></app-help-menu>
+    <span *ngIf="isLoggedIn">
+      <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
+        <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">account_circle</mat-icon>
+      </button>
+      <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
+        <div class="text mat-headline">Hello, {{ userName }}!</div>
+        <button mat-menu-item (click)="logout()">
+          <span type="button" mat-button >Sign Out</span>
+        </button>
+      </mat-menu>
+    </span>
+    <form>
+      <span *ngIf="!isLoggedIn && !isSignIn()">
+        <input placeholder="Username" [(ngModel)]="username" name="username" /><br />
+        <input placeholder="Password" [(ngModel)]="password" type="password" name="password" />
+      </span>
+      <button *ngIf="!isLoggedIn && !isSignIn()" mat-button (click)="signin()" type="submit">Sign In</button>
+    </form>
+  </mat-toolbar>
+
+  <div id="error" *ngIf="!!message && !isLoggedIn && !isSignIn()">
+    {{ message }}
+  </div>
 </div>

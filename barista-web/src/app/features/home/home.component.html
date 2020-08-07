@@ -1,0 +1,84 @@
+<div class="flex-grid" fxFlex>
+  <div class="row">
+    <app-banner
+      [isLoggedIn]="isLoggedIn"
+      (changeDatasetEvent)="receiveDataset($event)"
+    >
+    </app-banner>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-chart-gauge
+        [isLoggedIn]="isLoggedIn"
+        [threshold]= "vulnerabilityThreshold"
+        [dataset]="highVulnerability"
+        [title]="'High Vulnerability Index'"
+        [isLoading]="isLoadingStatsHighVulnerability"
+        [help]="'This is calculated using the total number of critical and high vulnerabilities divided by the total number of licenses. If this index is high, look at the Top 10 Vulnerabilities to find out which packages are the most prevelant causes. '"
+      >
+      </app-chart-gauge>
+    </div>
+    <div class="col">
+      <app-chart-gauge
+        [isLoggedIn]="isLoggedIn"
+        [threshold]= "licenseThreshold"
+        [dataset]="licenseNonCompliance"
+        [title]="'License Risk Index'"
+        [isLoading]="isLoadingStatsLicenseNonCompliance"
+        [help]="'This is calculated using the total number of rejected licenses divided by the total number of all licenses found in scans. If this index is high, ensure that all the packages and libraries that you\'re using is open source. '"
+      >
+      </app-chart-gauge>
+    </div>
+  </div>
+  <div class="row">
+     <div class="col">
+      <app-chart-bar-horizontal
+        [isLoggedIn]="isLoggedIn"
+        [dataset]="topVulnerabilities"
+        [title]="'Top 10 Vulnerabilities'"
+        [description]="'This chart displays the top vulnerabilities in order of count, and not by severity. The higher the
+        count, the more prevelant that vulnerability is in our database.'"
+        [isLoading]="isLoadingStatsVulnerabilities"
+        [help]="'This graph shows the most prevelant critical and high vulnerabilities found across all projects. Check each of your projects to ensure that your vulnerabilities are accounted for. Consider updating libraries and in some cases, replacing them.'"
+      >
+      </app-chart-bar-horizontal>
+    </div>
+    <div class="col">
+      <app-chart-bar-horizontal
+        [isLoggedIn]="isLoggedIn"
+        [dataset]="topComponentLicenseData"
+        [title]="'Top 10 Component Licenses'"
+        [description]="'This graph shows the 10 licenses that are most widely used across our organization\'s scanned
+        projects.'"
+        [isLoading]="isLoadingStatsComponentsScans"
+        [help]="'This shows the most prevelant licenses being used across all projects. Check that the most common ones are open source licenses. Check each of your projects\' license states. '"
+      >
+      </app-chart-bar-horizontal>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <app-chart-bar-vertical
+        [isLoggedIn]="isLoggedIn"
+        [dataset]="projectsAddedMonthly"
+        [title]="'Monthly Projects'"
+        [description]="'This graph shows how many projects have been created by month.'"
+        [isLoading]="isLoadingStatsProjects"
+        [help]="'Make sure you\'re scanning all software to be used. '"
+      >
+      </app-chart-bar-vertical>
+    </div>
+    <div class="col">
+      <app-chart-bar-vertical
+        [isLoggedIn]="isLoggedIn"
+        [dataset]="monthlyProjectScans"
+        [title]="'Components Scanned By Month'"
+        [description]="'This graph shows the number of components scanned by month. A component scanned in a user\'s project may be accounted for elsewhere if it is a duplicate from another project.'"
+        [isLoading]="isLoadingStatsProjectsScans"
+        [help]="'When this graph is flat, it could be assumed that you\'re doing your best to scan all your projects each month.'"
+      >
+      </app-chart-bar-vertical>
+    </div>
+  </div>
+</div>

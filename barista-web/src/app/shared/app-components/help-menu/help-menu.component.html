@@ -1,9 +1,9 @@
 <span>
-  <mat-menu #helpMenu="matMenu">
+  <mat-menu #helpMenu="matMenu" [overlapTrigger]="false">
     <a *ngFor="let menuItem of helpMenuItems" [href]="menuItem.url" target="_blank" mat-menu-item>{{ menuItem.title }}</a>
   </mat-menu>
 
-  <button mat-button [matMenuTriggerFor]="helpMenu">
-    Help
+  <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="helpMenu" #t="matMenuTrigger">
+    <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">info_outline</mat-icon>
   </button>
 </span>

@@ -8,3 +8,13 @@
   padding-left: 20px;
   padding-right: 20px;
 }
+
+.mat-card {
+  .mat-card-header {
+    .mat-card-title {
+      h1 {
+        margin: 0px;
+      }
+    }
+  }
+}

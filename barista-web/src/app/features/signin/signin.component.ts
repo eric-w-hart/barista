@@ -9,7 +9,7 @@ import { untilDestroyed } from 'ngx-take-until-destroy';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss'],
 })
-export class SigninComponent implements OnInit, OnDestroy {
+export class SigninComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService) {
     authService.statusChange.pipe(untilDestroyed(this)).subscribe((value: AuthServiceStatus) => {
       this.message = value.statusMessage;
@@ -24,6 +24,13 @@ export class SigninComponent implements OnInit, OnDestroy {
   ngOnInit() {}
 
   async signin() {
+    if (!this.username || !this.password) {
+      this.message = "Please enter a username and password";
+      return;
+    }
     await this.authService.login(this.username, this.password);
+  }
+  async homeLink(){
+    await this.router.navigate(['/home']);
   }
 }

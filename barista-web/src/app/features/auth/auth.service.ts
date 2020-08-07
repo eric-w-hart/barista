@@ -24,11 +24,11 @@ export class AuthService implements OnDestroy {
     try {
       const info = JSON.parse(localStorage.getItem('userInfo'));
       if (!info) {
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/home']);
       }
       return info;
     } catch (e) {
-      this.router.navigate(['/signin']);
+      this.router.navigate(['/home']);
     }
   }
 
@@ -71,7 +71,15 @@ export class AuthService implements OnDestroy {
       !project.userId ||
       project.userId === this.userInfo.id ||
       this.isAdmin ||
-      _.findIndex(this.userInfo.groups, group => group.toLowerCase() === project.userId.toLowerCase()) !== -1
+      _.findIndex(this.userInfo.groups, (group) => group.toLowerCase() === project.userId.toLowerCase()) !== -1
+    );
+  }
+
+  isProjectOwnerNonAdmin(project: Project): boolean {
+    return (
+      !project.userId ||
+      project.userId === this.userInfo.id ||
+      _.findIndex(this.userInfo.groups, (group) => group.toLowerCase() === project.userId.toLowerCase()) !== -1
     );
   }
 
@@ -89,26 +97,15 @@ export class AuthService implements OnDestroy {
       const userInfo = await this.userApiService.userMeGet().toPromise();
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       this.statusChange.next((status = { ...status, isLoggedIn: true, statusMessage: '' }));
-      await this.router.navigate([this.redirectUrl || '/dashboard']);
+      await this.router.navigate([this.redirectUrl || '/projects/user']);
+      window.location.reload();
     } catch (e) {
-      // user/pass fields left empty - might be better in html file
-      if (!username || !password){
         this.statusChange.next(
           (status = {
             ...status,
-            statusMessage: "Please enter a username and password",
+            statusMessage: e.message || 'An unknown error occured',
           }),
         );
-      }
-      // still needs a check for when an actual unknown error occurs
-      else {
-        this.statusChange.next(
-          (status = {
-            ...status,
-            statusMessage: e.message || "An unknown error occured",
-          }),
-        );
-      }
     } finally {
       this.statusChange.next({ ...status, isLoggingIn: false });
     }
@@ -116,6 +113,7 @@ export class AuthService implements OnDestroy {
 
   async logout() {
     localStorage.removeItem('accessToken');
+    this.statusChange.next({ isLoggedIn: false });
     await this.router.navigate(['/signin']);
   }
 

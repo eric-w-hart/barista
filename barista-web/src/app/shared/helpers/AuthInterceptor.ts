@@ -14,8 +14,10 @@ export class AuthInterceptor implements HttpInterceptor {
     if (err.status === 401 || err.status === 403) {
       // navigate /delete cookies or whatever
       this.authService.logout();
-      this.router.navigate([`/signin`]);
-
+      window.location.reload();
+      if(!this.router.url.endsWith('/signin')){
+        this.router.navigate(['/home']);
+      }
       return of(err.message);
     }
 

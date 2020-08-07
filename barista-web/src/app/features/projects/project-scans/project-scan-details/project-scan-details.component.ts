@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '@app/shared/+state/project/project.service';
 import IBreadcrumb from '@app/shared/app-components/breadcrumbs/IBreadcrumb';
 import { untilDestroyed } from 'ngx-take-until-destroy';
+import { AuthService } from '@app/features/auth/auth.service';
 
 @Component({
   selector: 'app-project-scan-details',
@@ -10,7 +11,11 @@ import { untilDestroyed } from 'ngx-take-until-destroy';
   styleUrls: ['./project-scan-details.component.scss'],
 })
 export class ProjectScanDetailsComponent implements OnInit, OnDestroy {
-  constructor(private route: ActivatedRoute, private projectService: ProjectService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private projectService: ProjectService,
+    private authService: AuthService,
+  ) {}
   breadcrumbs: IBreadcrumb[];
 
   selectedTabIndex: number;
@@ -18,22 +23,22 @@ export class ProjectScanDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.selectedTabIndex = params.tab ? params.tab : 0;
     });
 
-    this.route.paramMap.subscribe(async params => {
+    this.route.paramMap.subscribe(async (params) => {
       const projectId = Number(params.get('projectId'));
 
       this.projectService.setFilter(projectId); // ngrx entity data service and entity service
       this.projectService.filteredEntities$ // subscribe to observables, look at entity-metadata.ts
         .pipe(untilDestroyed(this))
-        .subscribe(projects => {
+        .subscribe((projects) => {
           if (projects.length > 0) {
             const projectDetail = { ...projects[0] };
-
+            const projectListType = this.projectService.breadcrumbProjectType(projectDetail);
             this.breadcrumbs = [
-              { url: '/project', title: 'Projects' },
+              ...projectListType,
               { url: `/project/${projectId}`, title: `${projectDetail.name}` },
               {
                 url: `/project/${projectId}`,

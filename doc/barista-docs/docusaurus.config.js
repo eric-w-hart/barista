@@ -91,8 +91,27 @@ module.exports = {
               to: 'docs/icla',
             },
           ],
-        },
-      ],
+          },
+          {
+              title: 'Project Build Status',
+              items: [
+                {
+                  html: `
+                  <a href="https://github.com/optum/barista" target="_blank" rel="noreferrer noopener" aria-label="Barista OSS Governance">
+                    <img src="https://github.com/optum/barista/workflows/buildcontainers/badge.svg?branch=develop" alt="Container Build Status" />
+                  </a>
+                `,
+                },
+                {
+                  html: `
+                  <a href="https://github.com/optum/barista" target="_blank" rel="noreferrer noopener" aria-label="Barista OSS Governance">
+                    <img src="https://github.com/optum/barista/workflows/buildrelease/badge.svg?branch=master" alt="Container Release Status" />
+                  </a>
+                `,
+                },
+              ],
+            },
+          ],
       copyright: `Copyright © ${new Date().getFullYear()} Optum, Inc. Built with Docusaurus.`,
     },
   },

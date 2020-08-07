@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { SystemConfigurationService } from '@app/shared/+state/systemConfiguration/system-configuration.service';
 import IMenuItem from '@app/shared/interfaces/IMenuItem';
 import { isArray } from 'lodash';
@@ -10,6 +10,7 @@ import { isArray } from 'lodash';
 })
 export class HelpMenuComponent implements OnInit {
   helpMenuItems: IMenuItem[] = [];
+  @Output() menuClick = new EventEmitter<boolean>();
 
   constructor(private systemConfigService: SystemConfigurationService) {}
 
@@ -17,5 +18,13 @@ export class HelpMenuComponent implements OnInit {
     this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe(data => {
       this.helpMenuItems = isArray(data.helpMenu) ? data.helpMenu : [];
     });
+  }
+
+  menuOpened(){
+    this.menuClick.emit(true);
+  }
+
+  menuClosed(){
+    this.menuClick.emit(false);
   }
 }

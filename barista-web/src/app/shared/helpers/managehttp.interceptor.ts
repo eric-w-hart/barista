@@ -18,6 +18,9 @@ export class ManageHttpInterceptor implements HttpInterceptor {
   }
 
   intercept<T>(req: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
+    if (req.url.toString().includes('api/v1/system-configuration')) {
+      return next.handle(req);
+    }
     return next.handle(req).pipe(takeUntil(this.httpCancelService.onCancelPendingRequests()));
   }
 }

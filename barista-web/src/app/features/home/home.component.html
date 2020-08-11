@@ -14,7 +14,7 @@
         [dataset]="highVulnerability"
         [title]="'High Vulnerability Index'"
         [isLoading]="isLoadingStatsHighVulnerability"
-        [help]="'This is calculated using the total number of critical and high vulnerabilities divided by the total number of discovered components. If this index is high, look at the Top 10 Vulnerabilities to find out which packages are the most prevelant causes. '"
+        [help]="'This is calculated using the total number of critical and high vulnerabilities divided by the total number of discovered components. If this index is high, look at the Top 10 Vulnerabilities to find out which packages are the most prevalant causes. '"
       >
       </app-chart-gauge>
     </div>
@@ -37,9 +37,9 @@
         [dataset]="topVulnerabilities"
         [title]="'Top 10 Vulnerabilities'"
         [description]="'This chart displays the top vulnerabilities in order of count, and not by severity. The higher the
-        count, the more prevelant that vulnerability is in our database.'"
+        count, the more prevalent that vulnerability is in our database.'"
         [isLoading]="isLoadingStatsVulnerabilities"
-        [help]="'This graph shows the most prevelant critical and high vulnerabilities found across all projects. Consider updating libraries to more recent versions and in some cases, replacing them to eliminate problematic dependencies.'"
+        [help]="'This graph shows the most prevalent critical and high vulnerabilities found across all projects. Consider updating libraries to more recent versions and in some cases, replacing them to eliminate problematic dependencies.'"
       >
       </app-chart-bar-horizontal>
     </div>
@@ -51,7 +51,7 @@
         [description]="'This graph shows the 10 licenses that are most widely used across our organization\'s scanned
         projects.'"
         [isLoading]="isLoadingStatsComponentsScans"
-        [help]="'This shows the most prevelant licenses being used across all projects. Check each of your projects\' license states to ensure compatibility with stated deployment models. Consider alternative components with more permissive licenses if necessary.'"
+        [help]="'This shows the most prevalent licenses being used across all projects. Check each of your projects\' license states to ensure compatibility with stated deployment models. Consider alternative components with more permissive licenses if necessary.'"
       >
       </app-chart-bar-horizontal>
     </div>

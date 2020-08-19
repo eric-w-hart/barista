@@ -31,7 +31,11 @@ If you've gotten as far as reading this section, then thank you for your suggest
    $ git config user.name "J. Random User"
    $ git config user.email "j.random.user@example.com"
    ```
-* The first time you open a pull request in this repository, a link will be provided via a comment on your PR that will allow you to sign our Contributor License Agreement (CLA) if you have not signed our CLA previously.
+>The name and email address must be valid as we cannot accept anonymous contributions.
+* Write good commit messages.
+> Concise commit messages that describe your changes help us better understand your contributions.
+* The first time you open a pull request in this repository, you will see a comment on your PR with a link that will allow you to sign our Contributor License Agreement (CLA) if necessary.
+> The link will take you to a page that allows you to view our ICL.  You will need to click the `Sign in with GitHub to agree button` and authorize the cla-assistant application to access the email addresses associated with your GitHub account.  Agreeing to the ICL is also considered to be an attestation that you either wrote or have the rights to contribute the code.  All committers to the PR branch will be required to sign the CLA, but you will only need to sign once.  This CLA applies to all repositories in the Optum org.
 
 ### General Guidelines
 

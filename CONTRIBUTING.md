@@ -8,7 +8,7 @@
 
 # Contribution Guidelines
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms. Please also review our [Individual Contributor License Agreement ("ICL")](INDIVIDUAL_CONTRIBUTOR_LICENSE.md) prior to submitting changes to the project.  You will need to attest to this agreement following the instructions in the [Paperwork for Pull Requests](#paperwork-for-pull-requests) section below.
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms. Please also review our [Contributor License Agreement ("CLA")](INDIVIDUAL_CONTRIBUTOR_LICENSE.md) prior to submitting changes to the project.  You will need to attest to this agreement following the instructions in the [Paperwork for Pull Requests](#paperwork-for-pull-requests) section below.
 
 ---
 ## How to Contribute
@@ -25,7 +25,7 @@ If you've gotten as far as reading this section, then thank you for your suggest
 
 ### Paperwork for Pull Requests
 
-* Please read this guide and make sure you agree with our [Individual Contributor License Agreement ("ICL")](INDIVIDUAL_CONTRIBUTOR_LICENSE.md).
+* Please read this guide and make sure you agree with our [Contributor License Agreement ("CLA")](INDIVIDUAL_CONTRIBUTOR_LICENSE.md).
 * Make sure git knows your name and email address:
    ```
    $ git config user.name "J. Random User"
@@ -35,7 +35,7 @@ If you've gotten as far as reading this section, then thank you for your suggest
 * Write good commit messages.
 > Concise commit messages that describe your changes help us better understand your contributions.
 * The first time you open a pull request in this repository, you will see a comment on your PR with a link that will allow you to sign our Contributor License Agreement (CLA) if necessary.
-> The link will take you to a page that allows you to view our ICL.  You will need to click the `Sign in with GitHub to agree button` and authorize the cla-assistant application to access the email addresses associated with your GitHub account.  Agreeing to the ICL is also considered to be an attestation that you either wrote or have the rights to contribute the code.  All committers to the PR branch will be required to sign the CLA, but you will only need to sign once.  This CLA applies to all repositories in the Optum org.
+> The link will take you to a page that allows you to view our CLA.  You will need to click the `Sign in with GitHub to agree button` and authorize the cla-assistant application to access the email addresses associated with your GitHub account.  Agreeing to the CLA is also considered to be an attestation that you either wrote or have the rights to contribute the code.  All committers to the PR branch will be required to sign the CLA, but you will only need to sign once.  This CLA applies to all repositories in the Optum org.
 
 ### General Guidelines
 

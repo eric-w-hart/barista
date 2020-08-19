@@ -1,5 +1,6 @@
 ![buildcontainers](https://github.com/optum/barista/workflows/buildcontainers/badge.svg?branch=develop)
 ![buildrelease](https://github.com/optum/barista/workflows/buildrelease/badge.svg?branch=master)
+<a href="https://cla-assistant.io/Optum/barista"><img src="https://cla-assistant.io/readme/badge/Optum/barista" alt="CLA assistant" /></a>
 
 # Barista ![alt text](./barista-web/src/assets/images/barista-icon.png)
 

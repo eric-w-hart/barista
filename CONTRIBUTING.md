@@ -31,11 +31,7 @@ If you've gotten as far as reading this section, then thank you for your suggest
    $ git config user.name "J. Random User"
    $ git config user.email "j.random.user@example.com"
    ```
-> Signing-Off on your commit is agreeing with our ICL and attesting that you either wrote or have the rights to contribute the code. The name and email address must be valid as we cannot accept anonymous contributions.
-* Write good commit messages
-* Sign-off every commit `git commit --signoff` or `git commit -s`, as directed by the ICL.
-
-> If you forget to sign a commit, then you’ll have to do a bit of rewriting history. Don’t worry. It’s pretty easy. If it’s the latest commit, you can just run either `git commit -a -s` or `git commit --amend --signoff` to fix things. It gets a little trickier if you have to change something farther back in history but there are some good instructions [here](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History) in the Changing Multiple Commit Messages section.
+* The first time you do a pull request, you will be asked to sign our Contributor License Agreement (CLA).
 
 ### General Guidelines
 

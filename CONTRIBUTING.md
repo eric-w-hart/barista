@@ -31,7 +31,7 @@ If you've gotten as far as reading this section, then thank you for your suggest
    $ git config user.name "J. Random User"
    $ git config user.email "j.random.user@example.com"
    ```
-* The first time you do a pull request, you will be asked to sign our Contributor License Agreement (CLA).
+* The first time you open a pull request in this repository, a link will be provided via a comment on your PR that will allow you to sign our Contributor License Agreement (CLA) if you have not signed our CLA previously.
 
 ### General Guidelines
 

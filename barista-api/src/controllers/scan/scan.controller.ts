@@ -25,8 +25,8 @@ import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { Queue } from 'bull';
 import { InjectQueue } from 'nest-bull';
 
-@UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+// @UseGuards(AuthGuard('jwt'))
+// @ApiOAuth2Auth()
 @Crud({
   query: {
     join: {
@@ -132,5 +132,15 @@ export class ScanController implements CrudController<Scan> {
   @UseInterceptors(CrudRequestInterceptor)
   async getJobStatus(@Param('id') id: string): Promise<string> {
     return await (await this.queue.getJob(id)).getState();
+  }
+
+  @Get('/:id/attribrution')
+  @UseInterceptors(CrudRequestInterceptor)
+  async getAttributions(@Param('id') id: number) {
+    const scan = await this.service.findOne(id);
+    const licenseScan = await this.service.latestCompletedLicenseScan(scan);
+
+    this.logger.log('id = ' + id);
+    return this.service.distinctLicenseAttributions(licenseScan.id);
   }
 }

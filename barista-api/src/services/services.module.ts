@@ -1,3 +1,4 @@
+import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { BomLicenseExceptionService } from '@app/services/bom-license-exception/bom-license-exception.service';
 import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-manual-license.service';
 import { BomSecurityExceptionService } from '@app/services/bom-security-exception/bom-security-exception.service';
@@ -33,7 +34,7 @@ import { UserService } from '@app/services/user/user.service';
 import { VulnerabilityStatusDeploymentTypeService } from '@app/services/vulnerability-status-deployment-type/vulnerability-status-deployment-type.service';
 import { AppOrmModule } from '@app/shared/app-orm.module';
 import { AppQueueModule } from '@app/shared/app-queue.module';
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, HttpModule, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -42,8 +43,10 @@ const services = [
   BomLicenseExceptionService,
   BomManualLicenseService,
   BomSecurityExceptionService,
+  ClearlyDefinedService,
   DeploymentTypeService,
   GlobalSearchService,
+  HttpModule,
   JwtStrategy,
   LdapService,
   LicenseScanResultItemService,

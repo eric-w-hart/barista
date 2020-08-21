@@ -1,5 +1,9 @@
 import { LicenseScanResult, Obligation, Project, ProjectScanStatusType, SecurityScanResult } from '@app/models';
-import { ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
+import {
+  ProjectDistinctLicenseDto,
+  ProjectDistinctVulnerabilityDto,
+  ProjectDistinctLicenseAttributionDto,
+} from '@app/models/DTOs';
 import { ProjectDistinctSeverityDto } from '@app/models/DTOs/ProjectDistinctSeverityDto';
 import { Scan } from '@app/models/Scan';
 import { AppServiceBase } from '@app/services/app-service-base/app-base.service';
@@ -60,6 +64,10 @@ export class ScanService extends AppServiceBase<Scan> {
     } else {
       return [];
     }
+  }
+
+  async distinctLicenseAttributions(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
+    return this.licenseScanResultService.distinctLicensesAttribution(scanId);
   }
 
   /**

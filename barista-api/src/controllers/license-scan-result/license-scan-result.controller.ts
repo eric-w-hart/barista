@@ -1,8 +1,8 @@
 import { LicenseScanResult } from '@app/models';
 import { LicenseScanResultService } from '@app/services/license-scan-result/license-scan-result.service';
-import { Controller } from '@nestjs/common';
+import { Controller, Get, UseInterceptors, Param } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
-import { Crud, CrudController } from '@nestjsx/crud';
+import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 
 // prettier-ignore
 @Crud({

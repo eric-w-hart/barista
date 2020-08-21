@@ -1,3 +1,4 @@
+import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { ScanBranchDto } from './../../models/DTOs/ScanBranchDto';
 import { LogProjectChangeCommand } from '@app/models/commands/LogProjectChangeCommand';
 import { JobInfoDto } from '@app/models/DTOs/JobInfoDto';
@@ -51,6 +52,7 @@ export class ScanController implements CrudController<Scan> {
   constructor(
     public service: ScanService,
     public projectService: ProjectService,
+    public clearlyDefinedService: ClearlyDefinedService,
     private commandBus: CommandBus,
     @InjectQueue('scan-queue') readonly queue: Queue,
   ) {}
@@ -142,5 +144,12 @@ export class ScanController implements CrudController<Scan> {
 
     this.logger.log('id = ' + id);
     return this.service.distinctLicenseAttributions(licenseScan.id);
+  }
+
+  @Get('/attribrution')
+  @UseInterceptors(CrudRequestInterceptor)
+  async getClearlyDefinedAttributions(@Query('indentifier') indentifier: string) {
+    indentifier = '"' + indentifier + '"';
+    return this.clearlyDefinedService.postDefinitions(indentifier);
   }
 }

@@ -136,7 +136,7 @@ export class ScanController implements CrudController<Scan> {
     return await (await this.queue.getJob(id)).getState();
   }
 
-  @Get('/:id/attribrution')
+  @Get('/:id/attribution')
   @UseInterceptors(CrudRequestInterceptor)
   async getAttributions(@Param('id') id: number) {
     const scan = await this.service.findOne(id);
@@ -146,7 +146,7 @@ export class ScanController implements CrudController<Scan> {
     return this.service.distinctLicenseAttributions(licenseScan.id);
   }
 
-  @Get('/attribrution')
+  @Get('/attribution')
   @UseInterceptors(CrudRequestInterceptor)
   async getClearlyDefinedAttributions(@Query('indentifier') indentifier: string) {
     indentifier = '"' + indentifier + '"';

@@ -1,7 +1,7 @@
-import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { BomLicenseExceptionService } from '@app/services/bom-license-exception/bom-license-exception.service';
 import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-manual-license.service';
 import { BomSecurityExceptionService } from '@app/services/bom-security-exception/bom-security-exception.service';
+import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { LogProjectChangeCommandHandler } from '@app/services/command-handlers/LogProjectChangeCommandHandler';
 import { DeploymentTypeService } from '@app/services/deployment-type/deployment-type.service';
 import { GlobalSearchService } from '@app/services/global-search/global-search.service';

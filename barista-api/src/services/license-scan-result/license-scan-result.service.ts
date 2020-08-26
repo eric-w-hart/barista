@@ -37,22 +37,28 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
    * Gets distinct licenses from a LicenseScanResult
    */
   async distinctLicensesAttribution(licenseScanId: Number): Promise<ProjectDistinctLicenseAttributionDto[]> {
-    // const licenses = await LicenseScanResultItem.createQueryBuilder('ri')
-    //   .innerJoin('ri.license', 'license')
-    //   .innerJoin('ri.licenseScan', 'licenseScan')
-    //   .where('licenseScan.id = :id', { id: licenseScanId })
-    //   .select(
-    //     'license.name as license, ri.publisherName as publisherName, ri.displayIdentifier, license.homepageUrl, license.referenceUrl',
-    //   )
-    //   .getRawMany();
-    // const replaceval = /:/gi;
-    // for (const license of licenses) {
-    //   await this.clearlyDefinedService.postNotices(
-    //     'maven/mavencentral/' + license.displayIdentifier.replace(replaceval, '/'),
-    //   );
-    //   this.logger.log('display = ' + license.displayIdentifier);
-    // }
-    return this.clearlyDefinedService.postDefinitions('"npm/npmjs/-/jquery/1.9.1"');
+    const licenses = await LicenseScanResultItem.createQueryBuilder('ri')
+      .innerJoin('ri.license', 'license')
+      .innerJoin('scan.id', 'scan')
+      .innerJoin('ri.licenseScan', 'licenseScan')
+      .where('licenseScan.id = :id', { id: licenseScanId })
+      .where('scan.id = ri.scanId')
+      .select(
+        'scan.projectId, license.name as license, ri.publisherName as publisherName, ri.displayIdentifier, license.homepageUrl, license.referenceUrl',
+      )
+      .getRawMany();
+    const replaceval = /:/gi;
+    for (const license of licenses) {
+      // await this.clearlyDefinedService.postNotices(
+      //   'maven/mavencentral/' + license.displayIdentifier.replace(replaceval, '/'),
+      // );
+      this.logger.log('display = ' + license.displayIdentifier);
+      this.logger.log('projectId = ' + license.projectId);
+    }
+    // const definitions = await this.clearlyDefinedService.postDefinitions('"npm/npmjs/-/jquery/1.9.1"');
+    // this.logger.log('declared' + definitions.licensed.declared);
+    // return definitions;
+    return null;
   }
 
   /**

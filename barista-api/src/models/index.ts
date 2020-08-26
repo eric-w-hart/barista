@@ -2,6 +2,7 @@ export { BomItemBase } from './BomItemBase';
 export { BomLicenseException } from './BomLicenseException';
 export { BomManualLicense } from './BomManualLicense';
 export { BomSecurityException } from './BomSecurityException';
+export { ClearlyDefined } from './ClearlyDefined';
 export { DeploymentType } from './DeploymentType';
 export { PackageManager } from './PackageManager';
 export { LegacyCommunityProjectImport } from './LegacyCommunityProjectImport';
@@ -29,4 +30,3 @@ export { VulnerabilityStatusDeploymentType } from './VulnerabilityStatusDeployme
 export { LicenseObligation } from './LicenseObligation';
 export { ProjectNote } from './ProjectNote';
 export { ToolTip } from './ToolTip';
-export { ProjectsByLatestScan } from './vProjectbyLatestScan';

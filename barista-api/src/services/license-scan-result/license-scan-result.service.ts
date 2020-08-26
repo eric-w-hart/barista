@@ -51,6 +51,7 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
     const replaceval = /:/gi;
     for (const license of licenses) {
       const packageManager = await this.clearlyDefinedService.getPackageType(license.package_manager_code);
+      this.logger.log('package = ' + packageManager);
       const clearlyDefined = await this.clearlyDefinedService.postNotices(
         packageManager + license.displayIdentifier.replace(replaceval, '/'),
       );

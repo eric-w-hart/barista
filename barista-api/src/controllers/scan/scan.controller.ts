@@ -145,11 +145,4 @@ export class ScanController implements CrudController<Scan> {
     this.logger.log('id = ' + id);
     return this.service.distinctLicenseAttributions(licenseScan.id);
   }
-
-  @Get('/attribution')
-  @UseInterceptors(CrudRequestInterceptor)
-  async getClearlyDefinedAttributions(@Query('indentifier') indentifier: string) {
-    indentifier = '"' + indentifier + '"';
-    return this.clearlyDefinedService.postDefinitions(indentifier);
-  }
 }

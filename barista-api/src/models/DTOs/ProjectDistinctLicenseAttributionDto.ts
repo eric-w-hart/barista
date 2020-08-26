@@ -1,4 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
+import { ClearlyDefined } from '../ClearlyDefined';
 
 export class ProjectDistinctLicenseAttributionDto {
   @ApiModelProperty()
@@ -12,4 +13,7 @@ export class ProjectDistinctLicenseAttributionDto {
 
   @ApiModelProperty()
   licenselink: any;
+
+  @ApiModelProperty()
+  clearDefined: ClearlyDefined;
 }

@@ -5,6 +5,8 @@ import { AppServiceBase } from '@app/services/app-service-base/app-base.service'
 import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { json } from 'express';
+import { listeners } from 'process';
 
 @Injectable()
 export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> {
@@ -36,29 +38,30 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
   /**
    * Gets distinct licenses from a LicenseScanResult
    */
-  async distinctLicensesAttribution(licenseScanId: Number): Promise<ProjectDistinctLicenseAttributionDto[]> {
+  async distinctLicensesAttribution(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
     const licenses = await LicenseScanResultItem.createQueryBuilder('ri')
-      .innerJoin('ri.license', 'license')
-      .innerJoin('scan.id', 'scan')
-      .innerJoin('ri.licenseScan', 'licenseScan')
-      .where('licenseScan.id = :id', { id: licenseScanId })
-      .where('scan.id = ri.scanId')
-      .select(
-        'scan.projectId, license.name as license, ri.publisherName as publisherName, ri.displayIdentifier, license.homepageUrl, license.referenceUrl',
-      )
+      .innerJoin('license', 'license', 'ri."licenseId" = license.id')
+      .innerJoin('license_scan_result', 'lsr', 'ri."licenseScanId" = lsr.id')
+      .innerJoin('scan', 'scan', 'scan.id = lsr."scanId"')
+      .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
+      .where('lsr."scanId" = :id', { id: scanId.toString() })
+      .select('p2."package_manager_code",p2.id, ri.*, license.code')
       .getRawMany();
+    const ret: ProjectDistinctLicenseAttributionDto[] = [];
     const replaceval = /:/gi;
     for (const license of licenses) {
-      // await this.clearlyDefinedService.postNotices(
-      //   'maven/mavencentral/' + license.displayIdentifier.replace(replaceval, '/'),
-      // );
-      this.logger.log('display = ' + license.displayIdentifier);
-      this.logger.log('projectId = ' + license.projectId);
+      const packageManager = await this.clearlyDefinedService.getPackageType(license.package_manager_code);
+      const clearlyDefined = await this.clearlyDefinedService.postNotices(
+        packageManager + license.displayIdentifier.replace(replaceval, '/'),
+      );
+      const projectDistinctLicenseAttributionDto = {} as ProjectDistinctLicenseAttributionDto;
+      projectDistinctLicenseAttributionDto.publisherName = license.publisherName;
+      projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
+      projectDistinctLicenseAttributionDto.license = license.code;
+      projectDistinctLicenseAttributionDto.clearDefined = clearlyDefined;
+      ret.push(projectDistinctLicenseAttributionDto);
     }
-    // const definitions = await this.clearlyDefinedService.postDefinitions('"npm/npmjs/-/jquery/1.9.1"');
-    // this.logger.log('declared' + definitions.licensed.declared);
-    // return definitions;
-    return null;
+    return ret;
   }
 
   /**

@@ -12,6 +12,20 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
   }
   private logger = new Logger('ClearlyDefinedService');
 
+  async getPackageType(packageType: string) {
+    switch (packageType) {
+      case 'maven':
+        return 'maven/mavencentral/';
+        break;
+      case 'npm':
+        return 'npm/npmjs/';
+        break;
+
+      default:
+        break;
+    }
+  }
+
   async postNotices(packageIndentifier: string) {
     try {
       const url = 'https://api.clearlydefined.io/notices';
@@ -35,7 +49,9 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
           clearlyDefined = Object.assign(clearlyDefined, res.data.content.packages[0]);
           clearlyDefined.indentifier = packageIndentifier;
           clearlyDefined.licensetext = res.data.content.packages[0].text;
-          clearlyDefined.copyrights = res.data.content.packages[0].copyrights.toString();
+          if (res.data.content.packages[0].copyrights?.length > 0) {
+            clearlyDefined.copyrights = res.data.content.packages[0].copyrights.toString();
+          }
           this.db.save(clearlyDefined);
         }
       }

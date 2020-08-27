@@ -53,17 +53,22 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
     let counter = 0;
     for (const license of licenses) {
       this.logger.log('counter = ' + counter++);
+      this.logger.log('package type = ' + license.package_manager_code);
       const packageConversion = await this.clearlyDefinedService.convertPackage(
         license.package_manager_code,
         license.displayIdentifier,
       );
       this.logger.log('package = ' + packageConversion);
-      const clearlyDefined = await this.clearlyDefinedService.postNotices(packageConversion);
       const projectDistinctLicenseAttributionDto = {} as ProjectDistinctLicenseAttributionDto;
+      if (packageConversion) {
+        const clearlyDefined = await this.clearlyDefinedService.postNotices(packageConversion);
+        projectDistinctLicenseAttributionDto.clearDefined = clearlyDefined;
+      }
+      projectDistinctLicenseAttributionDto.packageName = license.displayIdentifier;
       projectDistinctLicenseAttributionDto.publisherName = license.publisherName;
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
       projectDistinctLicenseAttributionDto.license = license.code;
-      projectDistinctLicenseAttributionDto.clearDefined = clearlyDefined;
+
       ret.push(projectDistinctLicenseAttributionDto);
     }
     return ret;

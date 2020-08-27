@@ -18,6 +18,7 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
         const replacevalcolon = /:/gi;
         return 'maven/mavencentral/' + packageName.replace(replacevalcolon, '/');
         break;
+
       case 'npm':
         const splitString = packageName.split('@');
         const newPackageName = splitString[0] + '/' + splitString[1];
@@ -25,6 +26,15 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
           return  'npm/npmjs/' + '@' + splitString[1] + '/' + splitString[2];
         }
         return 'npm/npmjs/-/' + newPackageName;
+        break;
+
+      case 'python2_7pip':
+      case 'python3-pip':
+        return 'pypi/pypi/-/' + packageName;
+        break;
+      case 'nuget':
+        const nugetSpilt = packageName.split('@');
+        return 'nuget/nuget/-/' + nugetSpilt[0] + '/' + nugetSpilt[1];
         break;
 
       default:

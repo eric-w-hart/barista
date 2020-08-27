@@ -16,4 +16,7 @@ export class ProjectDistinctLicenseAttributionDto {
 
   @ApiModelProperty()
   clearDefined: ClearlyDefined;
+
+  @ApiModelProperty()
+  packageName: string;
 }

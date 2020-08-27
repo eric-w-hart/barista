@@ -12,13 +12,19 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
   }
   private logger = new Logger('ClearlyDefinedService');
 
-  async getPackageType(packageType: string) {
+  async convertPackage(packageType: string, packageName: string) {
     switch (packageType) {
       case 'maven':
-        return 'maven/mavencentral/';
+        const replacevalcolon = /:/gi;
+        return 'maven/mavencentral/' + packageName.replace(replacevalcolon, '/');
         break;
       case 'npm':
-        return 'npm/npmjs/';
+        const splitString = packageName.split('@');
+        const newPackageName = splitString[0] + '/' + splitString[1];
+        if (splitString.length > 2) {
+          return  'npm/npmjs/' + '@' + splitString[1] + '/' + splitString[2];
+        }
+        return 'npm/npmjs/-/' + newPackageName;
         break;
 
       default:
@@ -40,10 +46,11 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
         },
       };
 
-      const res = await axios.post<ClearlyDefinedDTO>(url, data, config);
+
 
       let clearlyDefined = await this.db.findOne({ where: { indentifier: packageIndentifier } });
       if (!clearlyDefined) {
+        const res = await axios.post<ClearlyDefinedDTO>(url, data, config);
         clearlyDefined = this.db.create();
         if (res.data.content.packages.length > 0) {
           clearlyDefined = Object.assign(clearlyDefined, res.data.content.packages[0]);

@@ -140,9 +140,8 @@ export class ScanController implements CrudController<Scan> {
   @UseInterceptors(CrudRequestInterceptor)
   async getAttributions(@Param('id') id: number) {
     const scan = await this.service.findOne(id);
-    const licenseScan = await this.service.latestCompletedLicenseScan(scan);
-
-    this.logger.log('id = ' + id);
-    return this.service.distinctLicenseAttributions(licenseScan.id);
+    if (scan) {
+      return this.service.distinctLicenseAttributions(scan.id);
+    }
   }
 }

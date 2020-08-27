@@ -46,15 +46,19 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
       .where('lsr."scanId" = :id', { id: scanId.toString() })
       .select('p2."package_manager_code",p2.id, ri.*, license.code')
+      .select('p2."package_manager_code",p2.id, ri.*, license.code')
       .getRawMany();
     const ret: ProjectDistinctLicenseAttributionDto[] = [];
-    const replaceval = /:/gi;
+    this.logger.log('count = ' + licenses.length);
+    let counter = 0;
     for (const license of licenses) {
-      const packageManager = await this.clearlyDefinedService.getPackageType(license.package_manager_code);
-      this.logger.log('package = ' + packageManager);
-      const clearlyDefined = await this.clearlyDefinedService.postNotices(
-        packageManager + license.displayIdentifier.replace(replaceval, '/'),
+      this.logger.log('counter = ' + counter++);
+      const packageConversion = await this.clearlyDefinedService.convertPackage(
+        license.package_manager_code,
+        license.displayIdentifier,
       );
+      this.logger.log('package = ' + packageConversion);
+      const clearlyDefined = await this.clearlyDefinedService.postNotices(packageConversion);
       const projectDistinctLicenseAttributionDto = {} as ProjectDistinctLicenseAttributionDto;
       projectDistinctLicenseAttributionDto.publisherName = license.publisherName;
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;

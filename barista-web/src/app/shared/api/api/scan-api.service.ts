@@ -23,6 +23,7 @@ import { Scan } from '../model/scan';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+import { ProjectDistinctLicenseAttributionDto } from '../model/project-distinct-license-attribution-dto';
 
 
 
@@ -562,6 +563,58 @@ export class ScanApiService {
 
         return this.httpClient.get<any>(`${this.configuration.basePath}/scan/queue/job/${encodeURIComponent(String(id))}/status`,
             {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param id
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public scanIdAttributionGet(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ProjectDistinctLicenseAttributionDto>>;
+    public scanIdAttributionGet(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ProjectDistinctLicenseAttributionDto>>>;
+    public scanIdAttributionGet(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ProjectDistinctLicenseAttributionDto>>>;
+    public scanIdAttributionGet(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling scanIdAttributionGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+                // authentication (oauth2) required
+                if (this.configuration.accessToken) {
+                  const accessToken = typeof this.configuration.accessToken === 'function'
+                      ? this.configuration.accessToken()
+                      : this.configuration.accessToken;
+                  headers = headers.set('Authorization', 'Bearer ' + accessToken);
+              }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<ProjectDistinctLicenseAttributionDto>>(`${this.configuration.basePath}/scan/${encodeURIComponent(String(id))}/attribution`,
+            {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

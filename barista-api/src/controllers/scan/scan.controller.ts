@@ -25,6 +25,7 @@ import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { Queue } from 'bull';
 import { InjectQueue } from 'nest-bull';
+import { ProjectDistinctLicenseAttributionDto } from '@app/models/DTOs';
 
 // @UseGuards(AuthGuard('jwt'))
 // @ApiOAuth2Auth()
@@ -138,7 +139,8 @@ export class ScanController implements CrudController<Scan> {
 
   @Get('/:id/attribution')
   @UseInterceptors(CrudRequestInterceptor)
-  async getAttributions(@Param('id') id: number) {
+  @ApiResponse({ status: 200, type: [ProjectDistinctLicenseAttributionDto] })
+  async getAttributions(@Param('id') id: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
     const scan = await this.service.findOne(id);
     if (scan) {
       return this.service.distinctLicenseAttributions(scan.id);

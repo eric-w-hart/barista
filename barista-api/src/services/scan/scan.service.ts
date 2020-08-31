@@ -1,3 +1,4 @@
+import { LicenseScanResultItem } from './../../models/LicenseScanResultItem';
 import { LicenseScanResult, Obligation, Project, ProjectScanStatusType, SecurityScanResult } from '@app/models';
 import {
   ProjectDistinctLicenseDto,
@@ -67,7 +68,11 @@ export class ScanService extends AppServiceBase<Scan> {
   }
 
   async distinctLicenseAttributions(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
-    return this.licenseScanResultService.distinctLicensesAttribution(scanId);
+    return this.licenseScanResultService.licensesAttributionByScanId(scanId);
+  }
+
+  async licenseAttributionByModule(LicenseScanResultItemId: number): Promise<ProjectDistinctLicenseAttributionDto> {
+    return this.licenseScanResultService.licensesAttributionByScanResultItem(LicenseScanResultItemId);
   }
 
   /**

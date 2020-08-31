@@ -1,3 +1,4 @@
+import { AttributionController } from '@app/controllers/attribution/attribution';
 import { BomLicenseExceptionController } from '@app/controllers/bom-license-exception/bom-license-exception.controller';
 import { BomManualLicenseController } from '@app/controllers/bom-manual-license/bom-manual-license.controller';
 import { BomSecurityExceptionController } from '@app/controllers/bom-security-exception/bom-security-exception.controller';
@@ -37,6 +38,7 @@ import { UserController } from './user/user.controller';
   imports: [AppQueueModule, AppOrmModule, ServicesModule, CqrsModule],
   providers: [],
   controllers: [
+    AttributionController,
     BomLicenseExceptionController,
     BomManualLicenseController,
     BomSecurityExceptionController,

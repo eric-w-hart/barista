@@ -38,7 +38,7 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
   /**
    * Gets distinct licenses from a LicenseScanResult
    */
-  async distinctLicensesAttribution(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
+  async licensesAttributionByScanId(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
     const licenses = await LicenseScanResultItem.createQueryBuilder('ri')
       .innerJoin('license', 'license', 'ri."licenseId" = license.id')
       .innerJoin('license_scan_result', 'lsr', 'ri."licenseScanId" = lsr.id')
@@ -53,6 +53,29 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
     let counter = 0;
     for (const license of licenses) {
       this.logger.log('counter = ' + counter++);
+      ret.push(await this.attributionByModule(license));
+    }
+    return ret;
+  }
+
+  async licensesAttributionByScanResultItem(
+    licenseScanResultItemId: number,
+  ): Promise<ProjectDistinctLicenseAttributionDto> {
+    const license = await LicenseScanResultItem.createQueryBuilder('ri')
+      .innerJoin('license', 'license', 'ri."licenseId" = license.id')
+      .innerJoin('license_scan_result', 'lsr', 'ri."licenseScanId" = lsr.id')
+      .innerJoin('scan', 'scan', 'scan.id = lsr."scanId"')
+      .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
+      .where('ri.id = :id', { id: licenseScanResultItemId })
+      .select('p2."package_manager_code",p2.id, ri.*, license.code')
+      .select('p2."package_manager_code",p2.id, ri.*, license.code')
+      .getRawOne();
+    this.logger.log(license);
+    return await this.attributionByModule(license);
+  }
+
+  async attributionByModule(license) {
+    if (license) {
       this.logger.log('package type = ' + license.package_manager_code);
       const packageConversion = await this.clearlyDefinedService.convertPackage(
         license.package_manager_code,
@@ -68,10 +91,8 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       projectDistinctLicenseAttributionDto.publisherName = license.publisherName;
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
       projectDistinctLicenseAttributionDto.license = license.code;
-
-      ret.push(projectDistinctLicenseAttributionDto);
+      return projectDistinctLicenseAttributionDto;
     }
-    return ret;
   }
 
   /**

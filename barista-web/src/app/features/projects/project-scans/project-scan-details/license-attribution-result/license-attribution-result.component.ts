@@ -42,31 +42,28 @@ export class LicenseAttributionResultComponent implements OnInit {
         this.totalCount = response.length;
         console.log('total = ' + response.length);
         response.forEach((element) => {
-          this.attributionApiService
-            .attributionByScanResultIdIdGet(Number(element.id))
-            .pipe(delay(5000))
-            .subscribe((attribution) => {
-              this.attribution += 'Package: ';
-              this.attribution += attribution.packageName + '\n\n';
-              this.attribution += 'License: ';
-              this.attribution += attribution.clearDefined?.license
-                ? attribution.clearDefined.license
-                : attribution.license;
-              this.attribution += '\n\n';
-              this.attribution += 'Copyrights: \n';
-              this.attribution += attribution.clearDefined?.copyrights ? attribution.clearDefined.copyrights : '';
-              this.attribution += '\n\n';
-              this.attribution += 'License Text: \n';
-              this.attribution += attribution.clearDefined?.licensetext
-                ? attribution.clearDefined.licensetext
-                : attribution.licenselink;
-              this.attribution += '\n\n';
-              this.counter++;
-              console.log('counter = ' + this.counter);
-              if (this.totalCount === this.counter) {
-                this.isLoadingAttribution = false;
-              }
-            });
+          this.attributionApiService.attributionByScanResultIdIdGet(Number(element.id)).subscribe((attribution) => {
+            this.attribution += 'Package: ';
+            this.attribution += attribution.packageName + '\n\n';
+            this.attribution += 'License: ';
+            this.attribution += attribution.clearDefined?.license
+              ? attribution.clearDefined.license
+              : attribution.license;
+            this.attribution += '\n\n';
+            this.attribution += 'Copyrights: \n';
+            this.attribution += attribution.clearDefined?.copyrights ? attribution.clearDefined.copyrights : '';
+            this.attribution += '\n\n';
+            this.attribution += 'License Text: \n';
+            this.attribution += attribution.clearDefined?.licensetext
+              ? attribution.clearDefined.licensetext
+              : attribution.licenselink;
+            this.attribution += '\n\n';
+            this.counter++;
+            console.log('counter = ' + this.counter);
+            if (this.totalCount === this.counter) {
+              this.isLoadingAttribution = false;
+            }
+          });
         });
       });
   }

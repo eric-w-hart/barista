@@ -1,3 +1,5 @@
+export * from './attribution.service';
+import { AttributionService } from './attribution.service';
 export * from './bom-license-exception-api.service';
 import { BomLicenseExceptionApiService } from './bom-license-exception-api.service';
 export * from './bom-manual-license-api.service';
@@ -52,4 +54,4 @@ export * from './user-api.service';
 import { UserApiService } from './user-api.service';
 export * from './vulnerability-status-deployment-type-api.service';
 import { VulnerabilityStatusDeploymentTypeApiService } from './vulnerability-status-deployment-type-api.service';
-export const APIS = [BomLicenseExceptionApiService, BomManualLicenseApiService, BomSecurityExceptionApiService, DefaultApiService, DeploymentTypeApiService, GlobalSearchApiService, LicenseApiService, LicenseScanResultApiService, LicenseScanResultItemApiService, LicenseStatusDeploymentTypeApiService, ObligationApiService, ObligationTypeApiService, OutputFormatTypeApiService, PackageManagerApiService, ProjectApiService, ProjectDevelopmentTypeApiService, ProjectNotesApiService, ProjectScanStatusTypeApiService, ProjectStatusTypeApiService, ScanApiService, SecurityScanResultApiService, SecurityScanResultItemApiService, SecurityScanResultItemStatusTypeApiService, SystemConfigurationApiService, ToolTipApiService, UserApiService, VulnerabilityStatusDeploymentTypeApiService];
+export const APIS = [AttributionService, BomLicenseExceptionApiService, BomManualLicenseApiService, BomSecurityExceptionApiService, DefaultApiService, DeploymentTypeApiService, GlobalSearchApiService, LicenseApiService, LicenseScanResultApiService, LicenseScanResultItemApiService, LicenseStatusDeploymentTypeApiService, ObligationApiService, ObligationTypeApiService, OutputFormatTypeApiService, PackageManagerApiService, ProjectApiService, ProjectDevelopmentTypeApiService, ProjectNotesApiService, ProjectScanStatusTypeApiService, ProjectStatusTypeApiService, ScanApiService, SecurityScanResultApiService, SecurityScanResultItemApiService, SecurityScanResultItemStatusTypeApiService, SystemConfigurationApiService, ToolTipApiService, UserApiService, VulnerabilityStatusDeploymentTypeApiService];

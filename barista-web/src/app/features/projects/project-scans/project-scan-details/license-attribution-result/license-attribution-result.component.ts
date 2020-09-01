@@ -1,8 +1,8 @@
-import { ProjectDistinctLicenseAttributionDto } from './../../../../../shared/api/model/project-distinct-license-attribution-dto';
+import { ProjectDistinctLicenseAttributionDto } from '@app/shared/api/model/project-distinct-license-attribution-dto';
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScanApiService } from '@app/shared/api';
+import { AttributionService, LicenseScanResultItemApiService } from '@app/shared/api';
 
 @Component({
   selector: 'app-license-attribution-result',
@@ -10,27 +10,51 @@ import { ScanApiService } from '@app/shared/api';
   styleUrls: ['./license-attribution-result.component.scss'],
 })
 export class LicenseAttributionResultComponent implements OnInit {
-  constructor(private router: Router, private route: ActivatedRoute, private scanApiService: ScanApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private attributionApiService: AttributionService,
+    private licenseScanResultItemApiService: LicenseScanResultItemApiService,
+  ) {}
   attribution = '';
   isLoadingAttribution = true;
 
   ngOnInit() {
     const scanId = this.route.snapshot.paramMap.get('scanId');
-    this.scanApiService.scanIdAttributionGet(Number(scanId)).subscribe((response) => {
-      response.forEach((element) => {
-        this.attribution += 'Package: ';
-        this.attribution += element.packageName + '\n\n';
-        this.attribution += 'License: ';
-        this.attribution += element.clearDefined?.license ? element.clearDefined.license : element.license;
-        this.attribution += '\n\n';
-        this.attribution += 'Copyrights: \n';
-        this.attribution += element.clearDefined?.copyrights ? element.clearDefined.copyrights : '';
-        this.attribution += '\n\n';
-        this.attribution += 'License Text: \n';
-        this.attribution += element.clearDefined?.licensetext ? element.clearDefined.licensetext : element.licenselink;
-        this.attribution += '\n\n';
+    const query: any = {};
+    query.filter = 'licenseScan.scan||eq||' + scanId;
+    this.licenseScanResultItemApiService
+      .licenseScanResultItemGet(
+        query.fields,
+        query.filter,
+        query.or,
+        query.sort,
+        query.join,
+        query.perPage,
+        query.offset,
+        query.page,
+        query.cache,
+      )
+      .subscribe((response) => {
+        response.forEach((element) => {
+          this.attributionApiService.attributionByScanResultIdIdGet(Number(element.id)).subscribe((attribution) => {
+            this.attribution += 'Package: ';
+            this.attribution += attribution.packageName + '\n\n';
+            this.attribution += 'License: ';
+            this.attribution += attribution.clearDefined?.license
+              ? attribution.clearDefined.license
+              : attribution.license;
+            this.attribution += '\n\n';
+            this.attribution += 'Copyrights: \n';
+            this.attribution += attribution.clearDefined?.copyrights ? attribution.clearDefined.copyrights : '';
+            this.attribution += '\n\n';
+            this.attribution += 'License Text: \n';
+            this.attribution += attribution.clearDefined?.licensetext
+              ? attribution.clearDefined.licensetext
+              : attribution.licenselink;
+            this.attribution += '\n\n';
+          });
+        });
+        this.isLoadingAttribution = false;
       });
-      this.isLoadingAttribution = false;
-    });
   }
 }

@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-
+import { AttributionService } from './api/attribution.service';
 import { BomLicenseExceptionApiService } from './api/bom-license-exception-api.service';
 import { BomManualLicenseApiService } from './api/bom-manual-license-api.service';
 import { BomSecurityExceptionApiService } from './api/bom-security-exception-api.service';
@@ -36,6 +36,7 @@ import { VulnerabilityStatusDeploymentTypeApiService } from './api/vulnerability
   declarations: [],
   exports:      [],
   providers: [
+    AttributionService,
     BomLicenseExceptionApiService,
     BomManualLicenseApiService,
     BomSecurityExceptionApiService,

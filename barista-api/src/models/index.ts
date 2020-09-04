@@ -16,6 +16,7 @@ export { Obligation } from './Obligation';
 export { ObligationType } from './ObligationType';
 export { OptionValueModelBase } from './OptionValueModelBase';
 export { Project } from './Project';
+export { ProjectAttribution } from './ProjectAttribution';
 export { ProjectDevelopmentType } from './ProjectDevelopmentType';
 export { Scan } from './Scan';
 export { SecurityScanResult } from './SecurityScanResult';

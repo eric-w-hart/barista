@@ -3,13 +3,7 @@ import { ClearlyDefined } from '../ClearlyDefined';
 
 export class ProjectDistinctLicenseAttributionDto {
   @ApiModelProperty()
-  packageName: string;
-
-  @ApiModelProperty()
-  publisherName: any;
-
-  @ApiModelProperty()
-  publisherUrl: any;
+  clearDefined: ClearlyDefined;
 
   @ApiModelProperty()
   license: any;
@@ -18,5 +12,11 @@ export class ProjectDistinctLicenseAttributionDto {
   licenselink: any;
 
   @ApiModelProperty()
-  clearDefined: ClearlyDefined;
+  packageName: string;
+
+  @ApiModelProperty()
+  publisherName: any;
+
+  @ApiModelProperty()
+  publisherUrl: any;
 }

@@ -5,8 +5,6 @@ import { AppServiceBase } from '@app/services/app-service-base/app-base.service'
 import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { json } from 'express';
-import { listeners } from 'process';
 
 @Injectable()
 export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> {
@@ -19,15 +17,17 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
    * Gets distinct licenses from a LicenseScanResult
    */
   async distinctLicenses(licenseScanResult: LicenseScanResult): Promise<ProjectDistinctLicenseDto[]> {
-    return (await LicenseScanResultItem.createQueryBuilder('ri')
-      .innerJoin('ri.license', 'license')
-      .innerJoin('ri.licenseScan', 'licenseScan')
-      .addGroupBy('license.id')
-      .addOrderBy('count(*)', 'DESC')
-      .where('licenseScan.id = :id', { id: licenseScanResult.id })
-      .select('license.name as name')
-      .addSelect('count(*) as count')
-      .getRawMany()).map(row => ({
+    return (
+      await LicenseScanResultItem.createQueryBuilder('ri')
+        .innerJoin('ri.license', 'license')
+        .innerJoin('ri.licenseScan', 'licenseScan')
+        .addGroupBy('license.id')
+        .addOrderBy('count(*)', 'DESC')
+        .where('licenseScan.id = :id', { id: licenseScanResult.id })
+        .select('license.name as name')
+        .addSelect('count(*) as count')
+        .getRawMany()
+    ).map(row => ({
       count: +row.count,
       license: {
         name: row.name,

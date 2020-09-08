@@ -1,9 +1,9 @@
-import { LicenseScanResultItem } from './../../models/LicenseScanResultItem';
+import { ProjectAttribution } from './../../models/ProjectAttribution';
 import { LicenseScanResult, Obligation, Project, ProjectScanStatusType, SecurityScanResult } from '@app/models';
 import {
+  ProjectDistinctLicenseAttributionDto,
   ProjectDistinctLicenseDto,
   ProjectDistinctVulnerabilityDto,
-  ProjectDistinctLicenseAttributionDto,
 } from '@app/models/DTOs';
 import { ProjectDistinctSeverityDto } from '@app/models/DTOs/ProjectDistinctSeverityDto';
 import { Scan } from '@app/models/Scan';
@@ -25,7 +25,7 @@ import { Queue } from 'bull';
 import * as _ from 'lodash';
 import { InjectQueue } from 'nest-bull';
 import * as nodemailer from 'nodemailer';
-import { In, IsNull } from 'typeorm';
+import { ProjectAttributionService } from '../project-attribution/project-attribution.service';
 
 @Injectable()
 export class ScanService extends AppServiceBase<Scan> {
@@ -45,6 +45,7 @@ export class ScanService extends AppServiceBase<Scan> {
     @Inject(forwardRef(() => BomSecurityExceptionService))
     private readonly bomSecurityExceptionService: BomSecurityExceptionService,
     @Inject(forwardRef(() => ProjectService))
+    @Inject(forwardRef(() => ProjectAttributionService))
     private readonly projectService: ProjectService,
     @InjectRepository(Scan) repo,
     @InjectQueue('scan-queue') readonly queue: Queue,

@@ -23,7 +23,7 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
         const splitString = packageName.split('@');
         const newPackageName = splitString[0] + '/' + splitString[1];
         if (splitString.length > 2) {
-          return  'npm/npmjs/' + '@' + splitString[1] + '/' + splitString[2];
+          return 'npm/npmjs/' + '@' + splitString[1] + '/' + splitString[2];
         }
         return 'npm/npmjs/-/' + newPackageName;
         break;
@@ -56,8 +56,6 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
         },
       };
 
-
-
       let clearlyDefined = await this.db.findOne({ where: { indentifier: packageIndentifier } });
       if (!clearlyDefined) {
         const res = await axios.post<ClearlyDefinedDTO>(url, data, config);
@@ -66,8 +64,10 @@ export class ClearlyDefinedService extends AppServiceBase<ClearlyDefined> {
           clearlyDefined = Object.assign(clearlyDefined, res.data.content.packages[0]);
           clearlyDefined.indentifier = packageIndentifier;
           clearlyDefined.licensetext = res.data.content.packages[0].text;
-          if (res.data.content.packages[0].copyrights?.length > 0) {
-            clearlyDefined.copyrights = res.data.content.packages[0].copyrights.toString();
+          if (res.data.content.packages[0]) {
+            if (res.data.content.packages[0].copyrights?.length > 0) {
+              clearlyDefined.copyrights = res.data.content.packages[0].copyrights.toString();
+            }
           }
           this.db.save(clearlyDefined);
         }

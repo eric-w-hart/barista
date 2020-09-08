@@ -14,6 +14,7 @@ import { ObligationService } from '@app/services/obligation/obligation.service';
 import { OutputFormatTypeService } from '@app/services/output-format-type/output-format-type.service';
 import { PackageManagerService } from '@app/services/package-manager/package-manager.service';
 import { ProjectDevelopmentTypeService } from '@app/services/project-development-type/project-development-type.service';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectNotesService } from '@app/services/project-notes/project-notes.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ProjectStatusTypeService } from '@app/services/project-status-type/project-status-type.service';
@@ -58,6 +59,7 @@ const services = [
   ObligationTypeService,
   OutputFormatTypeService,
   PackageManagerService,
+  ProjectAttributionService,
   ProjectDevelopmentTypeService,
   ProjectNotesService,
   ProjectScanStatusTypeService,

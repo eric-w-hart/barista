@@ -1,3 +1,6 @@
+import { ProjectAttributionDto } from './../../models/DTOs/ProjectAttributionDto';
+import { ProjectAttribution } from './../../models/ProjectAttribution';
+
 import { Obligation, ProjectScanStatusType, Scan, SystemConfiguration } from '@app/models';
 import { ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
 import { ObligationSearchDto } from '@app/models/DTOs/ObligationSearchDto';
@@ -13,6 +16,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GetManyDefaultResponse } from '@nestjsx/crud';
 import { SelectQueryBuilder } from 'typeorm';
 import * as url from 'url';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 
 @Injectable()
 export class ProjectService extends AppServiceBase<Project> {
@@ -21,6 +25,8 @@ export class ProjectService extends AppServiceBase<Project> {
     private readonly scanService: ScanService,
     @Inject(forwardRef(() => BomManualLicenseService))
     private readonly bomManualLicenseService: BomManualLicenseService,
+    @Inject(forwardRef(() => ProjectAttributionService))
+    private readonly projectAttributionService: ProjectAttributionService,
     @InjectRepository(Project) repo,
   ) {
     super(repo);
@@ -61,7 +67,7 @@ export class ProjectService extends AppServiceBase<Project> {
             where l.id = t.licenseId
             group by l.id`;
     const rows = await this.db.manager.query(query, [project.id]);
-    return rows.map((row) => ({
+    return rows.map(row => ({
       license: {
         name: row.name,
       },
@@ -95,6 +101,14 @@ export class ProjectService extends AppServiceBase<Project> {
     }
   }
 
+  async getprojectAttribution(project: Project): Promise<ProjectAttributionDto> {
+    const projectAttribution = new ProjectAttributionDto();
+    projectAttribution.licenseText = await (await this.projectAttributionService.findOne({
+      where: { project: project },
+    })).attribution;
+    return projectAttribution;
+  }
+
   /**
    * Gets distinct vulnerabilities from the latest Scan of a Project
    */
@@ -109,7 +123,11 @@ export class ProjectService extends AppServiceBase<Project> {
   }
 
   async distinctUserIds(): Promise<any> {
-    return this.db.createQueryBuilder('project').select('project.userId').addGroupBy('project.userId').getRawMany();
+    return this.db
+      .createQueryBuilder('project')
+      .select('project.userId')
+      .addGroupBy('project.userId')
+      .getRawMany();
   }
 
   getUsersProjectsQuery(userId: string): SelectQueryBuilder<Project> {
@@ -278,7 +296,7 @@ export class ProjectService extends AppServiceBase<Project> {
                     group by l.code)
                 group by loo."obligationCode")`;
 
-    return await PaginateRawQuery(this.db.manager, query, [projectId], page, pageSize, (record) => ({
+    return await PaginateRawQuery(this.db.manager, query, [projectId], page, pageSize, record => ({
       id: record.id,
       code: record.code,
       name: record.name,

@@ -266,6 +266,17 @@ export class ProjectController implements CrudController<Project> {
     }
   }
 
+  @Get('/:id/attributions')
+  @UseInterceptors(CrudRequestInterceptor)
+  async attributions(@Param('id') id: string): Promise<any> {
+    const project = await this.service.db.findOne(Number(id));
+    if (project) {
+      return this.service.getprojectAttribution(project);
+    } else {
+      return [];
+    }
+  }
+
   @Get('/:id/stats/project-scan-status')
   @UseInterceptors(CrudRequestInterceptor)
   @ApiResponse({ status: 200, type: ProjectScanStateDto })

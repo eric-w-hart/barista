@@ -27,8 +27,8 @@ import { Queue } from 'bull';
 import { InjectQueue } from 'nest-bull';
 import { ProjectDistinctLicenseAttributionDto } from '@app/models/DTOs';
 
-// @UseGuards(AuthGuard('jwt'))
-// @ApiOAuth2Auth()
+@UseGuards(AuthGuard('jwt'))
+@ApiOAuth2Auth()
 @Crud({
   query: {
     join: {

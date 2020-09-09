@@ -105,7 +105,7 @@ export class ProjectService extends AppServiceBase<Project> {
     const projectAttribution = new ProjectAttributionDto();
     projectAttribution.licenseText = await (await this.projectAttributionService.findOne({
       where: { project: project },
-    })).attribution;
+    }))?.attribution;
     return projectAttribution;
   }
 

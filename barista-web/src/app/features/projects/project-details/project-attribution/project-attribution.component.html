@@ -1,7 +1,7 @@
 <mat-card class="content-card" fxFill>
   <mat-card-content>
     <div class="spinner" *ngIf="isLoadingAttribution">
-      <mat-label>Loading {{ counter }} of {{ totalCount }} licenses</mat-label>
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
     <textarea
       *ngIf="!isLoadingAttribution"

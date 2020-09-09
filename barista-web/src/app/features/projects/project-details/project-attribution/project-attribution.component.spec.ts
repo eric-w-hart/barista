@@ -16,11 +16,11 @@ import { FormlyModule } from '@ngx-formly/core';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 import { SafePipeModule } from 'safe-pipe';
-import { LicenseAttributionResultComponent } from './license-attribution-result.component';
+import { ProjectAttributionComponent } from './project-attribution.component';
 
 describe('LicenseAttributionResultComponent', () => {
-  let component: LicenseAttributionResultComponent;
-  let fixture: ComponentFixture<LicenseAttributionResultComponent>;
+  let component: ProjectAttributionComponent;
+  let fixture: ComponentFixture<ProjectAttributionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -48,12 +48,12 @@ describe('LicenseAttributionResultComponent', () => {
         SafePipeModule,
         PrettyJsonModule,
       ],
-      declarations: [LicenseAttributionResultComponent, LicenseScanResultItemsComponent, ObjectDetailsComponent],
+      declarations: [ProjectAttributionComponent, LicenseScanResultItemsComponent, ObjectDetailsComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LicenseAttributionResultComponent);
+    fixture = TestBed.createComponent(ProjectAttributionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,6 +2,7 @@ import { Project } from './../../../../shared/api/model/project';
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectApiService } from '@app/shared/api';
+import { saveAs as importedSaveAs } from 'file-saver';
 
 @Component({
   selector: 'app-project-attribution',
@@ -20,5 +21,11 @@ export class ProjectAttributionComponent implements OnInit {
       this.isLoadingAttribution = false;
     });
   }
-  download() {}
+
+  download() {
+    this.projectApiService.projectIdAttributionDownload(this.project.id.toString()).subscribe((response) => {
+      const blob: any = new Blob([response], { type: 'text/plain; charset=utf-8' });
+      importedSaveAs(response, 'attribution.txt');
+    });
+  }
 }

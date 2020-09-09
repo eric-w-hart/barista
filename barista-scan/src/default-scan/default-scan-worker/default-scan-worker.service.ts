@@ -304,6 +304,7 @@ export class DefaultScanWorkerService {
             this.logger.debug('length = ' + licenseAttribtions.length);
             licenseAttribtions.forEach(license => {
               this.logger.debug('package = ' + license.packageName);
+
               projectAttribution.attribution += 'Package: ';
               projectAttribution.attribution += license.packageName + '\n\n';
               projectAttribution.attribution += 'License: ';
@@ -316,6 +317,8 @@ export class DefaultScanWorkerService {
               projectAttribution.attribution += license.clearDefined?.licensetext
                 ? license.clearDefined.licensetext
                 : license.licenselink;
+              projectAttribution.attribution +=
+                '--------------------------------------------------------------------------------';
               projectAttribution.attribution += '\n\n';
             });
 

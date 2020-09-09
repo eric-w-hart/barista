@@ -3,13 +3,10 @@
     <div class="spinner" *ngIf="isLoadingAttribution">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
-    <textarea
-      *ngIf="!isLoadingAttribution"
-      style="width: 100%; height: 500px;"
-      matInput
-      [(ngModel)]="attribution"
-      readonly
-    >
-    </textarea>
+    <button class="scan-btn" mat-raised-button color="primary" (click)="download()">
+      <mat-icon>cloud_download</mat-icon>
+      <span> Download</span>
+    </button>
+    <p [innerText]="attribution"></p>
   </mat-card-content>
 </mat-card>

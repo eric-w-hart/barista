@@ -20,4 +20,5 @@ export class ProjectAttributionComponent implements OnInit {
       this.isLoadingAttribution = false;
     });
   }
+  download() {}
 }

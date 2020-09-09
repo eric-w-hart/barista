@@ -317,8 +317,9 @@ export class DefaultScanWorkerService {
               projectAttribution.attribution += license.clearDefined?.licensetext
                 ? license.clearDefined.licensetext
                 : license.licenselink;
+              projectAttribution.attribution += '\n\n';
               projectAttribution.attribution +=
-                '--------------------------------------------------------------------------------';
+                '-------------------------------------------------------------------------------------------------------------------------------';
               projectAttribution.attribution += '\n\n';
             });
 

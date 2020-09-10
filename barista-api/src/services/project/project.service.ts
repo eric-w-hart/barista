@@ -103,9 +103,14 @@ export class ProjectService extends AppServiceBase<Project> {
 
   async getprojectAttribution(project: Project): Promise<ProjectAttributionDto> {
     const projectAttribution = new ProjectAttributionDto();
-    projectAttribution.licenseText = await (await this.projectAttributionService.findOne({
+    const projectAttributionFound = await this.projectAttributionService.findOne({
       where: { project: project },
-    }))?.attribution;
+    });
+    if (projectAttributionFound) {
+      projectAttribution.licenseText = projectAttributionFound.attribution;
+    } else {
+      projectAttribution.licenseText = 'Successful scan required for attribution';
+    }
     return projectAttribution;
   }
 

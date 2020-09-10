@@ -39,7 +39,7 @@ export class NpmService extends DepClientBaseService {
       if (!fs.existsSync(cacheSubDirectory)) {
         fs.mkdirSync(cacheSubDirectory);
       }
-      command = `${command} --cache ${config.npmCacheDirectory}`;
+      command = `${command} --cache ${config.npmCacheDirectory} --ignore-scripts`;
     }
 
     return command;

@@ -1,3 +1,4 @@
+import { ModuleSearchComponent } from './features/module-search/module-search.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@app/features/auth/auth.guard';
@@ -30,6 +31,10 @@ const dashboardRoutes: Routes = [
     path: '',
     canActivateChild: [AuthGuard],
     children: [
+      {
+        path: 'module-search',
+        component: ModuleSearchComponent,
+      },
       {
         path: 'projects',
         component: DashboardComponent,

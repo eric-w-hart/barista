@@ -301,10 +301,7 @@ export class DefaultScanWorkerService {
             const projectAttribution = new ProjectAttribution();
             projectAttribution.attribution = '';
             projectAttribution.project = scan.project;
-            this.logger.debug('length = ' + licenseAttribtions.length);
             licenseAttribtions.forEach(license => {
-              this.logger.debug('package = ' + license.packageName);
-
               projectAttribution.attribution += 'Package: ';
               projectAttribution.attribution += license.packageName + '\n\n';
               projectAttribution.attribution += 'License: ';

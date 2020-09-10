@@ -13,7 +13,6 @@ export class ProjectAttributionService extends AppServiceBase<ProjectAttribution
 
   async insertAttribution(partial: ProjectAttribution) {
     let projectAttribution = await this.db.findOne({ where: { project: partial.project.id } });
-    this.logger.debug('found it = ' + projectAttribution);
     if (projectAttribution) {
       projectAttribution.attribution = partial.attribution;
     } else {

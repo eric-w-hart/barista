@@ -60,7 +60,6 @@ export class LdapService {
                 const baristaGroups = await this.projectService.distinctUserIds();
 
                 const ba = baristaGroups.map(g => g.project_userId);
-                this.logger.log(`distinct barista groups: ${ba}`);
                 const intersection = groups.filter(element =>
                   baristaGroups.map(g => g.project_userId).includes(element),
                 );
@@ -129,7 +128,6 @@ export class LdapService {
                 return null;
               }
 
-              // this.logger.log(`AD answer: ${result.entries.map(entryLocal => JSON.stringify(entryLocal.object))}`);
               const memberOf = result.entries[0].object.memberOf;
 
               // Only look at the first response

@@ -49,10 +49,7 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       .select('p2."package_manager_code",p2.id, ri.*, license.code')
       .getRawMany();
     const ret: ProjectDistinctLicenseAttributionDto[] = [];
-    this.logger.log('count = ' + licenses.length);
-    let counter = 0;
     for (const license of licenses) {
-      this.logger.log('counter = ' + counter++);
       ret.push(await this.attributionByModule(license));
     }
     return ret;
@@ -70,18 +67,15 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       .select('p2."package_manager_code",p2.id, ri.*, license.code')
       .select('p2."package_manager_code",p2.id, ri.*, license.code')
       .getRawOne();
-    this.logger.log(license);
     return await this.attributionByModule(license);
   }
 
   async attributionByModule(license) {
     if (license) {
-      this.logger.log('package type = ' + license.package_manager_code);
       const packageConversion = await this.clearlyDefinedService.convertPackage(
         license.package_manager_code,
         license.displayIdentifier,
       );
-      this.logger.log('package = ' + packageConversion);
       const projectDistinctLicenseAttributionDto = {} as ProjectDistinctLicenseAttributionDto;
       if (packageConversion) {
         const clearlyDefined = await this.clearlyDefinedService.postNotices(packageConversion);

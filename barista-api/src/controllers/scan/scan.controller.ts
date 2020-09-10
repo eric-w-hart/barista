@@ -113,14 +113,12 @@ export class ScanController implements CrudController<Scan> {
   @Post('/project/:id')
   @UseInterceptors(CrudRequestInterceptor)
   async doScan(@Param('id') id: number, @Request() request: any): Promise<any> {
-    this.logger.log('not branch');
     return this.performScan(id, null, request);
   }
 
   @Post('/project/:id/branch/')
   @UseInterceptors(CrudRequestInterceptor)
   async doScanbyBranch(@Param('id') id: number, @Body() branch: ScanBranchDto, @Request() request: any): Promise<any> {
-    this.logger.log(branch.branch);
     return this.performScan(id, branch.branch, request);
   }
 

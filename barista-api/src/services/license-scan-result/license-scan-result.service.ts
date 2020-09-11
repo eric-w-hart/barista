@@ -63,8 +63,8 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       .innerJoin('scan', 'scan', 'scan.id = lsr."scanId"')
       .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
       .where('ri.id = :id', { id: licenseScanResultItemId })
-      .select('p2."package_manager_code",p2.id, ri.*, license.code')
-      .select('p2."package_manager_code",p2.id, ri.*, license.code')
+      .select('p2."package_manager_code",p2.id, ri.*, license.*')
+      .select('p2."package_manager_code",p2.id, ri.*, license.*')
       .getRawOne();
     return await this.attributionByModule(license);
   }
@@ -85,6 +85,7 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
       projectDistinctLicenseAttributionDto.license = license.name;
       projectDistinctLicenseAttributionDto.licenselink = license.homepageUrl;
+      this.logger.debug(JSON.stringify(projectDistinctLicenseAttributionDto));
       return projectDistinctLicenseAttributionDto;
     }
   }

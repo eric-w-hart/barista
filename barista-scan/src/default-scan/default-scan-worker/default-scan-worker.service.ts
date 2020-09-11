@@ -305,14 +305,20 @@ export class DefaultScanWorkerService {
               projectAttribution.attribution += 'Package: ';
               projectAttribution.attribution += license.packageName + '\n\n';
               projectAttribution.attribution += 'License: ';
-              projectAttribution.attribution += license.clearDefined ? license.clearDefined.license : license.license;
+              projectAttribution.attribution += license.clearDefined
+                ? license.clearDefined.license !== 'OTHER'
+                  ? license.clearDefined.license
+                  : license.license
+                : license.license;
               projectAttribution.attribution += '\n\n';
               projectAttribution.attribution += 'Copyrights: \n';
               projectAttribution.attribution += license.clearDefined?.copyrights ? license.clearDefined.copyrights : '';
               projectAttribution.attribution += '\n\n';
               projectAttribution.attribution += 'License Text: \n';
               projectAttribution.attribution += license.clearDefined?.licensetext
-                ? license.clearDefined.licensetext
+                ? license.clearDefined.licensetext !== 'OTHER'
+                  ? license.clearDefined.licensetext
+                  : license.licenselink
                 : license.licenselink;
               projectAttribution.attribution += '\n\n';
               projectAttribution.attribution +=

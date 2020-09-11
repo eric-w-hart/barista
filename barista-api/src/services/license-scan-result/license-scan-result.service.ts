@@ -45,8 +45,7 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       .innerJoin('scan', 'scan', 'scan.id = lsr."scanId"')
       .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
       .where('lsr."scanId" = :id', { id: scanId.toString() })
-      .select('p2."package_manager_code",p2.id, ri.*, license.code')
-      .select('p2."package_manager_code",p2.id, ri.*, license.code')
+      .select('p2."package_manager_code",p2.id, ri.*, license.*')
       .getRawMany();
     const ret: ProjectDistinctLicenseAttributionDto[] = [];
     for (const license of licenses) {

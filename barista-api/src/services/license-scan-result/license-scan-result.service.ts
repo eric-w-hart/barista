@@ -84,7 +84,8 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       projectDistinctLicenseAttributionDto.packageName = license.displayIdentifier;
       projectDistinctLicenseAttributionDto.publisherName = license.publisherName;
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
-      projectDistinctLicenseAttributionDto.license = license.code;
+      projectDistinctLicenseAttributionDto.license = license.name;
+      projectDistinctLicenseAttributionDto.licenselink = license.homepageUrl;
       return projectDistinctLicenseAttributionDto;
     }
   }

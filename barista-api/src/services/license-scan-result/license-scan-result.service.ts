@@ -85,6 +85,7 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
       projectDistinctLicenseAttributionDto.license = license.name;
       projectDistinctLicenseAttributionDto.licenselink = license.homepageUrl;
+      this.logger.debug(JSON.stringify(license));
       this.logger.debug(JSON.stringify(projectDistinctLicenseAttributionDto));
       return projectDistinctLicenseAttributionDto;
     }

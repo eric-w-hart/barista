@@ -116,7 +116,6 @@ export class ProjectScansComponent extends ComponentWithMessage implements OnIni
     if (this.selectedBranch === 'Default Branch') {
       scanBranch = '';
     }
-    console.log(scanBranch);
     this.scanService.apiService
       .scanProjectIdBranchPost(this.projectId, { branch: scanBranch })
       .pipe(first())

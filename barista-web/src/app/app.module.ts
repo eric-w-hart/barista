@@ -66,6 +66,7 @@ import { ProjectNotesDetailsComponent } from '@app/features/projects/project-det
 import { ProjectNotesComponent } from '@app/features/projects/project-details/project-notes/project-notes.component';
 import { ProjectStatusNormalComponent } from '@app/features/projects/project-details/project-status/project-status-normal/project-status-normal.component';
 import { LicenseScanResultItemsComponent } from '@app/features/projects/project-scans/project-scan-details/license-scan-result/license-scan-result-items/license-scan-result-items.component';
+import { ProjectAttributionComponent } from '@app/features/projects/project-details/project-attribution/project-attribution.component';
 import { LicenseScanResultComponent } from '@app/features/projects/project-scans/project-scan-details/license-scan-result/license-scan-result.component';
 import { SecurityScanResultItemsComponent } from '@app/features/projects/project-scans/project-scan-details/security-scan-result/security-scan-result-items/security-scan-result-items.component';
 import { SecurityScanResultComponent } from '@app/features/projects/project-scans/project-scan-details/security-scan-result/security-scan-result.component';
@@ -154,6 +155,7 @@ export function apiConfigFactory(): Configuration {
     OutputFormatTypeDetailsComponent,
     PackageManagerDetailsComponent,
     PackageManagersComponent,
+    ProjectAttributionComponent,
     ProjectDetailsComponent,
     ProjectNotesComponent,
     ProjectNotesDetailsComponent,

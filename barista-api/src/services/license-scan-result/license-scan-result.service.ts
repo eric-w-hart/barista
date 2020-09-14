@@ -1,14 +1,17 @@
 import { LicenseScanResult, LicenseScanResultItem, Obligation, Scan } from '@app/models';
 import { ProjectDistinctLicenseDto } from '@app/models/DTOs';
+import { ProjectDistinctLicenseAttributionDto } from '@app/models/DTOs';
 import { AppServiceBase } from '@app/services/app-service-base/app-base.service';
-import { Injectable } from '@nestjs/common';
+import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> {
-  constructor(@InjectRepository(LicenseScanResult) repo) {
+  constructor(@InjectRepository(LicenseScanResult) repo, private clearlyDefinedService: ClearlyDefinedService) {
     super(repo);
   }
+  private logger = new Logger('LicenseScanResultService');
 
   /**
    * Gets distinct licenses from a LicenseScanResult
@@ -28,6 +31,59 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
         name: row.name,
       },
     }));
+  }
+
+  /**
+   * Gets distinct licenses from a LicenseScanResult
+   */
+  async licensesAttributionByScanId(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
+    const licenses = await LicenseScanResultItem.createQueryBuilder('ri')
+      .innerJoin('license', 'license', 'ri."licenseId" = license.id')
+      .innerJoin('license_scan_result', 'lsr', 'ri."licenseScanId" = lsr.id')
+      .innerJoin('scan', 'scan', 'scan.id = lsr."scanId"')
+      .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
+      .where('lsr."scanId" = :id', { id: scanId.toString() })
+      .select('p2."package_manager_code",p2.id, ri.*, license.*')
+      .getRawMany();
+    const ret: ProjectDistinctLicenseAttributionDto[] = [];
+    for (const license of licenses) {
+      ret.push(await this.attributionByModule(license));
+    }
+    return ret;
+  }
+
+  async licensesAttributionByScanResultItem(
+    licenseScanResultItemId: number,
+  ): Promise<ProjectDistinctLicenseAttributionDto> {
+    const license = await LicenseScanResultItem.createQueryBuilder('ri')
+      .innerJoin('license', 'license', 'ri."licenseId" = license.id')
+      .innerJoin('license_scan_result', 'lsr', 'ri."licenseScanId" = lsr.id')
+      .innerJoin('scan', 'scan', 'scan.id = lsr."scanId"')
+      .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
+      .where('ri.id = :id', { id: licenseScanResultItemId })
+      .select('p2."package_manager_code",p2.id, ri.*, license.*')
+      .getRawOne();
+    return await this.attributionByModule(license);
+  }
+
+  async attributionByModule(license) {
+    if (license) {
+      const packageConversion = await this.clearlyDefinedService.convertPackage(
+        license.package_manager_code,
+        license.displayIdentifier,
+      );
+      const projectDistinctLicenseAttributionDto = {} as ProjectDistinctLicenseAttributionDto;
+      if (packageConversion) {
+        const clearlyDefined = await this.clearlyDefinedService.postNotices(packageConversion);
+        projectDistinctLicenseAttributionDto.clearDefined = clearlyDefined;
+      }
+      projectDistinctLicenseAttributionDto.packageName = license.displayIdentifier;
+      projectDistinctLicenseAttributionDto.publisherName = license.publisherName;
+      projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
+      projectDistinctLicenseAttributionDto.license = license.name;
+      projectDistinctLicenseAttributionDto.licenselink = license.homepage_url;
+      return projectDistinctLicenseAttributionDto;
+    }
   }
 
   /**

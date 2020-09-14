@@ -1,10 +1,11 @@
 import { Obligation, ProjectScanStatusType, Scan, SystemConfiguration } from '@app/models';
-import { ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
+import { ProjectAttributionDto, ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
 import { ObligationSearchDto } from '@app/models/DTOs/ObligationSearchDto';
 import { ProjectDistinctSeverityDto } from '@app/models/DTOs/ProjectDistinctSeverityDto';
 import { Project } from '@app/models/Project';
 import { AppServiceBase } from '@app/services/app-service-base/app-base.service';
 import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-manual-license.service';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { PaginateRawQuery } from '@app/shared/util/paginate-array-result';
@@ -21,6 +22,8 @@ export class ProjectService extends AppServiceBase<Project> {
     private readonly scanService: ScanService,
     @Inject(forwardRef(() => BomManualLicenseService))
     private readonly bomManualLicenseService: BomManualLicenseService,
+    @Inject(forwardRef(() => ProjectAttributionService))
+    private readonly projectAttributionService: ProjectAttributionService,
     @InjectRepository(Project) repo,
   ) {
     super(repo);
@@ -61,7 +64,7 @@ export class ProjectService extends AppServiceBase<Project> {
             where l.id = t.licenseId
             group by l.id`;
     const rows = await this.db.manager.query(query, [project.id]);
-    return rows.map((row) => ({
+    return rows.map(row => ({
       license: {
         name: row.name,
       },
@@ -95,6 +98,14 @@ export class ProjectService extends AppServiceBase<Project> {
     }
   }
 
+  async distinctUserIds(): Promise<any> {
+    return this.db
+      .createQueryBuilder('project')
+      .select('project.userId')
+      .addGroupBy('project.userId')
+      .getRawMany();
+  }
+
   /**
    * Gets distinct vulnerabilities from the latest Scan of a Project
    */
@@ -108,8 +119,17 @@ export class ProjectService extends AppServiceBase<Project> {
     }
   }
 
-  async distinctUserIds(): Promise<any> {
-    return this.db.createQueryBuilder('project').select('project.userId').addGroupBy('project.userId').getRawMany();
+  async getprojectAttribution(project: Project): Promise<ProjectAttributionDto> {
+    const projectAttribution = new ProjectAttributionDto();
+    const projectAttributionFound = await this.projectAttributionService.findOne({
+      where: { project: project },
+    });
+    if (projectAttributionFound) {
+      projectAttribution.licenseText = projectAttributionFound.attribution;
+    } else {
+      projectAttribution.licenseText = 'Successful scan required for attribution';
+    }
+    return projectAttribution;
   }
 
   getUsersProjectsQuery(userId: string): SelectQueryBuilder<Project> {
@@ -278,7 +298,7 @@ export class ProjectService extends AppServiceBase<Project> {
                     group by l.code)
                 group by loo."obligationCode")`;
 
-    return await PaginateRawQuery(this.db.manager, query, [projectId], page, pageSize, (record) => ({
+    return await PaginateRawQuery(this.db.manager, query, [projectId], page, pageSize, record => ({
       id: record.id,
       code: record.code,
       name: record.name,

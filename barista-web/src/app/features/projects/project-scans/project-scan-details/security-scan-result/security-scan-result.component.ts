@@ -25,8 +25,6 @@ export class SecurityScanResultComponent implements OnInit, OnDestroy {
     const scanId = this.route.snapshot.paramMap.get('scanId');
     const projectId = this.route.snapshot.paramMap.get('projectId');
 
-    console.log('projectId', projectId, 'scanId', scanId);
-
     this.securityScanResultService.setFilter(scanId);
     this.securityScanResultService.getWithQuery({
       filter: `scan||eq||${scanId}`,
@@ -34,8 +32,8 @@ export class SecurityScanResultComponent implements OnInit, OnDestroy {
 
     this.securityScanHtmlResult$ = this.securityScanResultService.filteredEntities$.pipe(
       untilDestroyed(this),
-      filter(result => result.length > 0),
-      switchMap(result => {
+      filter((result) => result.length > 0),
+      switchMap((result) => {
         return of(result[0].htmlResults);
       }),
     );

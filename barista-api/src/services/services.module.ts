@@ -1,6 +1,7 @@
 import { BomLicenseExceptionService } from '@app/services/bom-license-exception/bom-license-exception.service';
 import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-manual-license.service';
 import { BomSecurityExceptionService } from '@app/services/bom-security-exception/bom-security-exception.service';
+import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { LogProjectChangeCommandHandler } from '@app/services/command-handlers/LogProjectChangeCommandHandler';
 import { DeploymentTypeService } from '@app/services/deployment-type/deployment-type.service';
 import { GlobalSearchService } from '@app/services/global-search/global-search.service';
@@ -13,6 +14,7 @@ import { ObligationService } from '@app/services/obligation/obligation.service';
 import { OutputFormatTypeService } from '@app/services/output-format-type/output-format-type.service';
 import { PackageManagerService } from '@app/services/package-manager/package-manager.service';
 import { ProjectDevelopmentTypeService } from '@app/services/project-development-type/project-development-type.service';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectNotesService } from '@app/services/project-notes/project-notes.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ProjectStatusTypeService } from '@app/services/project-status-type/project-status-type.service';
@@ -33,7 +35,7 @@ import { UserService } from '@app/services/user/user.service';
 import { VulnerabilityStatusDeploymentTypeService } from '@app/services/vulnerability-status-deployment-type/vulnerability-status-deployment-type.service';
 import { AppOrmModule } from '@app/shared/app-orm.module';
 import { AppQueueModule } from '@app/shared/app-queue.module';
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, HttpModule, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -42,8 +44,10 @@ const services = [
   BomLicenseExceptionService,
   BomManualLicenseService,
   BomSecurityExceptionService,
+  ClearlyDefinedService,
   DeploymentTypeService,
   GlobalSearchService,
+  HttpModule,
   JwtStrategy,
   LdapService,
   LicenseScanResultItemService,
@@ -55,6 +59,7 @@ const services = [
   ObligationTypeService,
   OutputFormatTypeService,
   PackageManagerService,
+  ProjectAttributionService,
   ProjectDevelopmentTypeService,
   ProjectNotesService,
   ProjectScanStatusTypeService,

@@ -47,7 +47,6 @@ export class BannerComponent implements OnInit {
   user: UserInfo;
 
   changeDataset() {
-    console.log('dataset = ' + this.dataset);
     if (this.dataset === null) {
       this.dataset = this.user;
     } else {

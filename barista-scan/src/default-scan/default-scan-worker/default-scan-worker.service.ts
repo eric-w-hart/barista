@@ -16,6 +16,8 @@ import { Python3PipLicensesService } from '@app/default-scan/scanners/pip-licens
 import { ScanCodeService } from '@app/default-scan/scanners/scan-code/scan-code.service';
 import { PackageManager, Scan } from '@app/models';
 import { PackageManagerEnum } from '@app/models/PackageManager';
+import { ProjectAttribution } from '@app/models/ProjectAttribution';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectService } from '@app/services/project/project.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { fetchBinaryFromUrl } from '@app/shared/util/fetch-binary-from-url';
@@ -43,6 +45,7 @@ export class DefaultScanWorkerService {
   private tmpDir = tmp.dirSync({ unsafeCleanup: true });
 
   constructor(
+    private readonly projectAttributionService: ProjectAttributionService,
     private readonly projectService: ProjectService,
     private readonly scanService: ScanService,
     @Inject(forwardRef(() => ScanCodeService))
@@ -291,6 +294,43 @@ export class DefaultScanWorkerService {
           await scan.reload();
           scan.completedAt = new Date();
           await scan.save();
+
+          try {
+            const licenseAttribtions = await this.scanService.distinctLicenseAttributions(scan.id);
+
+            const projectAttribution = new ProjectAttribution();
+            projectAttribution.attribution = '';
+            projectAttribution.project = scan.project;
+            licenseAttribtions.forEach(license => {
+              projectAttribution.attribution += 'Package: ';
+              projectAttribution.attribution += license.packageName + '\n\n';
+              projectAttribution.attribution += 'License: ';
+              projectAttribution.attribution += license.clearDefined
+                ? license.clearDefined.license !== 'OTHER'
+                  ? license.clearDefined.license
+                  : license.license
+                : license.license;
+              projectAttribution.attribution += '\n\n';
+              projectAttribution.attribution += 'Copyrights: \n';
+              projectAttribution.attribution += license.clearDefined?.copyrights ? license.clearDefined.copyrights : '';
+              projectAttribution.attribution += '\n\n';
+              projectAttribution.attribution += 'License Text: \n';
+              projectAttribution.attribution += license.clearDefined?.licensetext
+                ? license.clearDefined.licensetext !== 'OTHER'
+                  ? license.clearDefined.licensetext
+                  : license.licenselink
+                : license.licenselink;
+              projectAttribution.attribution += '\n\n';
+              projectAttribution.attribution +=
+                '-------------------------------------------------------------------------------------------------------------------------------';
+              projectAttribution.attribution += '\n\n';
+            });
+
+            await this.projectAttributionService.insertAttribution(projectAttribution);
+          } catch (error) {
+            this.logger.error(error);
+          }
+
           try {
             await this.scanService.sendMailOnScanCompletion(scan);
           } catch (error) {

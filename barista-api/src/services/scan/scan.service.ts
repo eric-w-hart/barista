@@ -1,4 +1,3 @@
-import { ProjectAttribution } from './../../models/ProjectAttribution';
 import { LicenseScanResult, Obligation, Project, ProjectScanStatusType, SecurityScanResult } from '@app/models';
 import {
   ProjectDistinctLicenseAttributionDto,
@@ -13,6 +12,7 @@ import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-ma
 import { BomSecurityExceptionService } from '@app/services/bom-security-exception/bom-security-exception.service';
 import { LicenseScanResultItemService } from '@app/services/license-scan-result-item/license-scan-result-item.service';
 import { LicenseScanResultService } from '@app/services/license-scan-result/license-scan-result.service';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ProjectService } from '@app/services/project/project.service';
 import { scanCompletedEmails } from '@app/services/scan/email-templates';
@@ -25,7 +25,6 @@ import { Queue } from 'bull';
 import * as _ from 'lodash';
 import { InjectQueue } from 'nest-bull';
 import * as nodemailer from 'nodemailer';
-import { ProjectAttributionService } from '../project-attribution/project-attribution.service';
 
 @Injectable()
 export class ScanService extends AppServiceBase<Scan> {

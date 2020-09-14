@@ -1,13 +1,11 @@
-import { ProjectAttributionDto } from './../../models/DTOs/ProjectAttributionDto';
-import { ProjectAttribution } from './../../models/ProjectAttribution';
-
 import { Obligation, ProjectScanStatusType, Scan, SystemConfiguration } from '@app/models';
-import { ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
+import { ProjectAttributionDto, ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
 import { ObligationSearchDto } from '@app/models/DTOs/ObligationSearchDto';
 import { ProjectDistinctSeverityDto } from '@app/models/DTOs/ProjectDistinctSeverityDto';
 import { Project } from '@app/models/Project';
 import { AppServiceBase } from '@app/services/app-service-base/app-base.service';
 import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-manual-license.service';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { PaginateRawQuery } from '@app/shared/util/paginate-array-result';
@@ -16,7 +14,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GetManyDefaultResponse } from '@nestjsx/crud';
 import { SelectQueryBuilder } from 'typeorm';
 import * as url from 'url';
-import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 
 @Injectable()
 export class ProjectService extends AppServiceBase<Project> {
@@ -101,17 +98,12 @@ export class ProjectService extends AppServiceBase<Project> {
     }
   }
 
-  async getprojectAttribution(project: Project): Promise<ProjectAttributionDto> {
-    const projectAttribution = new ProjectAttributionDto();
-    const projectAttributionFound = await this.projectAttributionService.findOne({
-      where: { project: project },
-    });
-    if (projectAttributionFound) {
-      projectAttribution.licenseText = projectAttributionFound.attribution;
-    } else {
-      projectAttribution.licenseText = 'Successful scan required for attribution';
-    }
-    return projectAttribution;
+  async distinctUserIds(): Promise<any> {
+    return this.db
+      .createQueryBuilder('project')
+      .select('project.userId')
+      .addGroupBy('project.userId')
+      .getRawMany();
   }
 
   /**
@@ -127,12 +119,17 @@ export class ProjectService extends AppServiceBase<Project> {
     }
   }
 
-  async distinctUserIds(): Promise<any> {
-    return this.db
-      .createQueryBuilder('project')
-      .select('project.userId')
-      .addGroupBy('project.userId')
-      .getRawMany();
+  async getprojectAttribution(project: Project): Promise<ProjectAttributionDto> {
+    const projectAttribution = new ProjectAttributionDto();
+    const projectAttributionFound = await this.projectAttributionService.findOne({
+      where: { project: project },
+    });
+    if (projectAttributionFound) {
+      projectAttribution.licenseText = projectAttributionFound.attribution;
+    } else {
+      projectAttribution.licenseText = 'Successful scan required for attribution';
+    }
+    return projectAttribution;
   }
 
   getUsersProjectsQuery(userId: string): SelectQueryBuilder<Project> {

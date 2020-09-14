@@ -42,7 +42,6 @@ import {
 } from '@nestjsx/crud';
 import gitP, { SimpleGit } from 'simple-git/promise';
 import { Response } from 'express';
-import { logger } from 'elastic-apm-node';
 
 @UseGuards(AuthGuard('jwt'))
 @ApiOAuth2Auth()

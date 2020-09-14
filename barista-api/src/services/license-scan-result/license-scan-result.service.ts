@@ -17,17 +17,15 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
    * Gets distinct licenses from a LicenseScanResult
    */
   async distinctLicenses(licenseScanResult: LicenseScanResult): Promise<ProjectDistinctLicenseDto[]> {
-    return (
-      await LicenseScanResultItem.createQueryBuilder('ri')
-        .innerJoin('ri.license', 'license')
-        .innerJoin('ri.licenseScan', 'licenseScan')
-        .addGroupBy('license.id')
-        .addOrderBy('count(*)', 'DESC')
-        .where('licenseScan.id = :id', { id: licenseScanResult.id })
-        .select('license.name as name')
-        .addSelect('count(*) as count')
-        .getRawMany()
-    ).map(row => ({
+    return (await LicenseScanResultItem.createQueryBuilder('ri')
+      .innerJoin('ri.license', 'license')
+      .innerJoin('ri.licenseScan', 'licenseScan')
+      .addGroupBy('license.id')
+      .addOrderBy('count(*)', 'DESC')
+      .where('licenseScan.id = :id', { id: licenseScanResult.id })
+      .select('license.name as name')
+      .addSelect('count(*) as count')
+      .getRawMany()).map(row => ({
       count: +row.count,
       license: {
         name: row.name,
@@ -64,7 +62,6 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       .innerJoin('project', 'p2', 'p2.id = scan."projectId"')
       .where('ri.id = :id', { id: licenseScanResultItemId })
       .select('p2."package_manager_code",p2.id, ri.*, license.*')
-      .select('p2."package_manager_code",p2.id, ri.*, license.*')
       .getRawOne();
     return await this.attributionByModule(license);
   }
@@ -85,8 +82,6 @@ export class LicenseScanResultService extends AppServiceBase<LicenseScanResult> 
       projectDistinctLicenseAttributionDto.publisherUrl = license.publisherUrl;
       projectDistinctLicenseAttributionDto.license = license.name;
       projectDistinctLicenseAttributionDto.licenselink = license.homepage_url;
-      this.logger.debug(JSON.stringify(license));
-      this.logger.debug(JSON.stringify(projectDistinctLicenseAttributionDto));
       return projectDistinctLicenseAttributionDto;
     }
   }

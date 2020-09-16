@@ -39,6 +39,7 @@ async function bootstrap() {
     .addOAuth2('accessCode')
     .setBasePath('api/v1')
     .setSchemes('https', 'http')
+    .addTag('Attribution', 'Methods')
     .addTag('BomLicenseException', 'Methods')
     .addTag('BomManualLicense', 'Methods')
     .addTag('BomSecurityException', 'Methods')

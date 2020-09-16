@@ -1,3 +1,4 @@
+import { ClearlyDefinedService } from '@app/services/clearly-defined/clearly-defined.service';
 import { ScanBranchDto } from './../../models/DTOs/ScanBranchDto';
 import { LogProjectChangeCommand } from '@app/models/commands/LogProjectChangeCommand';
 import { JobInfoDto } from '@app/models/DTOs/JobInfoDto';
@@ -24,6 +25,7 @@ import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor } from '@nestjsx/crud';
 import { Queue } from 'bull';
 import { InjectQueue } from 'nest-bull';
+import { ProjectDistinctLicenseAttributionDto } from '@app/models/DTOs';
 
 @UseGuards(AuthGuard('jwt'))
 @ApiOAuth2Auth()
@@ -51,6 +53,7 @@ export class ScanController implements CrudController<Scan> {
   constructor(
     public service: ScanService,
     public projectService: ProjectService,
+    public clearlyDefinedService: ClearlyDefinedService,
     private commandBus: CommandBus,
     @InjectQueue('scan-queue') readonly queue: Queue,
   ) {}
@@ -110,14 +113,12 @@ export class ScanController implements CrudController<Scan> {
   @Post('/project/:id')
   @UseInterceptors(CrudRequestInterceptor)
   async doScan(@Param('id') id: number, @Request() request: any): Promise<any> {
-    this.logger.log('not branch');
     return this.performScan(id, null, request);
   }
 
   @Post('/project/:id/branch/')
   @UseInterceptors(CrudRequestInterceptor)
   async doScanbyBranch(@Param('id') id: number, @Body() branch: ScanBranchDto, @Request() request: any): Promise<any> {
-    this.logger.log(branch.branch);
     return this.performScan(id, branch.branch, request);
   }
 
@@ -132,5 +133,15 @@ export class ScanController implements CrudController<Scan> {
   @UseInterceptors(CrudRequestInterceptor)
   async getJobStatus(@Param('id') id: string): Promise<string> {
     return await (await this.queue.getJob(id)).getState();
+  }
+
+  @Get('/:id/attribution')
+  @UseInterceptors(CrudRequestInterceptor)
+  @ApiResponse({ status: 200, type: [ProjectDistinctLicenseAttributionDto] })
+  async getAttributions(@Param('id') id: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
+    const scan = await this.service.findOne(id);
+    if (scan) {
+      return this.service.distinctLicenseAttributions(scan.id);
+    }
   }
 }

@@ -9,7 +9,15 @@
       Home
     </button>
 
-    <button *ngIf="isLoggedIn" mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="projectsMenu" #t="matMenuTrigger" [class.clicked]="onProj && !menuClicked || t.menuOpen">
+    <button
+      *ngIf="isLoggedIn"
+      mat-button
+      (menuOpened)="menuOpened()"
+      (menuClosed)="menuClosed()"
+      [matMenuTriggerFor]="projectsMenu"
+      #t="matMenuTrigger"
+      [class.clicked]="(onProj && !menuClicked) || t.menuOpen"
+    >
       <mat-icon class="routeIcon">source</mat-icon>
       Projects
     </button>
@@ -26,10 +34,22 @@
         <mat-icon class="routeIcon">language</mat-icon>
         Community
       </button>
+      <button mat-menu-item routerLink="/module-search" routerLinkActive="active">
+        <mat-icon class="routeIcon">image_search</mat-icon>
+        Module Search
+      </button>
     </mat-menu>
 
     <span *ngIf="isLoggedIn && isAdmin">
-      <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="adminMenu" #t="matMenuTrigger" title="Admin Tools" [class.clicked]="onAdmin && !menuClicked || t.menuOpen">
+      <button
+        mat-button
+        (menuOpened)="menuOpened()"
+        (menuClosed)="menuClosed()"
+        [matMenuTriggerFor]="adminMenu"
+        #t="matMenuTrigger"
+        title="Admin Tools"
+        [class.clicked]="(onAdmin && !menuClicked) || t.menuOpen"
+      >
         <mat-icon class="routeIcon">how_to_reg</mat-icon> Admin
       </button>
       <mat-menu #adminMenu="matMenu">
@@ -41,13 +61,20 @@
     </span>
     <app-help-menu (menuClick)="receiveHelpEvent($event)" title="Help"></app-help-menu>
     <span *ngIf="isLoggedIn">
-      <button mat-button (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" [matMenuTriggerFor]="profileMenu" title="Profile" #t="matMenuTrigger">
-        <mat-icon style="font-size:35px" [inline]="true" [class.clicked]="t.menuOpen">account_circle</mat-icon>
+      <button
+        mat-button
+        (menuOpened)="menuOpened()"
+        (menuClosed)="menuClosed()"
+        [matMenuTriggerFor]="profileMenu"
+        title="Profile"
+        #t="matMenuTrigger"
+      >
+        <mat-icon style="font-size: 35px;" [inline]="true" [class.clicked]="t.menuOpen">account_circle</mat-icon>
       </button>
       <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
         <div class="text mat-headline">Hello, {{ userName }}!</div>
         <button mat-menu-item (click)="logout()">
-          <span type="button" mat-button >Sign Out</span>
+          <span type="button" mat-button>Sign Out</span>
         </button>
       </mat-menu>
     </span>

@@ -609,6 +609,90 @@ export class ProjectApiService {
         );
     }
 
+
+           /**
+     * @param id
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public projectIdAttributionGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public projectIdAttributionGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public projectIdAttributionGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public projectIdAttributionGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling projectIdObligationsGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (oauth2) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/project/${encodeURIComponent(String(id))}/attributions`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+/**
+     * @param id
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+
+    public projectIdAttributionDownload(id: string, observe?: 'response', reportProgress?: boolean): Observable<Blob>
+{
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling projectIdObligationsGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (oauth2) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get(`${this.configuration.basePath}/project/${encodeURIComponent(String(id))}/attributions/download`,
+            {
+                responseType: 'blob',
+                withCredentials: this.configuration.withCredentials,
+                headers: headers
+
+            }
+        );
+    }
+
     /**
      * Update one Project
      * @param id

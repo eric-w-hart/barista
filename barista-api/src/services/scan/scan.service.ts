@@ -1,5 +1,9 @@
 import { LicenseScanResult, Obligation, Project, ProjectScanStatusType, SecurityScanResult } from '@app/models';
-import { ProjectDistinctLicenseDto, ProjectDistinctVulnerabilityDto } from '@app/models/DTOs';
+import {
+  ProjectDistinctLicenseAttributionDto,
+  ProjectDistinctLicenseDto,
+  ProjectDistinctVulnerabilityDto,
+} from '@app/models/DTOs';
 import { ProjectDistinctSeverityDto } from '@app/models/DTOs/ProjectDistinctSeverityDto';
 import { Scan } from '@app/models/Scan';
 import { AppServiceBase } from '@app/services/app-service-base/app-base.service';
@@ -8,6 +12,7 @@ import { BomManualLicenseService } from '@app/services/bom-manual-license/bom-ma
 import { BomSecurityExceptionService } from '@app/services/bom-security-exception/bom-security-exception.service';
 import { LicenseScanResultItemService } from '@app/services/license-scan-result-item/license-scan-result-item.service';
 import { LicenseScanResultService } from '@app/services/license-scan-result/license-scan-result.service';
+import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ProjectService } from '@app/services/project/project.service';
 import { scanCompletedEmails } from '@app/services/scan/email-templates';
@@ -20,7 +25,6 @@ import { Queue } from 'bull';
 import * as _ from 'lodash';
 import { InjectQueue } from 'nest-bull';
 import * as nodemailer from 'nodemailer';
-import { In, IsNull } from 'typeorm';
 
 @Injectable()
 export class ScanService extends AppServiceBase<Scan> {
@@ -40,6 +44,7 @@ export class ScanService extends AppServiceBase<Scan> {
     @Inject(forwardRef(() => BomSecurityExceptionService))
     private readonly bomSecurityExceptionService: BomSecurityExceptionService,
     @Inject(forwardRef(() => ProjectService))
+    @Inject(forwardRef(() => ProjectAttributionService))
     private readonly projectService: ProjectService,
     @InjectRepository(Scan) repo,
     @InjectQueue('scan-queue') readonly queue: Queue,
@@ -60,6 +65,14 @@ export class ScanService extends AppServiceBase<Scan> {
     } else {
       return [];
     }
+  }
+
+  async distinctLicenseAttributions(scanId: number): Promise<ProjectDistinctLicenseAttributionDto[]> {
+    return this.licenseScanResultService.licensesAttributionByScanId(scanId);
+  }
+
+  async licenseAttributionByModule(LicenseScanResultItemId: number): Promise<ProjectDistinctLicenseAttributionDto> {
+    return this.licenseScanResultService.licensesAttributionByScanResultItem(LicenseScanResultItemId);
   }
 
   /**

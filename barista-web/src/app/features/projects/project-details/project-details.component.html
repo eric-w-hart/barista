@@ -262,6 +262,9 @@
       <mat-tab label="Bill of Materials" *ngIf="!newProject && project?.id">
         <app-bill-of-materials [project]="project"></app-bill-of-materials>
       </mat-tab>
+      <mat-tab label="Attribution" *ngIf="!newProject && project?.id">
+        <app-project-attribution [project]="project"></app-project-attribution>
+      </mat-tab>
       <mat-tab label="Notes" *ngIf="!newProject && project?.id">
         <app-project-notes [project]="project"></app-project-notes>
       </mat-tab>

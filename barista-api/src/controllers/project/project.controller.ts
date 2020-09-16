@@ -13,7 +13,20 @@ import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-
 import { ProjectService } from '@app/services/project/project.service';
 import { SecurityScanResultItemService } from '@app/services/security-scan-result-item/security-scan-result-item.service';
 import PaginateArrayResult, { EmptyPaginateResult } from '@app/shared/util/paginate-array-result';
-import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Request,
+  UseGuards,
+  UseInterceptors,
+  Header,
+  Res,
+  Logger,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
@@ -28,6 +41,7 @@ import {
   ParsedRequest,
 } from '@nestjsx/crud';
 import gitP, { SimpleGit } from 'simple-git/promise';
+import { Response } from 'express';
 
 @UseGuards(AuthGuard('jwt'))
 @ApiOAuth2Auth()
@@ -86,6 +100,7 @@ export class ProjectController implements CrudController<Project> {
   get base(): CrudController<Project> {
     return this;
   }
+  logger = new Logger('ProjectContoller');
   private git: SimpleGit = gitP();
 
   @Get('/:id/bill-of-materials/licenses')
@@ -263,6 +278,31 @@ export class ProjectController implements CrudController<Project> {
       return this.service.distinctObligations(project);
     } else {
       return [];
+    }
+  }
+
+  @Get('/:id/attributions')
+  @UseInterceptors(CrudRequestInterceptor)
+  async attributions(@Param('id') id: string): Promise<any> {
+    const project = await this.service.db.findOne(Number(id));
+    if (project) {
+      return this.service.getprojectAttribution(project);
+    } else {
+      return [];
+    }
+  }
+
+  @Get('/:id/attributions/download')
+  @Header('Content-Type', 'text/plain')
+  @Header('Content-Disposition', 'attachment; filename=attribution.txt')
+  async attributionsDownload(@Param('id') id: string, @Res() res: Response): Promise<any> {
+    const project = await this.service.db.findOne(Number(id));
+    if (project) {
+      const attribution = await this.service.getprojectAttribution(project);
+      return res
+        .status(200)
+        .send(attribution.licenseText)
+        .end();
     }
   }
 

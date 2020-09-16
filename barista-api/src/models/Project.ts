@@ -1,3 +1,4 @@
+import { ProjectAttribution } from './ProjectAttribution';
 import { ProjectScanStatusType } from './ProjectScanStatusType';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
@@ -92,17 +93,11 @@ export class Project extends ModelBase {
   LatestSecurityStatus: ProjectScanStatusType;
 
   @ApiModelProperty({ type: type => BomLicenseException, isArray: true })
-  @OneToMany(
-    type => BomLicenseException,
-    item => item.project,
-  )
+  @OneToMany(type => BomLicenseException, item => item.project)
   licenseExceptions: BomLicenseException[];
 
   @ApiModelProperty({ type: type => BomManualLicense, isArray: true })
-  @OneToMany(
-    type => BomManualLicense,
-    item => item.project,
-  )
+  @OneToMany(type => BomManualLicense, item => item.project)
   manualLicenses: BomManualLicense[];
   @ApiModelProperty()
   @Column()
@@ -146,11 +141,12 @@ export class Project extends ModelBase {
   @Column({ type: 'text', default: '', nullable: true })
   pathToUploadFileForScanning: string;
 
+  @ApiModelProperty({ type: type => ProjectAttribution, isArray: true })
+  @OneToMany(type => ProjectAttribution, projectAttribution => projectAttribution.project)
+  projectAttributions: ProjectAttribution[];
+
   @ApiModelProperty({ type: type => ProjectNote, isArray: true })
-  @OneToMany(
-    type => ProjectNote,
-    projectNote => projectNote.project,
-  )
+  @OneToMany(type => ProjectNote, projectNote => projectNote.project)
   projectNotes: ProjectNote[];
 
   @ApiModelProperty({ type: type => ProjectStatusType })
@@ -167,17 +163,11 @@ export class Project extends ModelBase {
   projectStatus: ProjectStatusType;
 
   @ApiModelProperty({ type: type => Scan, isArray: true })
-  @OneToMany(
-    type => Scan,
-    scan => scan.project,
-  )
+  @OneToMany(type => Scan, scan => scan.project)
   scans: Scan[];
 
   @ApiModelProperty({ type: type => BomSecurityException, isArray: true })
-  @OneToMany(
-    type => BomSecurityException,
-    item => item.project,
-  )
+  @OneToMany(type => BomSecurityException, item => item.project)
   securityExceptions: BomSecurityException[];
 
   @ApiModelProperty()

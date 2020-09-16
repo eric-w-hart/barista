@@ -1,0 +1,12 @@
+<mat-card class="content-card" fxFill>
+  <mat-card-content>
+    <div class="spinner" *ngIf="isLoadingAttribution">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <button class="scan-btn" mat-raised-button color="primary" (click)="download()">
+      <mat-icon>cloud_download</mat-icon>
+      <span> Download</span>
+    </button>
+    <p [innerText]="attribution"></p>
+  </mat-card-content>
+</mat-card>

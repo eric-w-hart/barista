@@ -60,7 +60,7 @@
     "write:commit-hash": "COMMIT_HASH=$(git log --pretty=format:%h -n 1); replace 'HEAD' $COMMIT_HASH src/info/commit-hash.ts",
     "write:app-version": "APP_VERSION=$(node -pe \"require('./package.json').version\"); replace '0.0.0.0' $APP_VERSION src/info/app-version.ts",
     "write:app-environment": "APP_ENVIRONMENT=${ENV:-undefined}; replace 'local' $APP_ENVIRONMENT src/info/app-environment.ts",
-    "spdx:update": "wget -d src/services/license/spdx-licenses.json https://github.com/spdx/license-list-data/raw/master/json/licenses.json"
+    "spdx:update": "nwget https://github.com/spdx/license-list-data/raw/master/json/licenses.json -O src/services/license/spdx-licenses.json"
   },
   "dependencies": {
     "@nestjs/common": "^6.0.0",
@@ -130,7 +130,6 @@
     "jest": "24.8.0",
     "jest-junit": "^6.4.0",
     "majestic": "^1.6.0",
-    "node-wget": "^0.4.3",
     "nodemon": "^1.18.9",
     "onchange": "^6.0.0",
     "prettier": "^1.15.3",
@@ -143,7 +142,8 @@
     "tslint-etc": "^1.6.0",
     "tslint-lines-between-class-members": "^1.3.6",
     "typescript": "3.7.2",
-    "wait-on": "^3.2.0"
+    "wait-on": "^3.2.0",
+    "wget-improved": "^3.2.1"
   },
   "_moduleAliases": {
     "@app": "dist"

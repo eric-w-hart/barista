@@ -29,6 +29,7 @@ Barista allows a developer to set up their project for scanning from any Git com
 1.  Each technology stack uses native tools to gather project dependencies with as much meta data as can be harvested e.g. license, publisher information and or the project's published URL
 1. Unsupported technology stacks can be scanned using the [nexB/scancode-tool](https://github.com/nexB/scancode-toolkit) but results are not as comprehensive and performance is degraded.
 1. All project and dependency code is then run through the [OWASP Dependency Check tool](https://github.com/jeremylong/DependencyCheck) to gather published vulnerability information.
+1. All discovered components are checked against the [clearlydefined.io](https://clearlydefined.io/) project to retrieve copyright and license attribution information.  Information retrieved from clearlydefined.io is cached locally by component and version to increase performance.  The attribution information is collected into a downloadable file available at the project level in the GUI.
 1. Both license and vulnerability findings are then run through a set of  user defined business rules which allow categorization of findings into 1 of 3 categories:
 
     - Approved: ![alt text](https://github.com/Optum/barista/raw/master/doc/images/barista-green-check.png)

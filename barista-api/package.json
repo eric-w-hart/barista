@@ -11,7 +11,6 @@
     "compose:dev": "docker-compose -f ./docker/barista-compose-services.yml",
     "compose:rebuild": "docker-compose -f ./docker/barista-compose-services.yml -f ./docker/barista-compose-apps.yml build barista-api barista-scan barista-web",
     "compose:rebuild:dev": "docker-compose -f ./docker/barista-compose-services.yml build db db-test redis",
-    "doc": "compodoc -p tsconfig.build.json -n Barista-API -t --hideGenerator -d ./class-documentation",
     "format": "prettier \"src/**/*.ts\"",
     "format:ci": "yarn format -c",
     "format:watch": "onchange '**/*.*' -- yarn format-lint",
@@ -64,7 +63,6 @@
     "spdx:update": "wget -d src/services/license/spdx-licenses.json https://github.com/spdx/license-list-data/raw/master/json/licenses.json"
   },
   "dependencies": {
-    "@compodoc/compodoc": "^1.1.11",
     "@nestjs/common": "^6.0.0",
     "@nestjs/core": "^6.0.0",
     "@nestjs/cqrs": "^6.0.1",

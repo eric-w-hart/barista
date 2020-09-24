@@ -2,7 +2,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CrudConfigService } from '@nestjsx/crud';
-// import Arena from 'bull-arena';
+import Arena from 'bull-arena';
 import * as dotenv from 'dotenv';
 import 'module-alias/register';
 import 'reflect-metadata';
@@ -68,25 +68,25 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api/v1/api-docs', app, document);
 
-  // const arena = Arena(
-  //   {
-  //     queues: [
-  //       {
-  //         name: 'scan-queue',
-  //         hostId: 'barista-queue',
-  //         host: process.env.REDIS_HOST || 'localhost',
-  //         port: Number(process.env.REDIS_PORT) || 6379,
-  //         prefix: '{barista}:',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     basePath: '/arena',
-  //     disableListen: true,
-  //   },
-  // );
+  const arena = Arena(
+    {
+      queues: [
+        {
+          name: 'scan-queue',
+          hostId: 'barista-queue',
+          host: process.env.REDIS_HOST || 'localhost',
+          port: Number(process.env.REDIS_PORT) || 6379,
+          prefix: '{barista}:',
+        },
+      ],
+    },
+    {
+      basePath: '/arena',
+      disableListen: true,
+    },
+  );
 
-  // app.use(arena);
+  app.use(arena);
   app.enableCors();
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

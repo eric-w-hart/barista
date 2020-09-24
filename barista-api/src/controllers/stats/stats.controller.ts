@@ -33,6 +33,8 @@ import {
   ParsedRequest,
 } from '@nestjsx/crud';
 
+import { makeBadge, ValidationError } from 'badge-maker';
+
 @Crud({
   model: {
     type: Project,
@@ -76,10 +78,11 @@ export class StatsController implements CrudController<Project> {
     }
 
     const format = {
-      text: [label, value],
+      label: label,
+      message: value,
       color: color,
       labelColor: '#855',
-      template: 'flat',
+      style: 'flat',
     };
 
     return format;
@@ -92,10 +95,7 @@ export class StatsController implements CrudController<Project> {
   }
 
   createSVG(format: any) {
-    const { BadgeFactory } = require('gh-badges');
-    const bf = new BadgeFactory();
-
-    return bf.create(format);
+    return makeBadge(format);
   }
 
   async getLatestScanDate(project: Project) {

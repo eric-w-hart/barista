@@ -1,5 +1,6 @@
 ARG BASETAG=compose
 ARG REPO=""
+ARG DOCKER=""
 
 FROM ${DOCKER}golang:1.13 as go
 

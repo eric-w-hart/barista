@@ -19,6 +19,7 @@ import { PackageManagerEnum } from '@app/models/PackageManager';
 import { ProjectAttribution } from '@app/models/ProjectAttribution';
 import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectService } from '@app/services/project/project.service';
+import { ScanLogService } from '@app/services/scan-log/scan-log.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { fetchBinaryFromUrl } from '@app/shared/util/fetch-binary-from-url';
 import { shellExecuteSync } from '@app/shared/util/shell-execute';
@@ -48,6 +49,7 @@ export class DefaultScanWorkerService {
     private readonly projectAttributionService: ProjectAttributionService,
     private readonly projectService: ProjectService,
     private readonly scanService: ScanService,
+    private readonly scanLogService: ScanLogService,
     @Inject(forwardRef(() => ScanCodeService))
     private readonly scanCodeService: ScanCodeService,
     @Inject(forwardRef(() => LicenseCheckerService))
@@ -294,6 +296,11 @@ export class DefaultScanWorkerService {
           await scan.reload();
           scan.completedAt = new Date();
           await scan.save();
+
+          const scanLog = this.scanLogService.db.create();
+          scanLog.scan = scan;
+          scanLog.log = fs.readFileSync(this.jobInfo.tmpDir + '/log.txt').toString();
+          await scanLog.save();
 
           try {
             const licenseAttribtions = await this.scanService.distinctLicenseAttributions(scan.id);

@@ -7,8 +7,8 @@ export function shellExecuteSync(command: string, options: any = {}): string {
     logger.log(`*** command STARTED: ${command}`);
     const { stdout } = execa.commandSync(command, {
       ...options,
-      stdio: 'inherit',
       shell: true,
+      stdout: 'pipe',
     });
     logger.log(`*** command COMPLETED: ${command}`);
     return stdout;

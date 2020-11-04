@@ -3,6 +3,7 @@ import { Scanner } from '@app/default-scan/scanners/common/scanner.interface';
 import { shellExecuteSync } from '@app/shared/util/shell-execute';
 import { Logger } from '@nestjs/common';
 import * as execa from 'execa';
+import * as fs from 'fs';
 import * as path from 'path';
 
 export abstract class ScannerBaseService implements Scanner {
@@ -26,7 +27,11 @@ export abstract class ScannerBaseService implements Scanner {
 
     const command = await this.command(jobInfo);
     if (command) {
-      shellExecuteSync(command, this.options(jobInfo));
+      this.baseLogger.error('******** Options =  ' + jobInfo.tmpDir);
+      const st = shellExecuteSync(command, this.options(jobInfo));
+      this.baseLogger.error('******** stout =  ' + st);
+
+      fs.appendFileSync(jobInfo.tmpDir + '/log.txt', st);
     }
 
     await this.postExecute(jobInfo).catch(error => {

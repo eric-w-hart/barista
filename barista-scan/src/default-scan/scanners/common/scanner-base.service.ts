@@ -3,6 +3,7 @@ import { Scanner } from '@app/default-scan/scanners/common/scanner.interface';
 import { shellExecuteSync } from '@app/shared/util/shell-execute';
 import { Logger } from '@nestjs/common';
 import * as execa from 'execa';
+import * as fs from 'fs';
 import * as path from 'path';
 
 export abstract class ScannerBaseService implements Scanner {

@@ -28,7 +28,7 @@ export class DependencyCheckService extends ScannerBaseService {
 
   public async command(jobInfo: DefaultScanWorkerJobInfo) {
     let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh --project \
-    ${jobInfo.projectName} --noupdate --disableCentral --out ${jobInfo.dataDir}/dependency-check/ \
+    ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
     --format ALL --scan ${jobInfo.tmpDir}`;
 
     const BARISTA_OSS_USERNAME = process.env.BARISTA_OSS_USERNAME;

@@ -299,7 +299,7 @@ export class DefaultScanWorkerService {
 
           const scanLog = this.scanLogService.db.create();
           scanLog.scan = scan;
-          scanLog.log = fs.readFileSync(this.jobInfo.tmpDir + '/log.txt').toString();
+          scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
           await scanLog.save();
 
           try {

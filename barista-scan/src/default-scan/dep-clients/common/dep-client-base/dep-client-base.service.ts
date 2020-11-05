@@ -7,10 +7,14 @@ export abstract class DepClientBaseService implements DepClient {
 
   protected abstract async command(workingDir: string, options?: any): Promise<string>;
 
-  async fetchDependencies(workingDir: string, options: any): Promise<void> {
-    return shellExecute(await this.command(workingDir, options), {
-      cwd: workingDir,
-    });
+  async fetchDependencies(workingDir: string, options: any, logDir: string): Promise<void> {
+    return shellExecute(
+      await this.command(workingDir, options),
+      {
+        cwd: workingDir,
+      },
+      logDir,
+    );
   }
 
   async getPackageManager() {

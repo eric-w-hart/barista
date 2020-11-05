@@ -176,12 +176,16 @@ export class ScanCodeService extends ScannerBaseService {
     // tslint:disable-next-line:max-line-length
     const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
 
-    shellExecuteSync(command, {
-      shell: true,
-      env: {
-        OBJC_DISABLE_INITIALIZE_FORK_SAFETY: 'YES',
+    shellExecuteSync(
+      command,
+      {
+        shell: true,
+        env: {
+          OBJC_DISABLE_INITIALIZE_FORK_SAFETY: 'YES',
+        },
       },
-    });
+      dataDir.name,
+    );
 
     return this.getResults(dataDir.name);
   }

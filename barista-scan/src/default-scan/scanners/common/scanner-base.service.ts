@@ -26,7 +26,7 @@ export abstract class ScannerBaseService implements Scanner {
 
     const command = await this.command(jobInfo);
     if (command) {
-      shellExecuteSync(command, this.options(jobInfo));
+      shellExecuteSync(command, this.options(jobInfo), jobInfo.dataDir);
     }
 
     await this.postExecute(jobInfo).catch(error => {

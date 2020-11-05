@@ -167,7 +167,7 @@ export class DefaultScanWorkerService {
       options.useMavenCustomSettings = !this.isGitHubCom(scan.project.gitUrl);
       this.logger.log('userMavenCustom = ' + options.useMavenCustomSettings);
 
-      return depClient.fetchDependencies(workingDirectory, options);
+      return depClient.fetchDependencies(workingDirectory, options, jobInfo.dataDir);
     } else {
       this.logger.log('No package manager configured, not fetching dependencies.');
       return Promise.resolve();
@@ -216,7 +216,7 @@ export class DefaultScanWorkerService {
           let progress = 10;
           this.job.progress(progress);
 
-          shellExecuteSync('pwd', { cwd: this.jobInfo.tmpDir });
+          shellExecuteSync('pwd', { cwd: this.jobInfo.tmpDir }, this.jobInfo.dataDir);
 
           scan.startedAt = new Date();
           await scan.save();

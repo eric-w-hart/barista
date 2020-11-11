@@ -97,7 +97,7 @@ module.exports = {
           items: [
             {
               label: 'barista-web',
-              href: 'https://raw.githubusercontent.com/Optum/barista/blob/master/barista-web/barista-web-attribution.txt',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-web/barista-web-attribution.txt',
             },
             {
               label: 'barista-api',

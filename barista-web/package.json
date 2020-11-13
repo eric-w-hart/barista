@@ -92,7 +92,7 @@
     "jest-preset-angular": "^8.1.2",
     "majestic": "^1.6.2",
     "prettier": "2.0.2",
-    "protractor": "~5.4.3",
+    "protractor": "~7.0.0",
     "replace": "^1.1.5",
     "tslint": "~6.1.0",
     "tslint-config-prettier": "^1.18.0",

@@ -1,3 +1,4 @@
+import { LoggerService } from '@app/services/logger/logger.service';
 import { DefaultScanWorkerJobInfo } from '@app/default-scan/default-scan-worker/default-scan-worker-job-info.interface';
 import { DepClient } from '@app/default-scan/dep-clients/common/dep-client.interface';
 import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
@@ -41,7 +42,7 @@ export class DefaultScanWorkerService {
   private git = Git();
   private job: Job;
   private jobInfo: DefaultScanWorkerJobInfo;
-  private logger = new Logger('DefaultScanWorkerService');
+  private logger = new LoggerService('DefaultScanWorkerService');
   private scanners: Scanner[];
   private tmpDir = tmp.dirSync({ unsafeCleanup: true });
 
@@ -208,7 +209,8 @@ export class DefaultScanWorkerService {
         this.jobInfo.projectName = scan.project.name;
 
         this.job.progress(5);
-
+        this.logger.log('datadir = ' + this.jobInfo.dataDir);
+        this.logger.fileTransport(this.jobInfo.dataDir + '/output.txt');
         this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo)}`);
 
         // Let's apply any security credentials we might have for the project
@@ -301,6 +303,8 @@ export class DefaultScanWorkerService {
           scanLog.scan = scan;
           scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
           await scanLog.save();
+
+          this.logger.log('Updating Attributions');
 
           try {
             const licenseAttribtions = await this.scanService.distinctLicenseAttributions(scan.id);

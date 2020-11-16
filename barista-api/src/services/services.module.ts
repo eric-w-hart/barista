@@ -9,6 +9,7 @@ import { LicenseScanResultItemService } from '@app/services/license-scan-result-
 import { LicenseScanResultService } from '@app/services/license-scan-result/license-scan-result.service';
 import { LicenseStatusDeploymentTypeService } from '@app/services/license-status-deployment-type/license-status-deployment-type.service';
 import { LicenseService } from '@app/services/license/license.service';
+import { LoggerService } from '@app/services/logger/logger.service';
 import { ObligationTypeService } from '@app/services/obligation-type/obligation-type.service';
 import { ObligationService } from '@app/services/obligation/obligation.service';
 import { OutputFormatTypeService } from '@app/services/output-format-type/output-format-type.service';
@@ -55,6 +56,7 @@ const services = [
   LicenseScanResultService,
   LicenseService,
   LicenseStatusDeploymentTypeService,
+  LoggerService,
   LocalStrategy,
   ObligationService,
   ObligationTypeService,

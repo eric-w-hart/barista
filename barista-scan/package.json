@@ -105,7 +105,7 @@
     "node-wget": "^0.4.3",
     "nodemailer": "^6.3.1",
     "nuget": "^2.0.2",
-    "p-all": "^2.1.0",
+    "p-all": "^3.0.0",
     "p-iteration": "^1.1.8",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",

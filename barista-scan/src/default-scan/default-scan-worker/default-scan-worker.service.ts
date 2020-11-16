@@ -344,6 +344,10 @@ export class DefaultScanWorkerService {
           }
 
           this.cleanup(this.jobInfo, null, resolve, reject);
+          const scanLog = this.scanLogService.db.create();
+          scanLog.scan = scan;
+          scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
+          await scanLog.save();
         };
 
         if (!_.isEmpty(scan.project.pathToUploadFileForScanning)) {
@@ -385,7 +389,6 @@ export class DefaultScanWorkerService {
           this.logger.log('No pathToUploadFileForScanning and no gitURL, so isSourceCode = false');
           await doScanProcess(false);
         }
-
         const scanLog = this.scanLogService.db.create();
         scanLog.scan = scan;
         scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
@@ -395,11 +398,6 @@ export class DefaultScanWorkerService {
 
         scan.completedAt = new Date();
         await scan.save();
-
-        const scanLog = this.scanLogService.db.create();
-        scanLog.scan = scan;
-        scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
-        await scanLog.save();
 
         this.cleanup(this.jobInfo, error, resolve, reject);
       }

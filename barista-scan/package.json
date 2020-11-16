@@ -87,6 +87,7 @@
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "bull": "^3.10.0",
+    "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
@@ -125,6 +126,7 @@
     "string-similarity": "^3.0.0",
     "tmp": "^0.1.0",
     "typeorm": "^0.2.18",
+    "winston": "^3.3.3",
     "xml2js": "^0.4.19",
     "yarn": "^1.17.3"
   },

@@ -209,10 +209,11 @@ export class DefaultScanWorkerService {
         this.jobInfo.projectName = scan.project.name;
 
         this.job.progress(5);
-        this.logger.log('datadir = ' + this.jobInfo.dataDir);
-        this.logger.fileTransport(this.jobInfo.dataDir + '/output.txt');
-        this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo)}`);
 
+        this.logger.fileTransport(this.jobInfo.dataDir + '/output.txt');
+        this.logger.scanId = this.jobInfo.scanId;
+        this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo)}`);
+        this.logger.log('datadir = ' + this.jobInfo.dataDir);
         // Let's apply any security credentials we might have for the project
         const gitUrl = await this.projectService.gitUrlAuthForProject(scan.project);
 
@@ -361,9 +362,8 @@ export class DefaultScanWorkerService {
 
           await doScanProcess();
         } else if (!_.isEmpty(gitUrl)) {
-          this.logger.log('Cloning Git Repository');
+          this.logger.log('Cloning Git Repository = ' + gitUrl);
           const gitBranch = scan.tag;
-          this.logger.log('Branch = ' + gitBranch);
           const gitOptions = [];
           if (gitBranch) {
             this.logger.log('Branch = ' + gitBranch);

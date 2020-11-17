@@ -7,6 +7,7 @@ export class LoggerService {
     transports: [new winston.transports.Console()],
   };
   private readonly logger: Logger;
+  public scanId: number;
 
   constructor(private context: string, transport?) {
     this.logger = (winston as any).createLogger(LoggerService.loggerOptions);
@@ -58,23 +59,25 @@ export class LoggerService {
     const console = new winston.transports.Console();
     this.logger
       .clear() // Remove all transports
-      .add(console) // Add console transport
       .add(files);
   }
 
   private formatedLog(level: string, message: string, error?): void {
-    let result = '';
+    let result = `[${color.blue('CUSTOMLOGGER')}]`;
+    if (this.scanId) {
+      result += `[${color.greenBright(this.scanId)}] `;
+    }
     const currentDate = new Date();
     const time = `${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
 
     switch (level) {
       case 'info':
-        result = `[${color.blue('INFO')}] ${color.dim.yellow.bold.underline(time)} [${color.green(
+        result += `[${color.blue('INFO')}] ${color.dim.yellow.bold.underline(currentDate)} [${color.green(
           this.context,
         )}] ${message}`;
         break;
       case 'error':
-        result = `[${color.red('ERR')}] ${color.dim.yellow.bold.underline(time)} [${color.green(
+        result += `[${color.red('ERR')}] ${color.dim.yellow.bold.underline(currentDate)} [${color.green(
           this.context,
         )}] ${message}`;
         // if (error) {
@@ -82,7 +85,7 @@ export class LoggerService {
         // }
         break;
       case 'warn':
-        result = `[${color.yellow('WARN')}] ${color.dim.yellow.bold.underline(time)} [${color.green(
+        result += `[${color.yellow('WARN')}] ${color.dim.yellow.bold.underline(currentDate)} [${color.green(
           this.context,
         )}] ${message}`;
         break;

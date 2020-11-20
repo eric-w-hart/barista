@@ -78,7 +78,7 @@
     "@types/p-all": "^2.0.0",
     "@types/request": "^2.48.3",
     "@types/request-promise": "^4.1.44",
-    "@types/shelljs": "^0.8.5",
+    "@types/shelljs": "^0.8.8",
     "@types/spdx-correct": "^2.0.0",
     "@types/string-similarity": "^3.0.0",
     "@types/tmp": "^0.1.0",

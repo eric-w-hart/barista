@@ -93,6 +93,23 @@ module.exports = {
           ],
           },
           {
+          title: 'Attribution',
+          items: [
+            {
+              label: 'barista-web',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-web/barista-web-attribution.txt',
+            },
+            {
+              label: 'barista-api',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-api/barista-api-attribution.txt',
+            },
+            {
+              label: 'barista-scan',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-scan/barista-scan-attribution.txt',
+            },
+          ],
+          },
+          {
               title: 'Project Build Status',
               items: [
                 {

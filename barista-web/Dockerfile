@@ -15,15 +15,17 @@ ENV HOME=/usr/src/app
 RUN mkdir -p /usr/src/app && cd /usr/src/app
 WORKDIR /usr/src/app
 
-RUN cp docker/node-conf/npmrc .npmrc && cp docker/node-conf/yarnrc .yarnrc 
+RUN ls
+COPY docker/node-conf/npmrc .npmrc
+COPY docker/node-conf/yarnrc .yarnrc
 
-COPY yarn.lock /usr/src/app/
 
 # show the two registry configs.
 RUN npm config ls -l && yarn config get registry
 
 # do the initial npm install so it can be cached later
 COPY package.json /usr/src/app/
+COPY yarn.lock /usr/src/app/
 RUN   npm install
 
 RUN mkdir -p -v -m 770 .config /.config /.cache/yarn  && chown root:root /.cache /.cache/yarn /.config .config\

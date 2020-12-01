@@ -13,22 +13,13 @@ WORKDIR /usr/src/app
 ENV HOME=/usr/src/app
 
 RUN mkdir -p /usr/src/app && cd /usr/src/app
-WORKDIR /usr/src/app 
+WORKDIR /usr/src/app
 
-# set up the alternate registry
+
 COPY yarn.lock /usr/src/app/
-RUN cat yarn.lock | \
-      sed 's|https://registry.yarnpkg.com/|https://repo1.uhc.com/artifactory/api/npm/npm-virtual/|g' >web.t && mv -f web.t yarn.lock \
-    && touch .yarnrc .npmrc && chmod g+rw .yarnrc .npmrc \
-    && echo registry=https://repo1.uhc.com/artifactory/api/npm/npm-virtual/ > .npmrc \
-    && cp .npmrc /etc/npmrc 
 
-#RUN npm config ls -l   && npm install --force -g yarn yarnrc
-
-# set up the alternate registry
-RUN   echo "registry \"https://repo1.uhc.com/artifactory/api/npm/npm-virtual/\"" > .yarnrc \
-        && cp .yarnrc /etc/yarnrc \
-        && yarn config get registry 
+# show the two registry configs.
+RUN npm config ls -l && yarn config get registry
 
 # do the initial npm install so it can be cached later
 COPY package.json /usr/src/app/
@@ -50,11 +41,11 @@ ENV HOME=/usr/src/app
 
 RUN apk add nginx bash
 RUN mkdir -p /usr/share/nginx/html
-COPY --from=builder    /usr/src/app/dist/barista-web/* /usr/share/nginx/html/ 
-COPY  docker/nginx-conf/nginx.conf /etc/nginx/ 
+COPY --from=builder    /usr/src/app/dist/barista-web/* /usr/share/nginx/html/
+COPY  docker/nginx-conf/nginx.conf /etc/nginx/
 RUN  rm -fr /etc/nginx/conf.d/*  \
      &&   chgrp -R root /usr/share/nginx/html/* /var/log/nginx \
-     && chmod -R 777  /usr/share/nginx/html /var/lib/nginx /var/log/nginx /var/lib/nginx /run 
+     && chmod -R 777  /usr/share/nginx/html /var/lib/nginx /var/log/nginx /var/lib/nginx /run
 USER 1011
 
 STOPSIGNAL SIGTERM

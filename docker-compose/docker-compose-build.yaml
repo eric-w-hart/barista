@@ -59,8 +59,8 @@ services:
     networks:
       - baristanetwork
     volumes:
-      - ./docker-compose/pythons:/opt/pythons
-      - ./docker-compose/m2:/.m2
+      - pythons:/opt/pythons
+      - m2:/.m2
     depends_on:
       - database
       - barista-api
@@ -69,7 +69,7 @@ services:
   database:
     env_file: barista-compose.env
     volumes:
-      - ./postgres-data:/var/lib/pgsql
+      - pgdata:/var/lib/pgsql
     networks:
       - baristanetwork
     image: centos/postgresql-10-centos7:latest
@@ -80,8 +80,14 @@ services:
     networks:
       - baristanetwork
     volumes:
-      - ./docker-compose/redis-data:/data
-      - ./docker-compose/redis-config:/config
+      - redisdata:/data
+      - redisconfig:/config
 
 networks:
   baristanetwork:
+volumes:
+  pgdata:
+  redisdata:
+  redisconfig:
+  pythons:
+  m2:

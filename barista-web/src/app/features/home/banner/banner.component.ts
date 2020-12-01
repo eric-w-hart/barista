@@ -7,7 +7,7 @@ import { UserInfo } from '@app/shared/api/model/user-info';
   template: `
     <div *ngIf="!isLoggedIn">
       <div class="image">
-        <img src="/assets/images/barista_logo_text_removed.png" />
+        <img src="./assets/images/barista_logo_text_removed.png" />
       </div>
       <div class="mat-headline banner-text">
         Open Source Governance <br />

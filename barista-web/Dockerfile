@@ -15,6 +15,7 @@ ENV HOME=/usr/src/app
 RUN mkdir -p /usr/src/app && cd /usr/src/app
 WORKDIR /usr/src/app
 
+RUN cp docker/node-conf/npmrc .npmrc && cp docker/node-conf/yarnrc .yarnrc 
 
 COPY yarn.lock /usr/src/app/
 

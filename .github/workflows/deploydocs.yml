@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest        
     defaults:
       run:
-        working-directory: doc/barista-docs    
+        working-directory: barista-docs    
     steps:      
       - uses: actions/checkout@v2
       - run: ls
@@ -21,7 +21,7 @@ jobs:
         with:
           name: docsite
           # working-directory doesn't appear to be honored when using `uses`
-          path: doc/barista-docs/build/
+          path: barista-docs/build/
   deploy:
     needs: [build]
     runs-on: ubuntu-latest  

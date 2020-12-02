@@ -127,6 +127,13 @@ module.exports = {
                   </a>
                 `,
                 },
+                {
+                  html: `
+                  <a href="https://github.com/optum/barista" target="_blank" rel="noreferrer noopener" aria-label="Barista OSS Governance">
+                    <img src="https://github.com/Optum/barista/workflows/deploydocs/badge.svg" alt="Barista Docs Deploy Status" />
+                  </a>
+                `,
+                },
               ],
             },
           ],

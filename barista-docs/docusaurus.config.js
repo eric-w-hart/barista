@@ -6,6 +6,7 @@ module.exports = {
   favicon: 'img/barista-icon.ico',
   organizationName: 'Optum', // Usually your GitHub org/user name.
   projectName: 'barista', // Usually your repo name.
+  onBrokenLinks: 'ignore',
   themeConfig: {
     navbar: {
       title: 'Barista Docs',
@@ -13,7 +14,7 @@ module.exports = {
         alt: 'Barista logo',
         src: 'img/barista.png',
       },
-      links: [
+      items: [
         {to: 'docs/overview', label: 'Docs', position: 'left'},
         {
           href: 'https://github.com/Optum/barista',
@@ -93,6 +94,23 @@ module.exports = {
           ],
           },
           {
+          title: 'Attribution',
+          items: [
+            {
+              label: 'barista-web',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-web/barista-web-attribution.txt',
+            },
+            {
+              label: 'barista-api',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-api/barista-api-attribution.txt',
+            },
+            {
+              label: 'barista-scan',
+              href: 'https://raw.githubusercontent.com/Optum/barista/master/barista-scan/barista-scan-attribution.txt',
+            },
+          ],
+          },
+          {
               title: 'Project Build Status',
               items: [
                 {
@@ -106,6 +124,13 @@ module.exports = {
                   html: `
                   <a href="https://github.com/optum/barista" target="_blank" rel="noreferrer noopener" aria-label="Barista OSS Governance">
                     <img src="https://github.com/optum/barista/workflows/buildrelease/badge.svg?branch=master" alt="Container Release Status" />
+                  </a>
+                `,
+                },
+                {
+                  html: `
+                  <a href="https://github.com/optum/barista" target="_blank" rel="noreferrer noopener" aria-label="Barista OSS Governance">
+                    <img src="https://github.com/Optum/barista/workflows/deploydocs/badge.svg" alt="Barista Docs Deploy Status" />
                   </a>
                 `,
                 },

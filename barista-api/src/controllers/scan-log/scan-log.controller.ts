@@ -5,6 +5,13 @@ import { ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 @Crud({
+  query: {
+    join: {
+      scan: {
+        eager: true,
+      },
+    },
+  },
   model: {
     type: ScanLog,
   },

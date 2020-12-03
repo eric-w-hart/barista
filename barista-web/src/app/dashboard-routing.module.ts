@@ -26,6 +26,7 @@ import { TooltipDetailsComponent } from '@app/features/tooltips/tooltip-details/
 import { TooltipsComponent } from '@app/features/tooltips/tooltips.component';
 import { VulnerabilityStatusDeploymentTypesDetailsComponent } from '@app/features/vulnerability-status-deployment-types/vulnerability-status-deployment-types-details/vulnerability-status-deployment-types-details.component';
 import { VulnerabilityStatusDeploymentTypesComponent } from '@app/features/vulnerability-status-deployment-types/vulnerability-status-deployment-types.component';
+import { ScanLogsComponent } from './features/projects/project-scans/scan-logs/scan-logs.component';
 const dashboardRoutes: Routes = [
   {
     path: '',
@@ -123,6 +124,10 @@ const dashboardRoutes: Routes = [
           {
             path: 'security-scan-result',
             component: SecurityScanResultComponent,
+          },
+          {
+            path: 'scan-logs',
+            component: ScanLogsComponent,
           },
         ],
       },

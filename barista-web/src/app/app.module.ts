@@ -1,3 +1,4 @@
+import { ScanLog } from './shared/api/model/scan-log';
 import { HttpCancelService } from './shared/services/httpcancel.service';
 // tslint:disable:max-line-length
 import { NgModule } from '@angular/core';
@@ -104,6 +105,7 @@ import { BannerComponent } from './features/home/banner/banner.component';
 import { ChartGaugeComponent } from './features/home/chart-gauge/chart-gauge.component';
 import { ChartBarHorizontalComponent } from './features/home/chart-bar-horizontal/chart-bar-horizontal.component';
 import { ChartBarVerticalComponent } from './features/home/chart-bar-vertical/chart-bar-vertical.component';
+import { ScanLogsComponent } from './features/projects/project-scans/scan-logs/scan-logs.component';
 
 // tslint:enable:max-line-length
 
@@ -168,6 +170,7 @@ export function apiConfigFactory(): Configuration {
     ProjectStatusTypeDetailsComponent,
     ProjectStatusTypesComponent,
     ProjectsComponent,
+    ScanLogsComponent,
     SecurityScanResultComponent,
     SecurityScanResultItemDetailsComponent,
     SecurityScanResultItemsComponent,

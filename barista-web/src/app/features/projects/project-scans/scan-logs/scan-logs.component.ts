@@ -1,4 +1,5 @@
-import { filter, switchMap } from 'rxjs/operators';
+import { ScanLogService } from '@app/shared/api/api/scan-log.service';
+import { filter, scan, switchMap } from 'rxjs/operators';
 import { result } from 'lodash';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { Component, Input, OnInit } from '@angular/core';
@@ -12,21 +13,17 @@ import { Observable } from 'rxjs';
   styleUrls: ['./scan-logs.component.scss'],
 })
 export class ScanLogsComponent implements OnInit {
-  constructor(private route: ActivatedRoute) {}
-  isLoadingScanLogs = true;
-  scanLogs$: Observable<string>;
+  constructor(private route: ActivatedRoute, private scanLogService: ScanLogService) {}
+  isLoadingScanLogs = false;
+  scanLogs$: string;
 
   ngOnInit() {
     const scanId = this.route.snapshot.paramMap.get('scanId');
-
-    // this.scanLogs$ = this.scanLogService.scanLogByScanIdIdGet(Number(scanId)).pipe(
-    //   untilDestroyed(this),
-    //   filter((result) => result.length > 0),
-    //   switchMap((result) => {
-    //     this.isLoadingScanLogs = false;
-    //     return of(result[0].log);
-    //   }),
-    // );
+    this.scanLogService.scanLogByScanIdIdGet(Number(scanId)).subscribe((response) => {
+      let dataNames: string[] = response.map((item) => item.log);
+      this.scanLogs$ = dataNames.toString();
+      this.isLoadingScanLogs = false;
+    });
   }
 
   download() {

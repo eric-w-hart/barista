@@ -170,7 +170,7 @@ export class ScanCodeService extends ScannerBaseService {
     return Promise.resolve(jobInfo);
   }
 
-  public async scanDir(targetDir: string) {
+  public async scanDir(targetDir: string, jobInfo: DefaultScanWorkerJobInfo) {
     const config = await SystemConfiguration.defaultConfiguration();
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
@@ -184,7 +184,7 @@ export class ScanCodeService extends ScannerBaseService {
           OBJC_DISABLE_INITIALIZE_FORK_SAFETY: 'YES',
         },
       },
-      dataDir.name,
+      jobInfo.dataDir,
     );
 
     return this.getResults(dataDir.name);

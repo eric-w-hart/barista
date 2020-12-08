@@ -182,6 +182,15 @@ export class DefaultScanWorkerService {
     return urlParts.hostname.toLowerCase() === 'github.com';
   }
 
+  replaceGitHubPassword(gitUrl: string) {
+    const url = new URL(gitUrl);
+    if (url.password) {
+      return gitUrl.replace(url.password, '*******');
+    } else {
+      return gitUrl;
+    }
+  }
+
   async scan(job: Job<any>, callback: DoneCallback) {
     return new Promise<void>(async (resolve, reject) => {
       this.jobInfo = {};
@@ -362,7 +371,7 @@ export class DefaultScanWorkerService {
 
           await doScanProcess();
         } else if (!_.isEmpty(gitUrl)) {
-          this.logger.log('Cloning Git Repository = ' + gitUrl);
+          this.logger.log('Cloning Git Repository = ' + this.replaceGitHubPassword(gitUrl));
           const gitBranch = scan.tag;
           const gitOptions = [];
           if (gitBranch) {

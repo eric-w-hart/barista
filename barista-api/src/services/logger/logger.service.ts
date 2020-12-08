@@ -1,4 +1,5 @@
 import * as winston from 'winston';
+
 import * as color from 'chalk';
 import { Logger, LoggerOptions, transport } from 'winston';
 
@@ -55,7 +56,15 @@ export class LoggerService {
   }
 
   fileTransport(fileName: string) {
-    const files = new winston.transports.File({ filename: fileName });
+    const { combine, timestamp, label, printf } = winston.format;
+    const myFormat = printf(({ level, message, context, timestamp }) => {
+      return `${timestamp} [${context}] ${level}: ${message}`;
+    });
+
+    const files = new winston.transports.File({
+      filename: fileName,
+      format: winston.format.combine(winston.format.timestamp({ format: 'MM-DD-YYYY HH:mm:ss' }), myFormat),
+    });
     const console = new winston.transports.Console();
     this.logger
       .clear() // Remove all transports

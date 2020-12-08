@@ -212,7 +212,7 @@ export class DefaultScanWorkerService {
 
         this.logger.fileTransport(this.jobInfo.dataDir + '/output.txt');
         this.logger.scanId = this.jobInfo.scanId;
-        this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo)}`);
+        this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo, null, 2)}`);
         this.logger.log('datadir = ' + this.jobInfo.dataDir);
         // Let's apply any security credentials we might have for the project
         const gitUrl = await this.projectService.gitUrlAuthForProject(scan.project);

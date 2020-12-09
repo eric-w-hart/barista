@@ -191,6 +191,15 @@ export class DefaultScanWorkerService {
     }
   }
 
+  replaceGitHubPasswordInString(content: string, gitUrl: string) {
+    const url = new URL(gitUrl);
+    if (url.password) {
+      return content.replace(url.username + ':' + url.password, url.username + ':*******');
+    } else {
+      return content;
+    }
+  }
+
   async scan(job: Job<any>, callback: DoneCallback) {
     return new Promise<void>(async (resolve, reject) => {
       this.jobInfo = {};
@@ -385,14 +394,14 @@ export class DefaultScanWorkerService {
           }
           this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions, async (cloneError, cloneResult) => {
             if (cloneError) {
-              this.logger.error(`Clone Error: ${cloneError}`);
+              this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
+            } else {
+              await doScanProcess();
             }
 
             if (cloneResult && cloneResult !== '') {
               this.logger.log(`Clone Result: ${cloneResult}`);
             }
-
-            await doScanProcess();
           });
         } else {
           this.logger.log('No pathToUploadFileForScanning and no gitURL, so isSourceCode = false');

@@ -23,6 +23,7 @@ import { ProjectNotesApiService } from './api/project-notes-api.service';
 import { ProjectScanStatusTypeApiService } from './api/project-scan-status-type-api.service';
 import { ProjectStatusTypeApiService } from './api/project-status-type-api.service';
 import { ScanApiService } from './api/scan-api.service';
+import { ScanLogService } from './api/scan-log.service';
 import { SecurityScanResultApiService } from './api/security-scan-result-api.service';
 import { SecurityScanResultItemApiService } from './api/security-scan-result-item-api.service';
 import { SecurityScanResultItemStatusTypeApiService } from './api/security-scan-result-item-status-type-api.service';
@@ -57,6 +58,7 @@ import { VulnerabilityStatusDeploymentTypeApiService } from './api/vulnerability
     ProjectScanStatusTypeApiService,
     ProjectStatusTypeApiService,
     ScanApiService,
+    ScanLogService,
     SecurityScanResultApiService,
     SecurityScanResultItemApiService,
     SecurityScanResultItemStatusTypeApiService,

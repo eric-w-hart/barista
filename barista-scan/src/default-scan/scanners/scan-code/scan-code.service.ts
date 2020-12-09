@@ -170,18 +170,22 @@ export class ScanCodeService extends ScannerBaseService {
     return Promise.resolve(jobInfo);
   }
 
-  public async scanDir(targetDir: string) {
+  public async scanDir(targetDir: string, jobInfo: DefaultScanWorkerJobInfo) {
     const config = await SystemConfiguration.defaultConfiguration();
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
     const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
 
-    shellExecuteSync(command, {
-      shell: true,
-      env: {
-        OBJC_DISABLE_INITIALIZE_FORK_SAFETY: 'YES',
+    shellExecuteSync(
+      command,
+      {
+        shell: true,
+        env: {
+          OBJC_DISABLE_INITIALIZE_FORK_SAFETY: 'YES',
+        },
       },
-    });
+      jobInfo.dataDir,
+    );
 
     return this.getResults(dataDir.name);
   }

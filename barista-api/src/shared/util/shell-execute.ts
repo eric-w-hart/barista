@@ -1,11 +1,14 @@
-import { Logger } from '@nestjs/common';
+import { LoggerService } from '@app/services/logger/logger.service';
 import * as execa from 'execa';
 
-export function shellExecuteSync(command: string, options: any = {}): string {
-  const logger = new Logger('ShellExecuteSync');
+export function shellExecuteSync(command: string, options: any = {}, logDir?: string): string {
+  const logger = new LoggerService('ShellExecuteSync');
+  if (logDir) {
+    logger.fileTransport(logDir + '/output.txt');
+  }
   try {
     logger.log(`*** command STARTED: ${command}`);
-    const { stdout } = execa.commandSync(command, {
+    const { stdout } = execa.commandSync(command + ' ' + logOption(logDir), {
       ...options,
       stdio: 'inherit',
       shell: true,
@@ -17,15 +20,24 @@ export function shellExecuteSync(command: string, options: any = {}): string {
   }
 }
 
-export function shellExecute(command: string, options: any = {}): Promise<void> {
-  const logger = new Logger('ShellExecute');
+export function shellExecute(command: string, options: any = {}, logDir?: string): Promise<void> {
+  const logger = new LoggerService('ShellExecute');
+  if (logDir) {
+    logger.fileTransport(logDir + '/output.txt');
+  }
   logger.log(`*** command STARTED: ${command}`);
   return execa
-    .command(command, { ...options, stdio: 'inherit', shell: true })
+    .command(command + ' ' + logOption(logDir), { ...options, stdio: 'inherit', shell: true })
     .then(() => {
       logger.log(`*** command COMPLETED: ${command}`);
     })
     .catch(error => {
       logger.error(`*** command ERROR: ${error} ${command}`);
     });
+}
+
+export function logOption(logDir: string) {
+  if (logDir) {
+    return ' 2>&1 | tee -a ' + logDir + '/output.txt';
+  }
 }

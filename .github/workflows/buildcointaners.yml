@@ -8,7 +8,7 @@ on:
   push:
     branches:
 #      - $default-branch
-#     - 'develop'
+      - 'develop'
       - 'rolinge/gitactions'
 
     # Publish `v1.2.3` tags as releases.

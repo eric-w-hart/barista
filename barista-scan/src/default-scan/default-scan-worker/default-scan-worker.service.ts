@@ -1,3 +1,4 @@
+import { LoggerService } from '@app/services/logger/logger.service';
 import { DefaultScanWorkerJobInfo } from '@app/default-scan/default-scan-worker/default-scan-worker-job-info.interface';
 import { DepClient } from '@app/default-scan/dep-clients/common/dep-client.interface';
 import { GolangService } from '@app/default-scan/dep-clients/golang/golang.service';
@@ -19,6 +20,7 @@ import { PackageManagerEnum } from '@app/models/PackageManager';
 import { ProjectAttribution } from '@app/models/ProjectAttribution';
 import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { ProjectService } from '@app/services/project/project.service';
+import { ScanLogService } from '@app/services/scan-log/scan-log.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { fetchBinaryFromUrl } from '@app/shared/util/fetch-binary-from-url';
 import { shellExecuteSync } from '@app/shared/util/shell-execute';
@@ -40,7 +42,7 @@ export class DefaultScanWorkerService {
   private git = Git();
   private job: Job;
   private jobInfo: DefaultScanWorkerJobInfo;
-  private logger = new Logger('DefaultScanWorkerService');
+  private logger = new LoggerService('DefaultScanWorkerService');
   private scanners: Scanner[];
   private tmpDir = tmp.dirSync({ unsafeCleanup: true });
 
@@ -48,6 +50,7 @@ export class DefaultScanWorkerService {
     private readonly projectAttributionService: ProjectAttributionService,
     private readonly projectService: ProjectService,
     private readonly scanService: ScanService,
+    private readonly scanLogService: ScanLogService,
     @Inject(forwardRef(() => ScanCodeService))
     private readonly scanCodeService: ScanCodeService,
     @Inject(forwardRef(() => LicenseCheckerService))
@@ -167,7 +170,7 @@ export class DefaultScanWorkerService {
       options.useMavenCustomSettings = !this.isGitHubCom(scan.project.gitUrl);
       this.logger.log('userMavenCustom = ' + options.useMavenCustomSettings);
 
-      return depClient.fetchDependencies(workingDirectory, options);
+      return depClient.fetchDependencies(workingDirectory, options, jobInfo.dataDir);
     } else {
       this.logger.log('No package manager configured, not fetching dependencies.');
       return Promise.resolve();
@@ -177,6 +180,15 @@ export class DefaultScanWorkerService {
   isGitHubCom(gitUrl: string) {
     const urlParts = url.parse(gitUrl);
     return urlParts.hostname.toLowerCase() === 'github.com';
+  }
+
+  replaceGitHubPassword(gitUrl: string) {
+    const url = new URL(gitUrl);
+    if (url.password) {
+      return gitUrl.replace(url.password, '*******');
+    } else {
+      return gitUrl;
+    }
   }
 
   async scan(job: Job<any>, callback: DoneCallback) {
@@ -207,8 +219,10 @@ export class DefaultScanWorkerService {
 
         this.job.progress(5);
 
-        this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo)}`);
-
+        this.logger.fileTransport(this.jobInfo.dataDir + '/output.txt');
+        this.logger.scanId = this.jobInfo.scanId;
+        this.logger.log(`this.jobInfo: ${JSON.stringify(this.jobInfo, null, 2)}`);
+        this.logger.log('datadir = ' + this.jobInfo.dataDir);
         // Let's apply any security credentials we might have for the project
         const gitUrl = await this.projectService.gitUrlAuthForProject(scan.project);
 
@@ -216,7 +230,7 @@ export class DefaultScanWorkerService {
           let progress = 10;
           this.job.progress(progress);
 
-          shellExecuteSync('pwd', { cwd: this.jobInfo.tmpDir });
+          shellExecuteSync('pwd', { cwd: this.jobInfo.tmpDir }, this.jobInfo.dataDir);
 
           scan.startedAt = new Date();
           await scan.save();
@@ -295,6 +309,8 @@ export class DefaultScanWorkerService {
           scan.completedAt = new Date();
           await scan.save();
 
+          this.logger.log('Updating Attributions');
+
           try {
             const licenseAttribtions = await this.scanService.distinctLicenseAttributions(scan.id);
 
@@ -336,6 +352,10 @@ export class DefaultScanWorkerService {
           } catch (error) {
             this.logger.error(error);
           }
+          const scanLog = this.scanLogService.db.create();
+          scanLog.scan = scan;
+          scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
+          await scanLog.save();
 
           this.cleanup(this.jobInfo, null, resolve, reject);
         };
@@ -351,9 +371,8 @@ export class DefaultScanWorkerService {
 
           await doScanProcess();
         } else if (!_.isEmpty(gitUrl)) {
-          this.logger.log('Cloning Git Repository');
+          this.logger.log('Cloning Git Repository = ' + this.replaceGitHubPassword(gitUrl));
           const gitBranch = scan.tag;
-          this.logger.log('Branch = ' + gitBranch);
           const gitOptions = [];
           if (gitBranch) {
             this.logger.log('Branch = ' + gitBranch);
@@ -379,11 +398,20 @@ export class DefaultScanWorkerService {
           this.logger.log('No pathToUploadFileForScanning and no gitURL, so isSourceCode = false');
           await doScanProcess(false);
         }
+        const scanLog = this.scanLogService.db.create();
+        scanLog.scan = scan;
+        scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
+        await scanLog.save();
       } catch (error) {
         this.logger.error(error);
 
         scan.completedAt = new Date();
         await scan.save();
+
+        const scanLog = this.scanLogService.db.create();
+        scanLog.scan = scan;
+        scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
+        await scanLog.save();
 
         this.cleanup(this.jobInfo, error, resolve, reject);
       }

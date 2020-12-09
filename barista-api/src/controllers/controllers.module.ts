@@ -32,6 +32,7 @@ import { AppOrmModule } from '@app/shared/app-orm.module';
 import { AppQueueModule } from '@app/shared/app-queue.module';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { ScanLogController } from './scan-log/scan-log.controller';
 import { UserController } from './user/user.controller';
 
 @Module({
@@ -58,6 +59,7 @@ import { UserController } from './user/user.controller';
     ProjectScanStatusTypeController,
     ProjectStatusTypeController,
     ScanController,
+    ScanLogController,
     SecurityScanResultController,
     SecurityScanResultItemController,
     SecurityScanResultItemStatusTypeController,
@@ -66,6 +68,7 @@ import { UserController } from './user/user.controller';
     ToolTipController,
     UserController,
     VulnerabilityStatusDeploymentTypeController,
+    ScanLogController,
   ],
 })
 export class ControllersModule {}

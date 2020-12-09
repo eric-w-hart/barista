@@ -154,7 +154,7 @@ export class LicenseNugetService extends ScannerBaseService {
         scan.jobInfo.data = jobInfo;
         await scan.save();
 
-        await this.postProcess(licenseScanResult, nuspecs);
+        await this.postProcess(licenseScanResult, nuspecs, jobInfo);
 
         licenseScanResult.completedAt = new Date();
         await this.licenseScanResultService.db.save(licenseScanResult);
@@ -166,7 +166,11 @@ export class LicenseNugetService extends ScannerBaseService {
     });
   }
 
-  public async postProcess(licenseScanResult: LicenseScanResult, nuspecs: any[]): Promise<void> {
+  public async postProcess(
+    licenseScanResult: LicenseScanResult,
+    nuspecs: any[],
+    jobInfo?: DefaultScanWorkerJobInfo,
+  ): Promise<void> {
     return new Promise<void>(async resolve => {
       const operations = [];
 
@@ -176,7 +180,7 @@ export class LicenseNugetService extends ScannerBaseService {
             const packageName = this.getPackageName(nuspec);
 
             await this.fetchLicense(nuspec);
-            const rawScanCodeResult = await this.scanForLicenses(nuspec);
+            const rawScanCodeResult = await this.scanForLicenses(nuspec, jobInfo);
             const scanCodeOutput = await this.scanCodeService.extractLicenseInformation(rawScanCodeResult);
 
             return {
@@ -241,7 +245,7 @@ export class LicenseNugetService extends ScannerBaseService {
     return Promise.resolve(jobInfo);
   }
 
-  public async scanForLicenses(nuspec: any) {
+  public async scanForLicenses(nuspec: any, jobInfo?: DefaultScanWorkerJobInfo) {
     const tmpDir = tmp.dirSync();
 
     // Get Files
@@ -258,7 +262,7 @@ export class LicenseNugetService extends ScannerBaseService {
       }
     });
 
-    const scanResults = await this.scanCodeService.scanDir(tmpDir.name);
+    const scanResults = await this.scanCodeService.scanDir(tmpDir.name, jobInfo);
     return scanResults;
   }
 }

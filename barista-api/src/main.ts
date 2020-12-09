@@ -57,6 +57,7 @@ async function bootstrap() {
     .addTag('ProjectStatusType', 'Methods')
     .addTag('ProjectScanStatusType', 'Methods')
     .addTag('Scan', 'Methods')
+    .addTag('ScanLog', 'Methods')
     .addTag('SecurityScanResult', 'Methods')
     .addTag('SecurityScanResultItem', 'Methods')
     .addTag('SecurityScanResultItemStatusType', 'Methods')

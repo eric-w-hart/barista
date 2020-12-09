@@ -395,9 +395,8 @@ export class DefaultScanWorkerService {
           this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions, async (cloneError, cloneResult) => {
             if (cloneError) {
               this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
-            } else {
-              await doScanProcess();
             }
+            await doScanProcess();
 
             if (cloneResult && cloneResult !== '') {
               this.logger.log(`Clone Result: ${cloneResult}`);

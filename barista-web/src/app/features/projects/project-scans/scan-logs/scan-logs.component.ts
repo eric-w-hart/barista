@@ -1,11 +1,7 @@
-import { ScanLogService } from '@app/shared/api/api/scan-log.service';
-import { filter, scan, switchMap } from 'rxjs/operators';
-import { result } from 'lodash';
-import { untilDestroyed } from 'ngx-take-until-destroy';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs/internal/observable/of';
-import { Observable } from 'rxjs';
+import { ScanLogService } from '@app/shared/api/api/scan-log.service';
+import { saveAs as importedSaveAs } from 'file-saver';
 
 @Component({
   selector: 'app-scan-logs',
@@ -15,21 +11,23 @@ import { Observable } from 'rxjs';
 export class ScanLogsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private scanLogService: ScanLogService) {}
   isLoadingScanLogs = false;
+  scanId: string;
   scanLogs$: string;
 
-  ngOnInit() {
-    const scanId = this.route.snapshot.paramMap.get('scanId');
-    this.scanLogService.scanLogByScanIdIdGet(Number(scanId)).subscribe((response) => {
-      let dataNames: string[] = response.map((item) => item.log);
-      this.scanLogs$ = dataNames.toString();
-      this.isLoadingScanLogs = false;
+  download() {
+    this.scanLogService.scanLogByScanIdIdGet(Number(this.scanId)).subscribe((response) => {
+      const scanLogs: string[] = response.map((item) => item.log);
+      const blob: any = new Blob([scanLogs.toString()], { type: 'text/plain; charset=utf-8' });
+      importedSaveAs(blob, 'scan.log');
     });
   }
 
-  download() {
-    // this.projectApiService.projectIdAttributionDownload(this.project.id.toString()).subscribe((response) => {
-    //   const blob: any = new Blob([response], { type: 'text/plain; charset=utf-8' });
-    //   importedSaveAs(response, 'attribution.txt');
-    // });
+  ngOnInit() {
+    this.scanId = this.route.snapshot.paramMap.get('scanId');
+    this.scanLogService.scanLogByScanIdIdGet(Number(this.scanId)).subscribe((response) => {
+      const scanLogs: string[] = response.map((item) => item.log);
+      this.scanLogs$ = scanLogs.toString();
+      this.isLoadingScanLogs = false;
+    });
   }
 }

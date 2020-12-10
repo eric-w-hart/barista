@@ -74,16 +74,18 @@ export class DefaultScanWorkerService {
 
   cleanup(info: DefaultScanWorkerJobInfo, error: Error = null, resolve, reject) {
     try {
-      if (process.env.NODE_ENV.toLowerCase() === 'production') {
-        this.logger.debug(
-          `*** [process.env.NODE_ENV === ${process.env.NODE_ENV}] Deleting temporary scan directories.`,
-        );
-        this.tmpDir.removeCallback();
-        this.dataDir.removeCallback();
-      } else {
-        this.logger.debug(
-          `*** [process.env.NODE_ENV === ${process.env.NODE_ENV}] NOT Deleting temporary scan directories.`,
-        );
+      if (process.env.NODE_ENV) {
+        if (process.env.NODE_ENV.toLowerCase() === 'production') {
+          this.logger.debug(
+            `*** [process.env.NODE_ENV === ${process.env.NODE_ENV}] Deleting temporary scan directories.`,
+          );
+          this.tmpDir.removeCallback();
+          this.dataDir.removeCallback();
+        } else {
+          this.logger.debug(
+            `*** [process.env.NODE_ENV === ${process.env.NODE_ENV}] NOT Deleting temporary scan directories.`,
+          );
+        }
       }
 
       this.job.progress(100);
@@ -392,11 +394,33 @@ export class DefaultScanWorkerService {
             gitOptions.push('--depth');
             gitOptions.push('1');
           }
+
+          scan.startedAt = new Date();
+          await scan.save();
+
           this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions, async (cloneError, cloneResult) => {
             if (cloneError) {
-              this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
+              await this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
+
+              await scan.reload();
+              scan.completedAt = new Date();
+              await scan.save();
+
+              const scanLog = this.scanLogService.db.create();
+              scanLog.scan = scan;
+              scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
+              await scanLog.save();
+
+              this.cleanup(this.jobInfo, null, resolve, reject);
+
+              try {
+                await this.scanService.sendMailOnScanCompletion(scan);
+              } catch (error) {
+                this.logger.error(error);
+              }
+            } else {
+              await doScanProcess();
             }
-            await doScanProcess();
 
             if (cloneResult && cloneResult !== '') {
               this.logger.log(`Clone Result: ${cloneResult}`);
@@ -406,12 +430,8 @@ export class DefaultScanWorkerService {
           this.logger.log('No pathToUploadFileForScanning and no gitURL, so isSourceCode = false');
           await doScanProcess(false);
         }
-        const scanLog = this.scanLogService.db.create();
-        scanLog.scan = scan;
-        scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
-        await scanLog.save();
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error('ScanProcess Error' + error);
 
         scan.completedAt = new Date();
         await scan.save();

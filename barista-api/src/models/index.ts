@@ -19,6 +19,7 @@ export { Project } from './Project';
 export { ProjectAttribution } from './ProjectAttribution';
 export { ProjectDevelopmentType } from './ProjectDevelopmentType';
 export { Scan } from './Scan';
+export { ScanLog } from './ScanLog';
 export { SecurityScanResult } from './SecurityScanResult';
 export { SecurityScanResultItem } from './SecurityScanResultItem';
 export { SecurityScanResultItemStatusType } from './SecurityScanResultItemStatusType';

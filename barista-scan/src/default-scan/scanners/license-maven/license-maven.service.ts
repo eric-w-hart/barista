@@ -181,7 +181,7 @@ export class LicenseMavenService extends ScannerBaseService {
   }
 
   public async preExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
-    shellExecuteSync(`mkdir ${jobInfo.dataDir}/maven-licenses`);
+    shellExecuteSync(`mkdir ${jobInfo.dataDir}/maven-licenses`, '', jobInfo.dataDir);
     return Promise.resolve(jobInfo);
   }
 

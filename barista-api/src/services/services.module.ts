@@ -9,16 +9,18 @@ import { LicenseScanResultItemService } from '@app/services/license-scan-result-
 import { LicenseScanResultService } from '@app/services/license-scan-result/license-scan-result.service';
 import { LicenseStatusDeploymentTypeService } from '@app/services/license-status-deployment-type/license-status-deployment-type.service';
 import { LicenseService } from '@app/services/license/license.service';
+import { LoggerService } from '@app/services/logger/logger.service';
 import { ObligationTypeService } from '@app/services/obligation-type/obligation-type.service';
 import { ObligationService } from '@app/services/obligation/obligation.service';
 import { OutputFormatTypeService } from '@app/services/output-format-type/output-format-type.service';
 import { PackageManagerService } from '@app/services/package-manager/package-manager.service';
-import { ProjectDevelopmentTypeService } from '@app/services/project-development-type/project-development-type.service';
 import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
+import { ProjectDevelopmentTypeService } from '@app/services/project-development-type/project-development-type.service';
 import { ProjectNotesService } from '@app/services/project-notes/project-notes.service';
 import { ProjectScanStatusTypeService } from '@app/services/project-scan-status-type/project-scan-status-type.service';
 import { ProjectStatusTypeService } from '@app/services/project-status-type/project-status-type.service';
 import { ProjectService } from '@app/services/project/project.service';
+import { ScanLogService } from '@app/services/scan-log/scan-log.service';
 import { ScanService } from '@app/services/scan/scan.service';
 // tslint:disable-next-line:max-line-length
 import { SecurityScanResultItemStatusTypeService } from '@app/services/security-scan-result-item-status-type/security-scan-result-item-status-type.service';
@@ -54,6 +56,7 @@ const services = [
   LicenseScanResultService,
   LicenseService,
   LicenseStatusDeploymentTypeService,
+  LoggerService,
   LocalStrategy,
   ObligationService,
   ObligationTypeService,
@@ -65,6 +68,7 @@ const services = [
   ProjectScanStatusTypeService,
   ProjectService,
   ProjectStatusTypeService,
+  ScanLogService,
   ScanService,
   SecurityScanResultItemService,
   SecurityScanResultItemStatusTypeService,

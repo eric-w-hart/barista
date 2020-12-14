@@ -81,7 +81,7 @@
     "@types/jasminewd2": "~2.0.8",
     "@types/jest": "^25.1.4",
     "@types/lodash": "^4.14.149",
-    "@types/node": "^12.11.1",
+    "@types/node": "^14.14.13",
     "codelyzer": "^5.2.2",
     "compodoc": "^0.0.41",
     "hads": "^2.0.2",

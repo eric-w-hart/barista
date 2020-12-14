@@ -284,8 +284,9 @@ export class StatsController implements CrudController<Project> {
     }
     const query = `SELECT date_trunc('month', p2.created_at::date)::date AS name, COUNT(*) AS value
          FROM project p2
-        WHERE p2.development_type_code = 'organization' ${userFilter}
-        GROUP BY 1 ORDER BY 1 LIMIT 12;`;
+        WHERE p2.created_at > date_trunc('month', CURRENT_DATE) - INTERVAL '1 year'
+        AND p2.development_type_code = 'organization' ${userFilter}
+        GROUP BY 1 ORDER BY 1;`;
     const stats = await this.rawQuery<any>(query, { userId: usergroups });
 
     return stats;
@@ -308,8 +309,9 @@ export class StatsController implements CrudController<Project> {
       userFilter = 'AND p2."userId" in (:...userId)';
     }
     const query = `SELECT date_trunc('month', ssr.created_at::date)::date AS name, COUNT(*) AS value
-         FROM security_scan_result ssr, project p2
-        WHERE p2.development_type_code = 'organization' ${userFilter}
+        FROM security_scan_result ssr, project p2
+        WHERE ssr.created_at > date_trunc('month', CURRENT_DATE) - INTERVAL '1 year'
+        AND p2.development_type_code = 'organization' ${userFilter}
         GROUP BY 1 ORDER BY 1 LIMIT 12;`;
     const stats = await this.rawQuery<any>(query, { userId: usergroups });
 

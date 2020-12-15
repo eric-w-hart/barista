@@ -75,7 +75,7 @@
     "@angular-devkit/build-angular": "~0.901.0",
     "@angular/cli": "~9.0.7",
     "@angular/compiler-cli": "~9.1.0",
-    "@angular/language-service": "~9.1.0",
+    "@angular/language-service": "~11.0.4",
     "@openapitools/openapi-generator-cli": "^1.0.8-4.2.2",
     "@types/jasmine": "~3.5.10",
     "@types/jasminewd2": "~2.0.8",

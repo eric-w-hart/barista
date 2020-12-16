@@ -3431,9 +3431,9 @@ formidable@^1.2.0:
   integrity sha512-Fs9VRguL0gqGHkXS5GQiMCr1VhZBxz0JnJs4JmMp/2jL18Fmbzvv7vOFRU+U8TBkHEE/CX1qDXzJplVULgsLeg==
 
 forwarded-parse@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/forwarded-parse/-/forwarded-parse-2.1.0.tgz#1ae9d7a4be3af884f74d936d856f7d8c6abd0439"
-  integrity sha512-as9a7Xelt0CvdUy7/qxrY73dZq2vMx49F556fwjjFrUyzq5uHHfeLgD2cCq/6P4ZvusGZzjD6aL2NdgGdS5Cew==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/forwarded-parse/-/forwarded-parse-2.1.1.tgz#be73f3df5aa0bad5ba1af42005801ac9f4d49263"
+  integrity sha512-8Jh3uv3iaaTTvH3vM4qyRjKfe5dvR/THhiPY5zhsfFa/UviqnEd3hqNyxEtRCwL3+L2vv8JsanGZ5XHQcncyUA==
 
 forwarded@~0.1.2:
   version "0.1.2"

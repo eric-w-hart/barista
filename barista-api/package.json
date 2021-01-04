@@ -129,7 +129,7 @@
     "concurrently": "^4.1.0",
     "factory-girl": "^5.0.4",
     "faker": "^5.1.0",
-    "jest": "24.8.0",
+    "jest": "24.9.0",
     "jest-junit": "^6.4.0",
     "majestic": "^1.6.0",
     "nodemon": "^1.18.9",

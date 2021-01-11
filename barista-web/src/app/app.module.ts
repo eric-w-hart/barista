@@ -1,3 +1,4 @@
+import { githubValidDirective } from './shared/validators/githubvaliddirective';
 import { ScanLog } from './shared/api/model/scan-log';
 import { HttpCancelService } from './shared/services/httpcancel.service';
 // tslint:disable:max-line-length
@@ -139,6 +140,7 @@ export function apiConfigFactory(): Configuration {
     DashboardComponent,
     FlexLayoutTypeComponent,
     FooterComponent,
+    githubValidDirective,
     HeaderComponent,
     HomeComponent,
     LicenseDetailsComponent,

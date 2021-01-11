@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NgModel } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,7 +40,7 @@ import { ToolTipsCacheService } from '@app/shared/services/ToolTipsCacheService'
 import * as _ from 'lodash';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { combineLatest, Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-details',
@@ -47,6 +48,8 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./project-details.component.scss'],
 })
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
+  @ViewChild('gitUrlModel') gitUrlModel: NgModel;
+
   constructor(
     private projectService: ProjectService,
     private scanApiService: ScanApiService,
@@ -226,6 +229,20 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             }
           }
         });
+
+      this.gitUrlModel.control.valueChanges.subscribe((value: string) => {
+        console.log('top');
+        if (value === undefined || value.length === 0) {
+          return;
+        }
+        if (value.startsWith('http')) {
+          this.gitUrlModel.control.setErrors({ githubUrlDoesExist: true });
+        }
+        // this.http.get<Product>('/api/product/' + value).subscribe(product => {
+        //   this.partNumberModel.control.setErrors({"partnumberExists": true})
+        // },
+        // error => {});
+      });
     }
 
     this.route.queryParams.subscribe((queryParams) => {

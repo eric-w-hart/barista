@@ -53,8 +53,8 @@
                   appgithubValidator
                 />
                 <mat-error *ngIf="gitHubUrlModel.errors?.gitHubUrlDoesNotExist"
-                  >GitHub Repo does not exist. The repo must either be public or you must grant read access to the
-                  Barista service account</mat-error
+                  >GitHub Repo does not exist or is otherwise unavailable. The repo must either be public or you must
+                  grant read access to the Barista service account</mat-error
                 >
               </mat-form-field>
             </mat-grid-tile>

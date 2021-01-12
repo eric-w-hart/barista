@@ -44,11 +44,18 @@
                   url
                   pattern="https?://.+"
                   [(ngModel)]="project.gitUrl"
+                  [ngModelOptions]="{ updateOn: 'blur' }"
                   name="gitUrl"
                   [attr.required]="project.developmentType && project.developmentType.code != 'community'"
                   [matTooltip]="tooltips['gitUrl']"
                   [disabled]="project.pathToUploadFileForScanning ? '' : null"
+                  #gitHubUrlModel="ngModel"
+                  appgithubValidator
                 />
+                <mat-error *ngIf="gitHubUrlModel.errors?.gitHubUrlDoesNotExist"
+                  >GitHub Repo does not exist or is otherwise unavailable. The repo must either be public or you must
+                  grant read access to the Barista service account</mat-error
+                >
               </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile>

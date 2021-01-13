@@ -21,6 +21,7 @@ import {
 } from '@nestjs/common';
 import { ApiUseTags, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 import { Response } from 'express';
+import { Swagger } from '@nestjsx/crud/lib/crud';
 
 import {
   Crud,
@@ -46,7 +47,11 @@ import { makeBadge, ValidationError } from 'badge-maker';
 @ApiUseTags('Stats')
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
-  constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {}
+  constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {
+    const metadata = Swagger.getParams(this.getprojectonly);
+    const queryParamsMeta = Swagger.createQueryParamsMeta('getManyBase');
+    Swagger.setParams([...metadata, ...queryParamsMeta], this.getprojectonly);
+  }
   get base(): CrudController<Project> {
     return this;
   }
@@ -68,6 +73,12 @@ export class StatsController implements CrudController<Project> {
       }
     }
     return answer;
+  }
+
+  @UseInterceptors(CrudRequestInterceptor)
+  @Get('/project-only')
+  async getprojectonly(@ParsedRequest() req: CrudRequest) {
+    return (await this.base.getManyBase(req)) as Project[];
   }
 
   createFormat(label: string, value: string, status: string) {

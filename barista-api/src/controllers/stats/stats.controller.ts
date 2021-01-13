@@ -81,12 +81,6 @@ export class StatsController implements CrudController<Project> {
     return (await this.base.getManyBase(req)) as Project[];
   }
 
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/export/list.xlsx')
-  async exportSome(@ParsedRequest() req: CrudRequest) {
-    // some awesome feature handling
-  }
-
   createFormat(label: string, value: string, status: string) {
     let color = status;
     if (status === 'unknown') {

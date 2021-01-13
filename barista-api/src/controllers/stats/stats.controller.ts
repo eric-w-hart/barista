@@ -76,7 +76,7 @@ export class StatsController implements CrudController<Project> {
   }
 
   @UseInterceptors(CrudRequestInterceptor)
-  @Get('/projects/minimum')
+  @Get('/project-only')
   async getprojectminimum(@ParsedRequest() req: CrudRequest) {
     return (await this.base.getManyBase(req)) as Project[];
   }

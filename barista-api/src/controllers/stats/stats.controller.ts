@@ -48,9 +48,9 @@ import { makeBadge, ValidationError } from 'badge-maker';
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
   constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {
-    const metadata = Swagger.getParams(this.getprojectminimum);
+    const metadata = Swagger.getParams(this.getprojectonly);
     const queryParamsMeta = Swagger.createQueryParamsMeta('getManyBase');
-    Swagger.setParams([...metadata, ...queryParamsMeta], this.getprojectminimum);
+    Swagger.setParams([...metadata, ...queryParamsMeta], this.getprojectonly);
   }
   get base(): CrudController<Project> {
     return this;
@@ -77,7 +77,7 @@ export class StatsController implements CrudController<Project> {
 
   @UseInterceptors(CrudRequestInterceptor)
   @Get('/project-only')
-  async getprojectminimum(@ParsedRequest() req: CrudRequest) {
+  async getprojectonly(@ParsedRequest() req: CrudRequest) {
     return (await this.base.getManyBase(req)) as Project[];
   }
 

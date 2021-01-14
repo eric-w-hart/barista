@@ -5,9 +5,8 @@ import { join } from 'path';
 import * as tmp from 'tmp';
 
 export class TestHelper {
-
   // tslint:disable:member-ordering
-  static testDataDirectory: string = join(__dirname + '/../test-data');
+  static testDataDirectory: string = join(__dirname + '../../../../test-data');
   static insecureSampleProject: string = join(TestHelper.testDataDirectory + '/positive');
   static licenseSampleProject: string = join(TestHelper.testDataDirectory + '/license');
   static nugetSampleProject: string = join(TestHelper.testDataDirectory + '/nuget-packages');
@@ -40,19 +39,22 @@ export class TestHelper {
   }
 
   static async createProjectLicenseScanResult() {
-    const savedProject = await Project.getRepository().save({ name: 'test-project', gitUrl: 'http://github.com/test-project' });
+    const savedProject = await Project.getRepository().save({
+      name: 'test-project',
+      gitUrl: 'http://github.com/test-project',
+    });
     const project = await Project.getRepository().findOne(savedProject.id);
     const savedScan = await Scan.getRepository().save({ project, completedAt: new Date() });
     const scan = await Scan.getRepository().findOne(savedScan.id);
 
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       setTimeout(async () => {
         await TestHelper.createLicenseScan(scan);
         resolve();
       }, 1234);
     });
 
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       setTimeout(async () => {
         await TestHelper.createLicenseScan(scan);
         resolve();
@@ -61,7 +63,7 @@ export class TestHelper {
 
     let licenseScanResult1: LicenseScanResult;
 
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       setTimeout(async () => {
         licenseScanResult1 = await TestHelper.createLicenseScan(scan);
         resolve();

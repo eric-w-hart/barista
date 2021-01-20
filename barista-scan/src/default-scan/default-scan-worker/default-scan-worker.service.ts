@@ -203,8 +203,6 @@ export class DefaultScanWorkerService {
   }
 
   deleteFolderRecursive(filePath, ignorePath) {
-    this.logger.log('ignorepath = ' + ignorePath);
-    this.logger.log('path = ' + filePath);
     if (ignorePath.replace(/\/+$/, '') === filePath.replace(/\/+$/, '')) {
       return;
     }

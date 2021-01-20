@@ -438,10 +438,9 @@ export class DefaultScanWorkerService {
               }
             } else {
               if (scan.project.customPackageManagerPath) {
-                const Path = require('path');
                 this.deleteFolderRecursive(
                   this.jobInfo.tmpDir,
-                  Path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
+                  path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
                 );
               }
               await doScanProcess();

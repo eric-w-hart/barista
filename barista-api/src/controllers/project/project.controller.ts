@@ -226,6 +226,25 @@ export class ProjectController implements CrudController<Project> {
     return await PaginateArrayResult(query, +page, +pageSize);
   }
 
+  @Get('/validGithubRepo')
+  @UseInterceptors(CrudRequestInterceptor)
+  @ApiResponse({ status: 200 })
+  async getvalidGitRepo(@Query('githubUrl') gitUrl: string) {
+    const project = new Project();
+    project.gitUrl = gitUrl;
+
+    const gitUrl1 = await this.service.gitUrlAuthForProject(project);
+    const gitOptions = [];
+    gitOptions.push(gitUrl1);
+    try {
+      await this.git.listRemote(gitOptions);
+      return 'success';
+    } catch (e) {
+      this.logger.error(e);
+      return 'error';
+    }
+  }
+
   @Get('/:id/gitbranches')
   @UseInterceptors(CrudRequestInterceptor)
   @ApiResponse({ status: 200, type: [ScanBranchDto] })

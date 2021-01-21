@@ -202,6 +202,24 @@ export class DefaultScanWorkerService {
     }
   }
 
+  deleteFolderRecursive(filePath, ignorePath) {
+    if (ignorePath.replace(/\/+$/, '') === filePath.replace(/\/+$/, '')) {
+      return;
+    }
+    if (fs.existsSync(filePath)) {
+      fs.readdirSync(filePath).forEach((file, index) => {
+        const curPath = path.join(filePath, file);
+        if (fs.lstatSync(curPath).isDirectory()) {
+          // recurse
+          this.deleteFolderRecursive(curPath, ignorePath);
+        } else {
+          // delete file
+          fs.unlinkSync(curPath);
+        }
+      });
+    }
+  }
+
   async scan(job: Job<any>, callback: DoneCallback) {
     return new Promise<void>(async (resolve, reject) => {
       this.jobInfo = {};
@@ -419,6 +437,12 @@ export class DefaultScanWorkerService {
                 this.logger.error(error);
               }
             } else {
+              if (scan.project.customPackageManagerPath) {
+                this.deleteFolderRecursive(
+                  this.jobInfo.tmpDir,
+                  path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
+                );
+              }
               await doScanProcess();
             }
 

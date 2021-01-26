@@ -36,10 +36,12 @@ export class GoLicensesService extends ScannerBaseService {
       targetDir = path.join(jobInfo.tmpDir, scan.project.customPackageManagerPath);
     }
 
+    // let programDir = path.join(jobInfo.tmpDir, 'cmd/terrascale');
+
     const binary = 'go-licenses';
 
     // tslint:disable-next-line:max-line-length
-    const command = `cd ${targetDir}; GOPATH=${targetDir}/.go ${binary} csv ./ > ${jobInfo.dataDir}/go-licenses.csv`;
+    const command = `cd ${targetDir}; GOPATH=${targetDir}/.go ${binary} csv . > ${jobInfo.dataDir}/go-licenses.csv`;
     return command;
   }
 
@@ -139,6 +141,7 @@ export class GoLicensesService extends ScannerBaseService {
 
   public async upsertLicense(value: any, licenseScanResult: LicenseScanResult) {
     const licenseScanResultItem = await this.licenseScanResultItemFromJson(value);
+    this.logger.error('update license = ' + value);
     // Upsert license
     const partialLicense = this.partialLicense(value[2]);
 

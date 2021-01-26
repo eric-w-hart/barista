@@ -153,7 +153,9 @@ export class DefaultScanWorkerService {
 
       if (project.customPackageManagerPath) {
         options.customPackageManagerPath = project.customPackageManagerPath;
+        if (project.packageManager.code != PackageManagerEnum.GO.toString()){
         workingDirectory = join(jobInfo.tmpDir, project.customPackageManagerPath);
+        }
       }
 
       if (project.customPackageManagerFilename) {
@@ -437,7 +439,7 @@ export class DefaultScanWorkerService {
                 this.logger.error(error);
               }
             } else {
-              if (scan.project.customPackageManagerPath) {
+              if (scan.project.customPackageManagerPath && scan.project.packageManager.code != PackageManagerEnum.GO.toString()) {
                 this.deleteFolderRecursive(
                   this.jobInfo.tmpDir,
                   path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),

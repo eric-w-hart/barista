@@ -31,7 +31,7 @@ export class DependencyCheckService extends ScannerBaseService {
   public async command(jobInfo: DefaultScanWorkerJobInfo) {
     const host = process.env.DB_HOST || 'localhost',
       port = process.env.DB_PORT || 5432,
-      database = process.env.DC_DATABASE || 'barista-dev',
+      database = process.env.DB_DATABASE || 'barista-dev',
       username = process.env.DB_USER || 'postgres',
       password = process.env.DB_PASSWORD || 'password';
 

@@ -12,6 +12,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as pit from 'p-iteration';
+import * as dotenv from 'dotenv';
 // tslint:enable:max-line-length
 
 @Injectable()
@@ -22,14 +23,27 @@ export class DependencyCheckService extends ScannerBaseService {
     private readonly securityScanResultItemService: SecurityScanResultItemService,
   ) {
     super();
+    dotenv.config();
   }
   private readonly logger = new Logger('NvdCheckService');
   name = 'NvdCheckService';
 
   public async command(jobInfo: DefaultScanWorkerJobInfo) {
-    let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh --project \
-    ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
+    const host = process.env.DB_HOST || 'localhost',
+      port = process.env.DB_PORT || 5432,
+      database = process.env.DC_DATABASE || 'barista-dev',
+      username = process.env.DB_USER || 'postgres',
+      password = process.env.DB_PASSWORD || 'password';
+
+    let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh \
+    --project ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
     --format ALL --scan ${jobInfo.tmpDir}`;
+
+    command = `${command} \
+    --connectionString jdbc:postgresql://${host}:${port}/${database} \
+    --dbDriverName org.postgresql.Driver  \
+    --dbPassword ${password} \
+    --dbUser ${username}`;
 
     const BARISTA_OSS_USERNAME = process.env.BARISTA_OSS_USERNAME;
     const BARISTA_OSS_PASSWORD = process.env.BARISTA_OSS_PASSWORD;

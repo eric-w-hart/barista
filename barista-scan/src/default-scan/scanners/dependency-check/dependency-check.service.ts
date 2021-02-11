@@ -39,7 +39,7 @@ export class DependencyCheckService extends ScannerBaseService {
       `SELECT EXISTS (
     SELECT FROM information_schema.tables 
     WHERE  table_schema = 'public'
-    AND    table_name   = 'cpeEcosystemCache'
+    AND    table_name   = 'cpeecosystemcache'
     ) as exists`,
     );
     if (dependency_checker_db[0].exists) {

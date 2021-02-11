@@ -28,22 +28,36 @@ export class DependencyCheckService extends ScannerBaseService {
   private readonly logger = new Logger('NvdCheckService');
   name = 'NvdCheckService';
 
-  public async command(jobInfo: DefaultScanWorkerJobInfo) {
+  private async check_db() {
     const host = process.env.DB_HOST || 'localhost',
       port = process.env.DB_PORT || 5432,
       database = process.env.DB_DATABASE || 'barista-dev',
       username = process.env.DB_USER || 'postgres',
       password = process.env.DB_PASSWORD || 'password';
 
-    let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh \
-    --project ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
-    --format ALL --scan ${jobInfo.tmpDir}`;
-
-    command = `${command} \
+    const dependency_checker_db = await this.scanService.db.query(
+      `SELECT EXISTS (
+    SELECT FROM information_schema.tables 
+    WHERE  table_schema = 'public'
+    AND    table_name   = 'cpeEcosystemCache'
+    ) as exists`,
+    );
+    if (dependency_checker_db[0].exists) {
+      return `
     --connectionString jdbc:postgresql://${host}:${port}/${database} \
     --dbDriverName org.postgresql.Driver  \
     --dbPassword ${password} \
     --dbUser ${username}`;
+    }
+  }
+
+  public async command(jobInfo: DefaultScanWorkerJobInfo) {
+    let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh \
+    --project ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
+    --format ALL --scan ${jobInfo.tmpDir}`;
+
+    command = `${command} \ 
+               ${await this.check_db()} `;
 
     const BARISTA_OSS_USERNAME = process.env.BARISTA_OSS_USERNAME;
     const BARISTA_OSS_PASSWORD = process.env.BARISTA_OSS_PASSWORD;

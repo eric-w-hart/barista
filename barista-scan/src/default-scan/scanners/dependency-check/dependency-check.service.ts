@@ -43,8 +43,7 @@ export class DependencyCheckService extends ScannerBaseService {
     ) as exists`,
     );
     if (dependency_checker_db[0].exists) {
-      return `
-    --connectionString jdbc:postgresql://${host}:${port}/${database} \
+      return `--connectionString jdbc:postgresql://${host}:${port}/${database} \
     --dbDriverName org.postgresql.Driver  \
     --dbPassword ${password} \
     --dbUser ${username}`;
@@ -56,8 +55,7 @@ export class DependencyCheckService extends ScannerBaseService {
     --project ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
     --format ALL --scan ${jobInfo.tmpDir}`;
 
-    command = `${command} \ 
-               ${await this.check_db()} `;
+    command = `${command} ${await this.check_db()} `;
 
     const BARISTA_OSS_USERNAME = process.env.BARISTA_OSS_USERNAME;
     const BARISTA_OSS_PASSWORD = process.env.BARISTA_OSS_PASSWORD;

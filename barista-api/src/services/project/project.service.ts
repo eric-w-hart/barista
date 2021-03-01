@@ -142,6 +142,7 @@ export class ProjectService extends AppServiceBase<Project> {
     let gitUrl = project.gitUrl;
 
     log.log(`gitUrl: ${gitUrl}`);
+    
 
     if (gitUrl) {
       const urlParts = url.parse(gitUrl);
@@ -150,7 +151,9 @@ export class ProjectService extends AppServiceBase<Project> {
 
       let username = null;
       let password = null;
+      const gheUrl = process.env[config.githubEnterpriseUrlEnvVar];
 
+      log.log(`gheUrl: ${gheUrl}`);
       // If it is a GutHub.com URL, add the Github credentials
       const isGitHubCom = urlParts.hostname.toLowerCase() === 'github.com';
 
@@ -173,12 +176,27 @@ export class ProjectService extends AppServiceBase<Project> {
         let isGitHubEnterprise = false;
 
         if (process.env[config.githubEnterpriseUrlEnvVar]) {
-          const gheUrl = process.env[config.githubEnterpriseUrlEnvVar];
+          const gheUrl = process.env[config.githubEnterpriseUrlEnvVar].split(',');
 
           log.log(`gheUrl: ${gheUrl}`);
 
+
           if (gheUrl) {
-            isGitHubEnterprise = urlParts.hostname.toLowerCase() === gheUrl.toLowerCase();
+            if (gheUrl.some(x => url.parse(x).hostname?.toLowerCase() == urlParts.hostname.toLowerCase())){
+              isGitHubEnterprise = true;
+            }
+            // for (let urlstring of gheUrl){
+            //   if (urlstring)
+            //   {
+            //     const urlstringParts = url.parse(urlstring);
+            //     if (urlstringParts.hostname?.toLowerCase() == urlParts.hostname.toLowerCase()){
+            //       isGitHubEnterprise = true;
+            //       return;
+            //     }
+            //   }
+            // }
+
+            //isGitHubEnterprise = urlParts.hostname.toLowerCase() === gheUrl.toLowerCase();
 
             if (isGitHubEnterprise) {
               log.log(`isGitHubEnterprise: ${isGitHubEnterprise}`);
@@ -217,7 +235,7 @@ export class ProjectService extends AppServiceBase<Project> {
         log.log(`gitUrl: ${url.format(urlParts)}`);
       }
     }
-
+    log.log(`gitUrl: ${gitUrl}`);
     return gitUrl;
   }
 

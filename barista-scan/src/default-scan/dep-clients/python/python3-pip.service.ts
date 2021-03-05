@@ -33,7 +33,7 @@ export class Python3PipService extends DepClientBaseService {
 
     // command using only pyenv to manage environments
 
-    const command = `cd ${workingDir} && pyenv local ${pythonVersion} && python3 -m venv ./env && source env/bin/activate && pip install -r ${requirementsFile}`;
+    const command = `cd ${workingDir} && pyenv local ${pythonVersion} && python3 -m venv ./env && source env/bin/activate && pip install --index-url https://repo1.uhc.com/artifactory/api/pypi/pypi-virtual/simple -r ${requirementsFile}`;
 
     // tslint:enable:max-line-length
 

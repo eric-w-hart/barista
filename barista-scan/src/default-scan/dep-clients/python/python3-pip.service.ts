@@ -36,7 +36,7 @@ export class Python3PipService extends DepClientBaseService {
 
     // command using only pyenv to manage environments
 
-    let command = `cd ${workingDir} && pyenv local ${pythonVersion} && python3 -m venv ./env && source env/bin/activate && pip install -r ${requirementsFile}`;
+    let command = `cd ${workingDir} && pyenv local ${pythonVersion} && python3 -m venv ./env && source env/bin/activate && pip install -r ${requirementsFile} `;
     if (config.pythonPackageRepo){
       command = command + `--index-url ${config.pythonPackageRepo}`
     }

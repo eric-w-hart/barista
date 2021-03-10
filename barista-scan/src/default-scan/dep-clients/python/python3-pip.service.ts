@@ -1,3 +1,4 @@
+import { SystemConfiguration } from '@app/models';
 import { DepClientBaseService } from '@app/default-scan/dep-clients/common/dep-client-base/dep-client-base.service';
 import { PackageManagerEnum } from '@app/models/PackageManager';
 import { Injectable, Logger } from '@nestjs/common';
@@ -12,6 +13,8 @@ export class Python3PipService extends DepClientBaseService {
   }
 
   async command(workingDir: string, options?: any): Promise<string> {
+
+    const config = await SystemConfiguration.defaultConfiguration();
     // If the user has specified a custom requirements file then let's apply it
     let requirementsFile = 'requirements.txt';
     if (options && options.hasOwnProperty('customPackageManagerFilename')) {
@@ -33,8 +36,10 @@ export class Python3PipService extends DepClientBaseService {
 
     // command using only pyenv to manage environments
 
-    const command = `cd ${workingDir} && pyenv local ${pythonVersion} && python3 -m venv ./env && source env/bin/activate && pip install --index-url https://repo1.uhc.com/artifactory/api/pypi/pypi-virtual/simple -r ${requirementsFile}`;
-
+    let command = `cd ${workingDir} && pyenv local ${pythonVersion} && python3 -m venv ./env && source env/bin/activate && pip install -r ${requirementsFile}`;
+    if (config.pythonPackageRepo){
+      command = command + `--index-url ${config.pythonPackageRepo}`
+    }
     // tslint:enable:max-line-length
 
     return command;

@@ -75,6 +75,10 @@ export class SystemConfiguration extends OptionValueModelBase {
   npmRegistry: string;
 
   @ApiModelProperty()
+  @Column({ name: 'python_packaage_repo', nullable: true ,default: '' })
+  pythonPackageRepo: string;
+
+  @ApiModelProperty()
   @Column({ name: 'production_deploy_url', nullable: true })
   productionDeployUrl: string;
 

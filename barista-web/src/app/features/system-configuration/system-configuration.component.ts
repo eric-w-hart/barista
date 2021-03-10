@@ -26,7 +26,7 @@ export class SystemConfigurationComponent implements OnInit, OnDestroy {
       type: 'checkbox',
       templateOptions: {
         label: 'SPDX License List Version',
-        required: true,
+        required: false,
       },
     },
     {

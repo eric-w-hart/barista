@@ -48,6 +48,15 @@ export class SystemConfigurationComponent implements OnInit, OnDestroy {
       },
     },
     {
+      key: 'pythonPackageRepo',
+      type: 'input',
+      templateOptions: {
+        label: 'Python Package Repo',
+        placeholder: 'Enter Python Package Repo.',
+        required: true,
+      },
+    },
+    {
       key: 'maxProcesses',
       type: 'input',
       templateOptions: {

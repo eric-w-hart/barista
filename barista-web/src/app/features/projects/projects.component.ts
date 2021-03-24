@@ -9,6 +9,7 @@ import { untilDestroyed } from 'ngx-take-until-destroy';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
+
 enum ProjectDataTableType {
   user = 'user',
 }
@@ -35,6 +36,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   searchProjectsDataTable: AppDatatableComponent;
   selected = [];
   selectedIndex = 0;
+  selectedProject : Project;
   @ViewChild('statusTemplate', { static: true }) statusTemplate;
   subscribedToEvent = false;
 
@@ -78,15 +80,20 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((text: string) => {
         this.filter = text;
         this.searchProjectsDataTable.refresh();
+        console.log(this.searchProjectsDataTable);
       });
   }
 
   ngOnDestroy(): void {}
-
+cols : any[];
+projects : any = [];
+sortMode : string = 'single';
+_selectedColumns: any[];
   ngOnInit() {
     this.columns = [
-      { name: 'Project Name', prop: 'name', flexGrow: 1, cellTemplate: this.nameTemplate },
-      { name: 'Git URL', prop: 'gitUrl', flexGrow: 1 },
+      { name: 'Project Name', prop: 'name', flexGrow: 1, canSort: true, canFilter: true },
+      { name: 'Git URL', prop: 'gitUrl', flexGrow: 1,canSort: true, canFilter: true  },
+      { name: 'ASKID', prop: 'askID',canSort: true, canFilter: true },
       {
         name: 'Status',
         prop: 'id',
@@ -94,9 +101,35 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         cellTemplate: this.statusTemplate,
       },
     ];
-  }
+
+    this._selectedColumns = this.columns;
+
+    this.projectApiService.projectSearchGet(
+      this.projectDataTableType || 'internal',
+      50,
+       0,
+      this.filter || '',
+    ).subscribe((response: any) => {
+      this.projects= response.data;
+      console.log(this.projects);
+    });
+    }
 
   onSelect({ selected }) {
     return this.router.navigate(['project', selected[0].id]);
   }
+  onRowSelect(event) {
+    console.log('selected');
+    this.router.navigate(['project', this.selectedProject.id]);
+}
+
+@Input() get selectedColumns(): any[] {
+  return this._selectedColumns;
+}
+
+set selectedColumns(val: any[]) {
+  //restore original order
+  this._selectedColumns = this.columns.filter(col => val.includes(col));
+}
+
 }

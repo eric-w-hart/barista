@@ -5,7 +5,7 @@
   </button>
 </mat-form-field>
 
-<app-datatable
+<!-- <app-datatable
   #searchProjectsDataTable
   class="material striped"
   [columns]="columns"
@@ -18,10 +18,53 @@
   (select)="onSelect($event)"
   [getPageResults]="getPagedResults.bind(this)"
 >
-</app-datatable>
-<ng-template #nameTemplate let-row="row" let-value="value" ngx-datatable-cell-template>
+</app-datatable> -->
+
+<p-table [columns]="selectedColumns" [value]="projects"
+        styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
+        [paginator]="true"
+        [rows]="10"
+        selectionMode="single"
+        [(selection)]="selectedProject"
+        (onRowSelect)="onRowSelect($event)"
+        >
+        <ng-template pTemplate="caption">
+          <p-multiSelect [options]="columns" [(ngModel)]="selectedColumns" optionLabel="name"
+              selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" placeholder="Choose Columns"></p-multiSelect>
+      </ng-template>
+  <ng-template pTemplate="header" let-columns>
+      <tr>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.prop">
+            <div *ngIf="col.canSort">
+             {{col.name}}<p-sortIcon field={{col.prop}}></p-sortIcon>
+          </div>
+          <div *ngIf="!col.canSort">{{col.name}}</div>
+          </th>
+      </tr>
+      <tr>
+        <th *ngFor="let col of columns">
+          <div *ngIf="col.canFilter">
+          <p-columnFilter type="text" field={{col.prop}} ></p-columnFilter>
+        </div>
+        </th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-project let-columns="columns">
+      <tr [pSelectableRow]="project">
+          <td *ngFor="let col of columns">
+<div *ngIf="!col.cellTemplate">{{project[col.prop]}}</div>
+<div *ngIf="col.cellTemplate">
+  <app-project-status-normal [project]="{ id: project[col.prop]}"></app-project-status-normal>
+</div>
+
+          </td>
+      </tr>
+  </ng-template>
+</p-table>
+
+<ng-template #nameTemplate let-row="row" let-value="value" >
   {{ getName(row) }}
 </ng-template>
-<ng-template #statusTemplate let-row="row" let-value="value" ngx-datatable-cell-template>
+<ng-template #statusTemplate let-row="row" let-value="value" >
   <app-project-status-normal [project]="{ id: value }"></app-project-status-normal>
 </ng-template>

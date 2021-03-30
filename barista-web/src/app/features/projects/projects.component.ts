@@ -9,7 +9,6 @@ import { untilDestroyed } from 'ngx-take-until-destroy';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
-
 enum ProjectDataTableType {
   user = 'user',
 }
@@ -36,7 +35,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   searchProjectsDataTable: AppDatatableComponent;
   selected = [];
   selectedIndex = 0;
-  selectedProject : Project;
+  selectedProject: Project;
   @ViewChild('statusTemplate', { static: true }) statusTemplate;
   subscribedToEvent = false;
 
@@ -53,16 +52,47 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   getPagedResults(query: any): Observable<any> {
     switch (this.projectDataTableType) {
       case ProjectDataTableType.user: {
-        return this.userApiService.userProjectsGet(this.filter || '', query.perPage || 50, query.page || 0);
+        return this.userApiService.userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0);
       }
       default: {
         // Internal or community
         return this.projectApiService.projectSearchGet(
           this.projectDataTableType || 'internal',
-          query.perPage || 50,
+          query.perPage || 5000,
           query.page || 0,
           this.filter || '',
         );
+      }
+    }
+  }
+
+  getResults(query: any) {
+    switch (this.projectDataTableType) {
+      case ProjectDataTableType.user: {
+        this.userApiService
+          .userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0)
+          .subscribe((response: any) => {
+            this.projects = response.data;
+            this.projects.sort((a, b) => (a.name > b.name ? 1 : -1));
+            console.log(this.projects);
+            this.loading = false;
+          });
+      }
+      default: {
+        // Internal or community
+        this.projectApiService
+          .projectSearchGet(
+            this.projectDataTableType || 'internal',
+            query.perPage || 5000,
+            query.page || 0,
+            this.filter || '',
+          )
+          .subscribe((response: any) => {
+            this.projects = response.data;
+            this.projects.sort((a, b) => (a.name > b.name ? 1 : -1));
+            console.log(this.projects);
+            this.loading = false;
+          });
       }
     }
   }
@@ -72,7 +102,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     fromEvent(this.projectsSearchInput.nativeElement, 'keyup')
       .pipe(
         map((event: any) => event.target.value),
-        filter(res => res.length > 2 || res.length === 0),
+        filter((res) => res.length > 2 || res.length === 0),
         debounceTime(500),
         distinctUntilChanged(),
         untilDestroyed(this),
@@ -85,15 +115,19 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
-cols : any[];
-projects : any = [];
-sortMode : string = 'single';
-_selectedColumns: any[];
+  cols: any[];
+  projects: any = [];
+  sortMode: string = 'single';
+  _selectedColumns: any[];
+  loading: boolean;
+  exportColumns: any[];
+  exportName = 'BaristaExport';
   ngOnInit() {
+    this.loading = true;
     this.columns = [
       { name: 'Project Name', prop: 'name', flexGrow: 1, canSort: true, canFilter: true },
-      { name: 'Git URL', prop: 'gitUrl', flexGrow: 1,canSort: true, canFilter: true  },
-      { name: 'ASKID', prop: 'askID',canSort: true, canFilter: true },
+      { name: 'Git URL', prop: 'gitUrl', flexGrow: 1, canSort: true, canFilter: true },
+      { name: 'ASKID', prop: 'askID', canSort: true, canFilter: true, width: 100 },
       {
         name: 'Status',
         prop: 'id',
@@ -101,19 +135,17 @@ _selectedColumns: any[];
         cellTemplate: this.statusTemplate,
       },
     ];
+    this.exportColumns = this.columns.map((col) => ({
+      header: col.name,
+      field: col.prop,
+      canSort: col.canSort,
+      canFilter: col.canFilter,
+      cellTemplate: col.cellTemplate,
+    }));
 
-    this._selectedColumns = this.columns;
-
-    this.projectApiService.projectSearchGet(
-      this.projectDataTableType || 'internal',
-      50,
-       0,
-      this.filter || '',
-    ).subscribe((response: any) => {
-      this.projects= response.data;
-      console.log(this.projects);
-    });
-    }
+    this._selectedColumns = this.exportColumns;
+    this.getResults(5000);
+  }
 
   onSelect({ selected }) {
     return this.router.navigate(['project', selected[0].id]);
@@ -121,15 +153,14 @@ _selectedColumns: any[];
   onRowSelect(event) {
     console.log('selected');
     this.router.navigate(['project', this.selectedProject.id]);
-}
+  }
 
-@Input() get selectedColumns(): any[] {
-  return this._selectedColumns;
-}
+  @Input() get selectedColumns(): any[] {
+    return this._selectedColumns;
+  }
 
-set selectedColumns(val: any[]) {
-  //restore original order
-  this._selectedColumns = this.columns.filter(col => val.includes(col));
-}
-
+  set selectedColumns(val: any[]) {
+    //restore original order
+    this._selectedColumns = this.columns.filter((col) => val.includes(col));
+  }
 }

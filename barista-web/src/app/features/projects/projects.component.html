@@ -5,22 +5,17 @@
   </button>
 </mat-form-field> -->
 
-<!-- <app-datatable
+<app-datagrid
   #searchProjectsDataTable
-  class="material striped"
+  [records]="projects"
   [columns]="columns"
-  [columnMode]="'force'"
-  [headerHeight]="50"
-  [footerHeight]="50"
-  [rowHeight]="'auto'"
-  [selected]="selected"
-  [selectionType]="'single'"
+  class="material striped"
   (select)="onSelect($event)"
-  [getPageResults]="getPagedResults.bind(this)"
+  [tableLoading]="loading"
 >
-</app-datatable> -->
+</app-datagrid>
 
-<p-table
+<!-- <p-table
   #dt
   [columns]="selectedColumns"
   [value]="projects"
@@ -38,9 +33,6 @@
 >
   <ng-template pTemplate="caption">
     <div class="p-grid p-ai-center p-jc-end" style="height: 60px;">
-      <div class="p-col-8">
-        <button type="button" label="CSV" (click)="dt.exportCSV()" style="margin-right: 0.5em;">Export (CSV)</button>
-      </div>
       <div class="p-col-1" [style]="{ minWidth: '200px' }"><h4>Selected Columns:</h4></div>
       <div class="p-col-2">
         <p-multiSelect
@@ -79,7 +71,7 @@
       </td>
     </tr>
   </ng-template>
-</p-table>
+</p-table> -->
 
 <ng-template #nameTemplate let-row="row" let-value="value">
   {{ getName(row) }}

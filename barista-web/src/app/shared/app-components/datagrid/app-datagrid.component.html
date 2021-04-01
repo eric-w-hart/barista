@@ -1,0 +1,35 @@
+<p-table
+  #dt
+  [columns]="columns"
+  [value]="records"
+  styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
+  [paginator]="true"
+  [rows]="20"
+  [loading]="tableLoading"
+  selectionMode="single"
+  [autoLayout]="true"
+  [(selection)]="selectedItems"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.sortable ? col.field : null" [ngSwitch]="col.columnType">
+        <span>
+          {{ col.header }}
+          <p-sortIcon *ngIf="col.sortable" field="{{ col.field }}"></p-sortIcon>
+          <p-columnFilter *ngIf="col.filter" type="text" field="{{ col.field }}" display="menu"></p-columnFilter>
+        </span>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr [pSelectableRow]="rowData">
+      <td *ngFor="let col of columns" [ngSwitch]="col.columnType">
+        <div *ngSwitchCase="'text'">{{ rowData[col.field] }}</div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<ng-template #statusTemplate let-row="row" let-value="value">
+  <!-- <app-project-status-normal [project]="{ id: value }"></app-project-status-normal> -->
+</ng-template>

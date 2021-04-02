@@ -12,10 +12,12 @@ import {
   HostListener,
   ViewEncapsulation,
   ElementRef,
+  ViewContainerRef,
 } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
 import { SelectItem, SortEvent } from 'primeng/api';
 import { DataGridColumn } from './data-grid-column';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-datagrid',
@@ -37,17 +39,14 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() multiSortMeta?: any[] = [];
   @Input() defaultSortField?: string;
   @Input() defaultSortOrder?: number;
-  @Input() attestationEnabled? = false;
   @Input() rowsPerPageOptions?: number[] = [10, 25, 50, 75, 100, 500];
   @Input() rowsPerPageInitialValue? = 50;
   @Input() aggregateTitle?: string;
   @Input() aggregateValue? = 0;
-  @Input() actions?: SelectItem[] = [];
-  @Input() rowActions?: string[] = [];
   @Input() selectionEnabled? = false;
   @Input() exportEnabled? = true;
-  @Input() addRecordEnabled? = true;
   @Input() clearfilterEnabled? = true;
+  @Input() initialFilter?: string;
   @Input() columnOptionsEnabled? = true;
   @Input() totalRecorsDisplayEnabled? = true;
   @Input() paginatorEnabled? = true;
@@ -67,32 +66,34 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() onFilter: EventEmitter<any> = new EventEmitter<any>();
   @Output() onFiltersCleared: EventEmitter<any> = new EventEmitter<any>();
   @Output() onRefreshClicked: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onAttested: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onActionSelected: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onShowWorkflowDetails: EventEmitter<any> = new EventEmitter<any>();
+
   @Output() onCollapse: EventEmitter<any> = new EventEmitter<any>();
-  @Output() onActionDeleteRow: EventEmitter<any> = new EventEmitter<any>();
   @Output() onRowSelected: EventEmitter<any> = new EventEmitter<any>();
   @Output() onRowUnselected = new EventEmitter();
   @Output() onAddRecord = new EventEmitter();
-  @Output() onShowCobProgramsPickList: EventEmitter<any> = new EventEmitter<any>();
 
   @Output() onLoadData: EventEmitter<LazyLoadEvent> = new EventEmitter<LazyLoadEvent>();
   @Input() headerTemplate: TemplateRef<any>;
 
-  @ViewChild('dt') dt: any;
+  @ViewChild('dt') dt: Table;
   @ViewChild('dropdownCol') dropdownCol: any;
   @ViewChild('groupDropdownCol') groupDropdownCol: any;
   @ViewChild('globalSearchBox') globalSearchBox: ElementRef;
   @ViewChild('tristatedropdown') tristatedropdown: any;
-
+  @ViewChild('cellTemplate', { read: ViewContainerRef, static: true })
   selectedColumns: DataGridColumn[];
 
   ngOnDestroy(): void {}
 
   ngOnInit() {}
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    if (this.initialFilter) {
+      console.log(this.initialFilter);
+      const filter = this.initialFilter.split('|');
+      this.dt.filter(filter[2], 'askID', 'contains');
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {}
 

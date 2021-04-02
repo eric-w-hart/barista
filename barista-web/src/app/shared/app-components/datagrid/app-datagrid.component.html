@@ -25,11 +25,14 @@
     <tr [pSelectableRow]="rowData">
       <td *ngFor="let col of columns" [ngSwitch]="col.columnType">
         <div *ngSwitchCase="'text'">{{ rowData[col.field] }}</div>
+        <ng-template
+          #cellTemplate
+          *ngIf="col.cellTemplate"
+          [ngTemplateOutlet]="col.cellTemplate"
+          [ngTemplateOutletContext]="{ rowData: rowData }"
+        >
+        </ng-template>
       </td>
     </tr>
   </ng-template>
 </p-table>
-
-<ng-template #statusTemplate let-row="row" let-value="value">
-  <!-- <app-project-status-normal [project]="{ id: value }"></app-project-status-normal> -->
-</ng-template>

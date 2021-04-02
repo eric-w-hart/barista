@@ -12,6 +12,7 @@
   class="material striped"
   (select)="onSelect($event)"
   [tableLoading]="loading"
+  [initialFilter]="initialFilter"
 >
 </app-datagrid>
 
@@ -73,9 +74,9 @@
   </ng-template>
 </p-table> -->
 
-<ng-template #nameTemplate let-row="row" let-value="value">
+<ng-template #nameTemplate let-row="rowData">
   {{ getName(row) }}
 </ng-template>
-<ng-template #statusTemplate let-row="row" let-value="value">
-  <app-project-status-normal [project]="{ id: value }"></app-project-status-normal>
+<ng-template #statusTemplate let-row="rowData">
+  <app-project-status-normal [project]="{ id: row.id }"></app-project-status-normal>
 </ng-template>

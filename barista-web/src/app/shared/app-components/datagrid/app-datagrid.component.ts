@@ -89,16 +89,16 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.initialFilter) {
-      console.log(this.initialFilter);
-      const filter = this.initialFilter.split('|');
-      this.dt.filter(filter[2], 'askID', 'contains');
+      const filter = this.initialFilter.split('||');
+      if (filter.length > 2) {
+        this.dt.filter(filter[2], filter[0], filter[1]);
+      }
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {}
 
   rowSelected(event) {
-    console.log(event);
     this.onRowSelected.emit(event);
   }
 

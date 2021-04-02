@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectDevelopmentTypeEnum } from '@app/features/projects/project-development-type.enum';
-import { Project, ProjectApiService, UserApiService } from '@app/shared/api';
+import { Project, ProjectApiService, UserApiService, SystemConfiguration } from '@app/shared/api';
 import { AppDatatableComponent } from '@app/shared/app-components/datatable/app-datatable.component';
 import { isEmpty } from 'lodash';
 import { untilDestroyed } from 'ngx-take-until-destroy';
@@ -19,6 +19,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { DataGridColumn } from '@app/shared/app-components/datagrid/data-grid-column';
 import { AppDataGridComponent } from '@app/shared/app-components/datagrid/app-datagrid.component';
+import { SystemConfigurationService } from '@app/shared/+state/systemConfiguration/system-configuration.service';
 
 enum ProjectDataTableType {
   user = 'user',
@@ -35,6 +36,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     private userApiService: UserApiService,
     private router: Router,
     private route: ActivatedRoute,
+    private systemConfigService: SystemConfigurationService,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.initialFilter = params['filter'];
@@ -115,24 +117,37 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   loading: boolean;
   exportColumns: any[];
   exportName = 'BaristaExport';
+  systemConfiguration: Observable<SystemConfiguration>;
+  projectIdHeader: string;
   ngOnInit() {
-    this.loading = true;
-    this.columns = [
-      {
-        header: 'Project Name',
-        field: 'name',
-        sortable: true,
-        filter: true,
-        cellTemplate: this.nameTemplate,
-      },
-      { header: 'Git URL', field: 'gitUrl', columnType: 'text', sortable: true, filter: true },
-      { header: 'ASKID', field: 'askID', columnType: 'text', sortable: true, filter: true, width: '100' },
-      {
-        header: 'Status',
-        field: 'id',
-        cellTemplate: this.statusTemplate,
-      },
-    ];
+    this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
+      this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
+
+      this.loading = true;
+      this.columns = [
+        {
+          header: 'Project Name',
+          field: 'name',
+          sortable: true,
+          filter: true,
+          cellTemplate: this.nameTemplate,
+        },
+        { header: 'Git URL', field: 'gitUrl', columnType: 'text', sortable: true, filter: true },
+        {
+          header: this.projectIdHeader,
+          field: 'askID',
+          columnType: 'text',
+          sortable: true,
+          filter: true,
+          width: '100',
+        },
+        {
+          header: 'Status',
+          field: 'id',
+          cellTemplate: this.statusTemplate,
+        },
+      ];
+    });
     this.getResults(5000);
   }
 

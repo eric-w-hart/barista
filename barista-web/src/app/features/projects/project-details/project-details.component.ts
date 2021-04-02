@@ -48,7 +48,7 @@ import { first, debounceTime } from 'rxjs/operators';
   styleUrls: ['./project-details.component.scss'],
 })
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
-  @ViewChild('gitUrlModel') gitUrlModel: NgModel;
+  @ViewChild('gitUrlModel') gitUrlModel;
 
   constructor(
     private projectService: ProjectService,
@@ -230,7 +230,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           }
         });
 
-      this.gitUrlModel.control.valueChanges.subscribe((value: string) => {
+      this.gitUrlModel?.control.valueChanges.subscribe((value: string) => {
         console.log('top');
         if (value === undefined || value.length === 0) {
           return;

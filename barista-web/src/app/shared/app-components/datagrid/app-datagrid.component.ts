@@ -98,7 +98,9 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges) {}
 
   rowSelected(event) {
+    console.log(event);
     this.onRowSelected.emit(event);
   }
+
   public refresh() {}
 }

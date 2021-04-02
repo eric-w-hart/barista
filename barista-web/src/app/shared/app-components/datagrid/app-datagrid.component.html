@@ -8,7 +8,7 @@
   [loading]="tableLoading"
   selectionMode="single"
   [autoLayout]="true"
-  [(selection)]="selectedItems"
+  (onRowSelect)="rowSelected($event)"
 >
   <ng-template pTemplate="header" let-columns>
     <tr>

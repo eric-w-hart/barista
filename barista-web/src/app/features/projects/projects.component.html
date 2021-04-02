@@ -1,82 +1,17 @@
-<!-- <mat-form-field class="projects-filter-field">
-  <input matInput type="text" #projectsSearchInput placeholder="Search Filter" />
-  <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter = ''">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-form-field> -->
-
 <app-datagrid
   #searchProjectsDataTable
   [records]="projects"
   [columns]="columns"
-  class="material striped"
-  (select)="onSelect($event)"
+  styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
   [tableLoading]="loading"
   [initialFilter]="initialFilter"
->
-</app-datagrid>
-
-<!-- <p-table
-  #dt
-  [columns]="selectedColumns"
-  [value]="projects"
-  styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
-  [paginator]="true"
-  [rows]="20"
-  [loading]="loading"
-  selectionMode="single"
-  [autoLayout]="true"
-  [(selection)]="selectedProject"
-  (onRowSelect)="onRowSelect($event)"
-  [exportFilename]="exportName"
-  stateStorage="local"
-  stateKey="stateproject-local"
->
-  <ng-template pTemplate="caption">
-    <div class="p-grid p-ai-center p-jc-end" style="height: 60px;">
-      <div class="p-col-1" [style]="{ minWidth: '200px' }"><h4>Selected Columns:</h4></div>
-      <div class="p-col-2">
-        <p-multiSelect
-          [options]="columns"
-          [(ngModel)]="selectedColumns"
-          optionLabel="name"
-          selectedItemsLabel="{0} columns selected"
-          [style]="{ minWidth: '280px' }"
-          placeholder="Choose Columns"
-        ></p-multiSelect>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="header" let-columns>
-    <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-        <div *ngIf="col.canSort">{{ col.header }}<p-sortIcon field="{{ col.field }}"></p-sortIcon></div>
-        <div *ngIf="!col.canSort">{{ col.header }}</div>
-      </th>
-    </tr>
-    <tr>
-      <th *ngFor="let col of columns">
-        <div *ngIf="col.canFilter">
-          <p-columnFilter type="text" field="{{ col.field }}"></p-columnFilter>
-        </div>
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-project let-columns="columns">
-    <tr [pSelectableRow]="project">
-      <td *ngFor="let col of columns">
-        <div *ngIf="!col.cellTemplate">{{ project[col.field] }}</div>
-        <div *ngIf="col.cellTemplate">
-          <app-project-status-normal [project]="{ id: project[col.field] }"></app-project-status-normal>
-        </div>
-      </td>
-    </tr>
-  </ng-template>
-</p-table> -->
+  (onRowSelected)="onRowSelect($event)"
+></app-datagrid>
 
 <ng-template #nameTemplate let-row="rowData">
   {{ getName(row) }}
 </ng-template>
+
 <ng-template #statusTemplate let-row="rowData">
   <app-project-status-normal [project]="{ id: row.id }"></app-project-status-normal>
 </ng-template>

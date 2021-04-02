@@ -1,22 +1,9 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  ContentChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectDevelopmentTypeEnum } from '@app/features/projects/project-development-type.enum';
 import { Project, ProjectApiService, UserApiService, SystemConfiguration } from '@app/shared/api';
-import { AppDatatableComponent } from '@app/shared/app-components/datatable/app-datatable.component';
 import { isEmpty } from 'lodash';
-import { untilDestroyed } from 'ngx-take-until-destroy';
-import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { DataGridColumn } from '@app/shared/app-components/datagrid/data-grid-column';
 import { AppDataGridComponent } from '@app/shared/app-components/datagrid/app-datagrid.component';
 import { SystemConfigurationService } from '@app/shared/+state/systemConfiguration/system-configuration.service';
@@ -43,19 +30,21 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  @Input() projectDataTableType: ProjectDataTableType | ProjectDevelopmentTypeEnum;
+
+  @ViewChild('ProjectsDataGrid') projectsDataGrid: AppDataGridComponent;
+  @ViewChild('statusTemplate', { static: true }) statusTemplate;
+  @ViewChild('nameTemplate', { static: true }) nameTemplate;
+
   columns: DataGridColumn[] = [];
   filter: string;
-  @ViewChild('nameTemplate', { static: true }) nameTemplate;
-  @Input() projectDataTableType: ProjectDataTableType | ProjectDevelopmentTypeEnum;
-  @ViewChild('projectsSearchInput')
-  projectsSearchInput: ElementRef;
-  @ViewChild('ProjectsDataGrid') projectsDataGrid: AppDataGridComponent;
-  selected = [];
-  selectedIndex = 0;
-  selectedProject: Project;
   initialFilter: string;
-  // @ContentChild(TemplateRef) statusTemplate: TemplateRef<ElementRef>;
-  @ViewChild('statusTemplate', { static: true }) statusTemplate;
+  projects: any = [];
+  sortMode: string = 'single';
+  loading: boolean;
+  systemConfiguration: Observable<SystemConfiguration>;
+  projectIdHeader: string;
+
   subscribedToEvent = false;
 
   getPagedResults(query: any): Observable<any> {
@@ -83,7 +72,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           .subscribe((response: any) => {
             this.projects = response.data;
             this.projects.sort((a, b) => (a.name > b.name ? 1 : -1));
-            console.log(this.projects);
             this.loading = false;
           });
       }
@@ -99,7 +87,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           .subscribe((response: any) => {
             this.projects = response.data;
             this.projects.sort((a, b) => (a.name > b.name ? 1 : -1));
-            console.log(this.projects);
             this.loading = false;
           });
       }
@@ -110,15 +97,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
-  cols: any[];
-  projects: any = [];
-  sortMode: string = 'single';
-  _selectedColumns: any[];
-  loading: boolean;
-  exportColumns: any[];
-  exportName = 'BaristaExport';
-  systemConfiguration: Observable<SystemConfiguration>;
-  projectIdHeader: string;
   ngOnInit() {
     this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
       this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
@@ -151,21 +129,9 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getResults(5000);
   }
 
-  onSelect({ selected }) {
-    return this.router.navigate(['project', selected[0].id]);
-  }
   onRowSelect(event) {
-    console.log('selected');
-    this.router.navigate(['project', this.selectedProject.id]);
-  }
-
-  @Input() get selectedColumns(): any[] {
-    return this._selectedColumns;
-  }
-
-  set selectedColumns(val: any[]) {
-    //restore original order
-    this._selectedColumns = this.columns.filter((col) => val.includes(col));
+    const project = event?.data as Project;
+    this.router.navigate(['project', project.id]);
   }
 
   getName(row: Project) {

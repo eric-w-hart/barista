@@ -6,6 +6,8 @@
   [tableLoading]="loading"
   [initialFilter]="initialFilter"
   (onRowSelected)="onRowSelect($event)"
+  [defaultSortField]="'name'"
+  [defaultSortOrder]="1"
 ></app-datagrid>
 
 <ng-template #nameTemplate let-row="rowData">

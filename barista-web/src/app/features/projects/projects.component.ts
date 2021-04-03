@@ -71,7 +71,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           .userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0)
           .subscribe((response: any) => {
             this.projects = response.data;
-            this.projects.sort((a, b) => (a.name > b.name ? 1 : -1));
             this.loading = false;
           });
       }
@@ -86,7 +85,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           )
           .subscribe((response: any) => {
             this.projects = response.data;
-            this.projects.sort((a, b) => (a.name > b.name ? 1 : -1));
             this.loading = false;
           });
       }

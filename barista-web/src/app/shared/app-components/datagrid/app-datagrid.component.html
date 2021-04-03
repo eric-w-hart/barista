@@ -9,6 +9,8 @@
   selectionMode="single"
   [autoLayout]="true"
   (onRowSelect)="rowSelected($event)"
+  [sortField]="defaultSortField"
+  [sortOrder]="defaultSortOrder"
 >
   <ng-template pTemplate="header" let-columns>
     <tr>

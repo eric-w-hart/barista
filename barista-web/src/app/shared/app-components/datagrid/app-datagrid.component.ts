@@ -93,6 +93,7 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
       if (filter.length > 2) {
         this.dt.filter(filter[2], filter[0], filter[1]);
       }
+      this.tableLoading = false;
     }
   }
 

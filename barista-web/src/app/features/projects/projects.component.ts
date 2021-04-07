@@ -73,6 +73,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.projects = response.data;
             this.loading = false;
           });
+        break;
       }
       default: {
         // Internal or community

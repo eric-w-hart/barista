@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectDevelopmentTypeEnum } from '@app/features/projects/project-development-type.enum';
-import { Project, ProjectApiService, UserApiService } from '@app/shared/api';
-import { AppDatatableComponent } from '@app/shared/app-components/datatable/app-datatable.component';
-import IDataTableColumns from '@app/shared/interfaces/IDataTableColumns';
+import { Project, ProjectApiService, UserApiService, SystemConfiguration } from '@app/shared/api';
 import { isEmpty } from 'lodash';
-import { untilDestroyed } from 'ngx-take-until-destroy';
-import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { DataGridColumn } from '@app/shared/app-components/datagrid/data-grid-column';
+import { AppDataGridComponent } from '@app/shared/app-components/datagrid/app-datagrid.component';
+import { SystemConfigurationService } from '@app/shared/+state/systemConfiguration/system-configuration.service';
 
 enum ProjectDataTableType {
   user = 'user',
@@ -23,20 +22,115 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     private projectApiService: ProjectApiService,
     private userApiService: UserApiService,
     private router: Router,
-  ) {}
+    private route: ActivatedRoute,
+    private systemConfigService: SystemConfigurationService,
+  ) {
+    this.route.queryParams.subscribe((params) => {
+      this.initialFilter = params['filter'];
+    });
+  }
 
-  columns: IDataTableColumns[] = [];
-  filter: string;
-  @ViewChild('nameTemplate', { static: true }) nameTemplate;
   @Input() projectDataTableType: ProjectDataTableType | ProjectDevelopmentTypeEnum;
-  @ViewChild('projectsSearchInput')
-  projectsSearchInput: ElementRef;
-  @ViewChild('searchProjectsDataTable')
-  searchProjectsDataTable: AppDatatableComponent;
-  selected = [];
-  selectedIndex = 0;
+
+  @ViewChild('ProjectsDataGrid') projectsDataGrid: AppDataGridComponent;
   @ViewChild('statusTemplate', { static: true }) statusTemplate;
+  @ViewChild('nameTemplate', { static: true }) nameTemplate;
+
+  columns: DataGridColumn[] = [];
+  filter: string;
+  initialFilter: string;
+  projects: any = [];
+  sortMode: string = 'single';
+  loading: boolean;
+  systemConfiguration: Observable<SystemConfiguration>;
+  projectIdHeader: string;
+
   subscribedToEvent = false;
+
+  getPagedResults(query: any): Observable<any> {
+    switch (this.projectDataTableType) {
+      case ProjectDataTableType.user: {
+        return this.userApiService.userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0);
+      }
+      default: {
+        // Internal or community
+        return this.projectApiService.projectSearchGet(
+          this.projectDataTableType || 'internal',
+          query.perPage || 5000,
+          query.page || 0,
+          this.filter || '',
+        );
+      }
+    }
+  }
+
+  getResults(query: any) {
+    switch (this.projectDataTableType) {
+      case ProjectDataTableType.user: {
+        this.userApiService
+          .userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0)
+          .subscribe((response: any) => {
+            this.projects = response.data;
+            this.loading = false;
+          });
+      }
+      default: {
+        // Internal or community
+        this.projectApiService
+          .projectSearchGet(
+            this.projectDataTableType || 'internal',
+            query.perPage || 5000,
+            query.page || 0,
+            this.filter || '',
+          )
+          .subscribe((response: any) => {
+            this.projects = response.data;
+            this.loading = false;
+          });
+      }
+    }
+  }
+
+  ngAfterViewInit(): void {}
+
+  ngOnDestroy(): void {}
+
+  ngOnInit() {
+    this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
+      this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
+
+      this.loading = false;
+      this.columns = [
+        {
+          header: 'Project Name',
+          field: 'name',
+          sortable: true,
+          filter: true,
+          cellTemplate: this.nameTemplate,
+        },
+        { header: 'Git URL', field: 'gitUrl', columnType: 'text', sortable: true, filter: true },
+        {
+          header: this.projectIdHeader,
+          field: 'askID',
+          columnType: 'text',
+          sortable: true,
+          filter: true,
+          width: '100',
+        },
+        {
+          header: 'Status',
+          field: 'id',
+          cellTemplate: this.statusTemplate,
+        },
+      ];
+    });
+    this.getResults(5000);
+  }
+
+  onRowSelect(event) {
+    const project = event?.data as Project;
+    this.router.navigate(['project', project.id]);
+  }
 
   getName(row: Project) {
     let name = row.name;
@@ -46,57 +140,5 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return name;
-  }
-
-  getPagedResults(query: any): Observable<any> {
-    switch (this.projectDataTableType) {
-      case ProjectDataTableType.user: {
-        return this.userApiService.userProjectsGet(this.filter || '', query.perPage || 50, query.page || 0);
-      }
-      default: {
-        // Internal or community
-        return this.projectApiService.projectSearchGet(
-          this.projectDataTableType || 'internal',
-          query.perPage || 50,
-          query.page || 0,
-          this.filter || '',
-        );
-      }
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.subscribedToEvent = true;
-    fromEvent(this.projectsSearchInput.nativeElement, 'keyup')
-      .pipe(
-        map((event: any) => event.target.value),
-        filter(res => res.length > 2 || res.length === 0),
-        debounceTime(500),
-        distinctUntilChanged(),
-        untilDestroyed(this),
-      )
-      .subscribe((text: string) => {
-        this.filter = text;
-        this.searchProjectsDataTable.refresh();
-      });
-  }
-
-  ngOnDestroy(): void {}
-
-  ngOnInit() {
-    this.columns = [
-      { name: 'Project Name', prop: 'name', flexGrow: 1, cellTemplate: this.nameTemplate },
-      { name: 'Git URL', prop: 'gitUrl', flexGrow: 1 },
-      {
-        name: 'Status',
-        prop: 'id',
-        flexGrow: 1,
-        cellTemplate: this.statusTemplate,
-      },
-    ];
-  }
-
-  onSelect({ selected }) {
-    return this.router.navigate(['project', selected[0].id]);
   }
 }

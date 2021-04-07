@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  CanActivateChild,
+  Router,
+  RouterStateSnapshot,
+  UrlSegmentGroup,
+  PRIMARY_OUTLET,
+} from '@angular/router';
 import { AuthService } from '@app/features/auth/auth.service';
 
 @Injectable({
@@ -29,7 +37,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     // Store the attempted URL for redirecting
-    this.authService.redirectUrl = url;
+    const tree = this.router.parseUrl(url);
+    const primary: UrlSegmentGroup = tree.root.children[PRIMARY_OUTLET];
+    this.authService.redirectUrl = primary.toString();
+    this.authService.redirictParams = tree.queryParams;
 
     // Navigate to the login page with extras
     this.authService.logout();

@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, Params } from '@angular/router';
 import { Project, UserApiService, UserInfo } from '@app/shared/api';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
@@ -56,6 +56,7 @@ export class AuthService implements OnDestroy {
   }
 
   redirectUrl: string;
+  redirictParams: Params;
   statusChange = new BehaviorSubject<AuthServiceStatus>({});
 
   static accessToken(): string {
@@ -97,15 +98,15 @@ export class AuthService implements OnDestroy {
       const userInfo = await this.userApiService.userMeGet().toPromise();
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       this.statusChange.next((status = { ...status, isLoggedIn: true, statusMessage: '' }));
-      await this.router.navigate([this.redirectUrl || '/projects/user']);
+      await this.router.navigate([this.redirectUrl || '/projects/user'], { queryParams: this.redirictParams });
       window.location.reload();
     } catch (e) {
-        this.statusChange.next(
-          (status = {
-            ...status,
-            statusMessage: e.message || 'An unknown error occured',
-          }),
-        );
+      this.statusChange.next(
+        (status = {
+          ...status,
+          statusMessage: e.message || 'An unknown error occured',
+        }),
+      );
     } finally {
       this.statusChange.next({ ...status, isLoggingIn: false });
     }

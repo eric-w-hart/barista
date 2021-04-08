@@ -61,6 +61,7 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() rowDataColumnOptions?: SelectItem[] = [];
   @Input() showMultipleSelectionBox?: boolean = false;
   @Input() enableGlobalSearch: boolean = false;
+  @Input() enableCaptionHeader: boolean = false;
 
   @Output() selectedItemsChange = new EventEmitter<any[]>();
   @Output() onFilter: EventEmitter<any> = new EventEmitter<any>();
@@ -104,4 +105,8 @@ export class AppDataGridComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   public refresh() {}
+
+  clear(table: Table) {
+    table.clear();
+  }
 }

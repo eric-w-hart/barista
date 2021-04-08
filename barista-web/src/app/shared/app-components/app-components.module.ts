@@ -21,6 +21,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LineChartComponent } from '@app/shared/app-components/charts/line-chart/line-chart.component';
 import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 const expose = [
   AppDatatableComponent,
@@ -51,6 +53,8 @@ const expose = [
     GlobalInjectorModule,
     TableModule,
     MultiSelectModule,
+    ButtonModule,
+    InputTextModule,
   ],
   providers: [],
 })

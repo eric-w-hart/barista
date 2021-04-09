@@ -100,7 +100,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
       this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
 
-      this.loading = false;
+      this.loading = true;
       this.columns = [
         {
           header: 'Project Name',

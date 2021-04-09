@@ -92,7 +92,9 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.getResults(5000);
+  }
 
   ngOnDestroy(): void {}
 
@@ -125,7 +127,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       ];
     });
-    this.getResults(5000);
   }
 
   onRowSelect(event) {

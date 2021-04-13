@@ -3,13 +3,11 @@
   [records]="projects"
   [columns]="columns"
   styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
-  [tableLoading]="loading"
   [initialFilter]="initialFilter"
   (onRowSelected)="onRowSelect($event)"
   [defaultSortField]="'name'"
   [defaultSortOrder]="1"
   [enableCaptionHeader]="true"
-  [tableLoading]="loading"
 ></app-datagrid>
 
 <ng-template #nameTemplate let-row="rowData">

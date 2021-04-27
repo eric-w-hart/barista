@@ -61,18 +61,76 @@ export class StatsController implements CrudController<Project> {
   async getMany(@ParsedRequest() req: CrudRequest) {
     const answer = (await this.base.getManyBase(req)) as Project[];
 
-    let i;
-    for (i = 0; i < answer.length; i++) {
-      const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
-      const securityStatus = await this.service.highestSecurityStatus(answer[i]);
-      if (licenseStatus) {
-        answer[i].LatestLicenseStatus = licenseStatus;
-      }
-      if (securityStatus) {
-        answer[i].LatestSecurityStatus = securityStatus;
-      }
-    }
+    const projectArray = answer.map(a => a.id);
+    const query = `select p.id, max(psst.sort_order) as maxSecurity,
+                    case
+                    when max(psst.sort_order) = 3 then 'Red'
+                    when max(psst.sort_order) = 2 then 'Yellow'
+                    when max(psst.sort_order) = 1 then 'Green'
+                    else 'Green' end as latestSecurityStatus,
+                    null as latestLicenseStatus
+                    from project p 
+                    left join scan s2 
+                    on p.id = s2."projectId" 
+                    left join security_scan_result ssr 
+                    on ssr."scanId" = s2.id 
+                    left join security_scan_result_item ssri 
+                    on ssr.id = ssri."securityScanId"
+                    left join project_scan_status_type psst 
+                    on ssri.project_scan_status_type_code = psst.code 
+                    where s2.completed_at is not null and p.id in (:...projectIds)
+                    group by p.id 
+                    union
+                    select p.id, max(psst.sort_order) as maxSecurity,
+                    null as latestSecurityStatus,
+                    case
+                    when max(psst.sort_order) = 3 then 'Red'
+                    when max(psst.sort_order) = 2 then 'Yellow'
+                    when max(psst.sort_order) = 1 then 'Green'
+                    else 'Unknown' end as latestLicenseStatus
+
+                    from project p 
+                    left join scan s2 
+                    on p.id = s2."projectId" 
+                    left join license_scan_result lsr 
+                    on lsr."scanId" = s2.id 
+                    left join license_scan_result_item lsri 
+                    on lsr.id = lsri."licenseScanId"
+                    left join project_scan_status_type psst 
+                    on lsri.project_scan_status_type_code = psst.code 
+                    where s2.completed_at is not null and p.id in (:...projectIds)
+                    group by p.id 
+                    `;
+
+    const latestStatus = await this.rawQuery<any>(query, { projectIds: projectArray });
+
+    answer.map(function(a) {
+      var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestlicensestatus);
+      if (latest?.latestsecuritystatus) {
+        a.latestSecurityStatus = latest.latestsecuritystatus;
+      } else a.latestSecurityStatus = "No Scan";
+
+      var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestsecuritystatus);
+      if (latest?.latestlicensestatus) {
+        a.latestLicenseStatus = latest.latestlicensestatus;
+      } else a.latestLicenseStatus = "No Scan";
+      
+    });
+
     return answer;
+
+    // let i;
+    // for (i = 0; i < answer.length; i++) {
+    //   const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
+    //   const securityStatus = await this.service.highestSecurityStatus(answer[i]);
+    //   if (licenseStatus) {
+    //     answer[i].LatestLicenseStatus = licenseStatus;
+    //   }
+    //   if (securityStatus) {
+    //     answer[i].LatestSecurityStatus = securityStatus;
+    //   }
+    // }
+    // return answer;
   }
 
   @UseInterceptors(CrudRequestInterceptor)

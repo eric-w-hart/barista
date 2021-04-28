@@ -333,12 +333,16 @@ export class DefaultScanWorkerService {
               }),
             );
           }
-
+this.logger.debug('before promises');
           await Promise.all(scannerPromises);
+          this.logger.debug('after promises before reload');
 
           await scan.reload();
+          this.logger.debug('after reload before new date');
           scan.completedAt = new Date();
+          this.logger.debug('after new date befoe save');
           await scan.save();
+          this.logger.debug('after save');
 
           this.logger.log('Updating Attributions');
 

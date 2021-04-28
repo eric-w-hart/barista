@@ -25,15 +25,15 @@ export class DependencyCheckService extends ScannerBaseService {
     super();
     dotenv.config();
   }
-  private readonly logger = new Logger('NvdCheckService');
-  name = 'NvdCheckService';
+  private readonly logger = new Logger('DependencyCheckService');
+  name = 'DependencyCheckService';
 
   private async check_db() {
-    const host = process.env.DB_HOST || 'localhost',
-      port = process.env.DB_PORT || 5432,
-      database = process.env.DB_DATABASE || 'barista-dev',
-      username = process.env.DB_USER || 'postgres',
-      password = process.env.DB_PASSWORD || 'password';
+    process.env.DB_HOST = process.env.DB_HOST || 'localhost';
+    process.env.DB_PORT = process.env.DB_PORT || '5432';
+    process.env.DB_DATABASE = process.env.DB_DATABASE || 'barista-dev';
+    process.env.DB_USER = process.env.DB_USER || 'postgres';
+    process.env.DB_PASSWORD = process.env.DB_PASSWORD || 'password';
 
     const dependency_checker_db = await this.scanService.db.query(
       `SELECT EXISTS (
@@ -43,10 +43,10 @@ export class DependencyCheckService extends ScannerBaseService {
     ) as exists`,
     );
     if (dependency_checker_db[0].exists) {
-      return `--connectionString jdbc:postgresql://${host}:${port}/${database} \
+      return `--connectionString jdbc:postgresql://$DB_HOST:$DB_PORT/$DB_DATABASE \
     --dbDriverName org.postgresql.Driver  \
-    --dbPassword ${password} \
-    --dbUser ${username}`;
+    --dbPassword $DB_PASSWORD \
+    --dbUser $DB_USER`;
     }
   }
 

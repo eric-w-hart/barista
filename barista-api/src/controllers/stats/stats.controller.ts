@@ -62,7 +62,7 @@ export class StatsController implements CrudController<Project> {
     const answer = (await this.base.getManyBase(req)) as Project[];
 
     const projectArray = answer.map(a => a.id);
-    const query = `select p.id, max(psst.sort_order) as maxSecurity,
+    const query = `select p.id, max(psst.sort_order) as maxSecurity, 
                     case
                     when max(psst.sort_order) = 3 then 'Red'
                     when max(psst.sort_order) = 2 then 'Yellow'
@@ -70,16 +70,22 @@ export class StatsController implements CrudController<Project> {
                     else 'Green' end as latestSecurityStatus,
                     null as latestLicenseStatus
                     from project p 
-                    left join scan s2 
-                    on p.id = s2."projectId" 
+                    left join scan s2
+                    on p.id = s2."projectId" and 
+                    s2.id = ( 
+                    select Max(s3.id)
+                    from scan s3 
+                    where s3."projectId"  = p.id and s3.completed_at is not null)
                     left join security_scan_result ssr 
                     on ssr."scanId" = s2.id 
                     left join security_scan_result_item ssri 
-                    on ssr.id = ssri."securityScanId"
+                    on ssr.id = ssri."securityScanId" and not exists (
+                    select id from bom_security_exception bse
+                    where s2."projectId" = bse."projectId" and ssri."path" = bse."securityItemPath")
                     left join project_scan_status_type psst 
                     on ssri.project_scan_status_type_code = psst.code 
                     where s2.completed_at is not null and p.id in (:...projectIds)
-                    group by p.id 
+                    group by p.id
                     union
                     select p.id, max(psst.sort_order) as maxSecurity,
                     null as latestSecurityStatus,
@@ -88,18 +94,24 @@ export class StatsController implements CrudController<Project> {
                     when max(psst.sort_order) = 2 then 'Yellow'
                     when max(psst.sort_order) = 1 then 'Green'
                     else 'Unknown' end as latestLicenseStatus
-
                     from project p 
                     left join scan s2 
-                    on p.id = s2."projectId" 
+                    on p.id = s2."projectId" and 
+                    s2.id = ( 
+                    select Max(s3.id)
+                    from scan s3 
+                    where s3."projectId"  = p.id and s3.completed_at is not null)
                     left join license_scan_result lsr 
                     on lsr."scanId" = s2.id 
-                    left join license_scan_result_item lsri 
-                    on lsr.id = lsri."licenseScanId"
+                    left join 
+                    license_scan_result_item lsri 
+                    on lsr.id = lsri."licenseScanId" and not exists (
+                    select id from bom_license_exception ble 
+                    where s2."projectId" = ble."projectId" and lsri."displayIdentifier" = ble."licenseItemPath")
                     left join project_scan_status_type psst 
                     on lsri.project_scan_status_type_code = psst.code 
                     where s2.completed_at is not null and p.id in (:...projectIds)
-                    group by p.id 
+                    group by p.id
                     `;
 
     const latestStatus = await this.rawQuery<any>(query, { projectIds: projectArray });
@@ -108,12 +120,24 @@ export class StatsController implements CrudController<Project> {
       var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestlicensestatus);
       if (latest?.latestsecuritystatus) {
         a.latestSecurityStatus = latest.latestsecuritystatus;
-      } else a.latestSecurityStatus = "No Scan";
+      } else {
+        if (a.globalSecurityException){
+          a.latestSecurityStatus = "Green";
+        } else {
+          a.latestSecurityStatus = "No Scan";
+        }
+      }
 
       var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestsecuritystatus);
       if (latest?.latestlicensestatus) {
         a.latestLicenseStatus = latest.latestlicensestatus;
-      } else a.latestLicenseStatus = "No Scan";
+      } else {
+        if (a.globalLicenseException) {
+          a.latestLicenseStatus = 'Green';
+        } else {
+          a.latestLicenseStatus = "No Scan";
+        }
+      }
       
     });
 
@@ -121,8 +145,8 @@ export class StatsController implements CrudController<Project> {
 
     // let i;
     // for (i = 0; i < answer.length; i++) {
-    //   const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
-    //   const securityStatus = await this.service.highestSecurityStatus(answer[i]);
+       const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
+      const securityStatus = await this.service.highestSecurityStatus(answer[i]);
     //   if (licenseStatus) {
     //     answer[i].LatestLicenseStatus = licenseStatus;
     //   }

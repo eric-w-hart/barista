@@ -35,6 +35,7 @@ import {
 } from '@nestjsx/crud';
 
 import { makeBadge, ValidationError } from 'badge-maker';
+import { ScanService } from '@app/services/scan/scan.service';
 
 @Crud({
   model: {
@@ -116,6 +117,20 @@ export class StatsController implements CrudController<Project> {
 
     const latestStatus = await this.rawQuery<any>(query, { projectIds: projectArray });
 
+    const licenseExceptionQuery = `select "projectId" as id, max(psst.sort_order) as maxSecurity, null as latestSecurityStatus, 
+                                    case
+                                    when max(psst.sort_order) = 3 then 'Red'
+                                    when max(psst.sort_order) = 2 then 'Yellow'
+                                    when max(psst.sort_order) = 1 then 'Green'
+                                    else 'Unknown' end as latestLicenseStatus
+                                    from bom_license_exception ble
+                                    left join project_scan_status_type psst 
+                                    on ble.project_scan_status_type_code = psst.code 
+                                    where projectId in (:...projectIds)
+                                    group by "projectId" `;
+
+    const licenseExceptions = await this.rawQuery<any> (licenseExceptionQuery,  { projectIds: projectArray });
+
     answer.map(function(a) {
       var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestlicensestatus);
       if (latest?.latestsecuritystatus) {
@@ -130,23 +145,29 @@ export class StatsController implements CrudController<Project> {
 
       var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestsecuritystatus);
       if (latest?.latestlicensestatus) {
-        a.latestLicenseStatus = latest.latestlicensestatus;
+        var latestexception = licenseExceptions.find(exception => exception.id === a.id);
+        if (latestexception){
+          a.latestLicenseStatus = latest.maxsecurity < latestexception.maxsecurity ? latestexception.latestlicensestatus : latest.latestlicensestatus;
+        } else {
+          a.latestLicenseStatus = latest.latestlicensestatus;
+        }
       } else {
         if (a.globalLicenseException) {
           a.latestLicenseStatus = 'Green';
         } else {
           a.latestLicenseStatus = "No Scan";
         }
-      }
-      
+      }    
     });
+
+
 
     return answer;
 
     // let i;
     // for (i = 0; i < answer.length; i++) {
-       const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
-      const securityStatus = await this.service.highestSecurityStatus(answer[i]);
+      //  const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
+      // const securityStatus = await this.service.highestSecurityStatus(answer[i]);
     //   if (licenseStatus) {
     //     answer[i].LatestLicenseStatus = licenseStatus;
     //   }
@@ -245,6 +266,7 @@ export class StatsController implements CrudController<Project> {
       .send(svg)
       .end();
   }
+
 
   @Get('/badges/:id/vulnerabilities')
   @Header('Content-Type', 'image/svg+xml')

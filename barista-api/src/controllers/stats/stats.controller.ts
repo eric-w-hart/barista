@@ -165,7 +165,7 @@ export class StatsController implements CrudController<Project> {
         if (a.globalSecurityException){
           a.latestSecurityStatus = "Green";
         } else {
-          a.latestSecurityStatus = "No Scan";
+          a.latestSecurityStatus = 'Unknown';
         }
       }
 
@@ -187,7 +187,7 @@ export class StatsController implements CrudController<Project> {
         if (a.globalLicenseException) {
           a.latestLicenseStatus = 'Green';
         } else {
-          a.latestLicenseStatus = "No Scan";
+          a.latestLicenseStatus = 'Unknown';
         }
       }    
     });

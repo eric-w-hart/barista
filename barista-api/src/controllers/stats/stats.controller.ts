@@ -126,10 +126,36 @@ export class StatsController implements CrudController<Project> {
                                     from bom_license_exception ble
                                     left join project_scan_status_type psst 
                                     on ble.project_scan_status_type_code = psst.code 
-                                    where projectId in (:...projectIds)
+                                    where "projectId" in (:...projectIds)
                                     group by "projectId" `;
 
     const licenseExceptions = await this.rawQuery<any> (licenseExceptionQuery,  { projectIds: projectArray });
+
+    const licenseManualQuery = `select
+                                  bml."projectId" as id ,
+                                  max(psst.sort_order) as maxSecurity,
+                                  null as latestSecurityStatus,
+                                  case
+                                      when max(psst.sort_order) = 3 then 'Red'
+                                      when max(psst.sort_order) = 2 then 'Yellow'
+                                      when max(psst.sort_order) = 1 then 'Green'
+                                      else 'Green'
+                                  end as latestLicenseStatus
+                              from
+                                  bom_manual_license bml
+                              left join project p2 on
+                                  p2.id = bml."projectId"
+                              left join license l2 on
+                                  bml."licenseId" = l2.id
+                              left join license_status_deployment_type lsdt on
+                                  lsdt.license_code = l2.code
+                                  and lsdt.deployment_type_code = p2.deployment_type_code
+                              left join project_scan_status_type psst on
+                                  lsdt.project_scan_status_type_code = psst.code
+                                  where bml."projectId" in (:...projectIds)
+                                  group by "projectId"`;
+
+    const licenseManual = await this.rawQuery<any> (licenseManualQuery,  { projectIds: projectArray });
 
     answer.map(function(a) {
       var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestlicensestatus);
@@ -151,6 +177,12 @@ export class StatsController implements CrudController<Project> {
         } else {
           a.latestLicenseStatus = latest.latestlicensestatus;
         }
+        var latestmanual = licenseManual.find(manual => manual.id === a.id);
+        if (latestmanual){
+          a.latestLicenseStatus = latest.maxsecurity < latestmanual.maxsecurity ? latestmanual.latestlicensestatus : latest.latestlicensestatus;
+        } else {
+          a.latestLicenseStatus = latest.latestlicensestatus;
+        }
       } else {
         if (a.globalLicenseException) {
           a.latestLicenseStatus = 'Green';
@@ -160,22 +192,7 @@ export class StatsController implements CrudController<Project> {
       }    
     });
 
-
-
     return answer;
-
-    // let i;
-    // for (i = 0; i < answer.length; i++) {
-      //  const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
-      // const securityStatus = await this.service.highestSecurityStatus(answer[i]);
-    //   if (licenseStatus) {
-    //     answer[i].LatestLicenseStatus = licenseStatus;
-    //   }
-    //   if (securityStatus) {
-    //     answer[i].LatestSecurityStatus = securityStatus;
-    //   }
-    // }
-    // return answer;
   }
 
   @UseInterceptors(CrudRequestInterceptor)

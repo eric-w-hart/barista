@@ -49,9 +49,6 @@ import { ScanService } from '@app/services/scan/scan.service';
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
   constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {
-    const metadata = Swagger.getParams(this.getprojectonly);
-    const queryParamsMeta = Swagger.createQueryParamsMeta('getManyBase');
-    Swagger.setParams([...metadata, ...queryParamsMeta], this.getprojectonly);
   }
   get base(): CrudController<Project> {
     return this;
@@ -193,12 +190,6 @@ export class StatsController implements CrudController<Project> {
     });
 
     return answer;
-  }
-
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/project-only')
-  async getprojectonly(@ParsedRequest() req: CrudRequest) {
-    return (await this.base.getManyBase(req)) as Project[];
   }
 
   createFormat(label: string, value: string, status: string) {

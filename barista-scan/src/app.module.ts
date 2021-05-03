@@ -43,8 +43,8 @@ export class AppModule {
     shellExecuteSync('mvn --version');
 
     // Let's update dependency check at start so that a scan won't have to wait on it.
-    shellExecute(`${ScannerBaseService.toolsDir}/dependency-check/bin/dependency-check.sh --updateonly`).then(() => {
-      this.logger.debug('dependency-check update complete.');
-    });
+    // shellExecute(`${ScannerBaseService.toolsDir}/dependency-check/bin/dependency-check.sh --updateonly`).then(() => {
+    //   this.logger.debug('dependency-check update complete.');
+    // });
   }
 }

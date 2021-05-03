@@ -153,7 +153,9 @@ export class DefaultScanWorkerService {
 
       if (project.customPackageManagerPath) {
         options.customPackageManagerPath = project.customPackageManagerPath;
+        if (project.packageManager.code != PackageManagerEnum.GO.toString()){
         workingDirectory = join(jobInfo.tmpDir, project.customPackageManagerPath);
+        }
       }
 
       if (project.customPackageManagerFilename) {
@@ -331,12 +333,16 @@ export class DefaultScanWorkerService {
               }),
             );
           }
-
+this.logger.debug('before promises');
           await Promise.all(scannerPromises);
+          this.logger.debug('after promises before reload');
 
           await scan.reload();
+          this.logger.debug('after reload before new date');
           scan.completedAt = new Date();
+          this.logger.debug('after new date befoe save');
           await scan.save();
+          this.logger.debug('after save');
 
           this.logger.log('Updating Attributions');
 
@@ -437,7 +443,7 @@ export class DefaultScanWorkerService {
                 this.logger.error(error);
               }
             } else {
-              if (scan.project.customPackageManagerPath) {
+              if (scan.project.customPackageManagerPath && scan.project.packageManager.code != PackageManagerEnum.GO.toString()) {
                 this.deleteFolderRecursive(
                   this.jobInfo.tmpDir,
                   path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),

@@ -11,6 +11,8 @@ import { SystemConfigurationComponent } from '@app/features/system-configuration
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { TableModule } from 'primeng/table';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppComponent } from '@app/app.component';
@@ -223,6 +225,8 @@ export function apiConfigFactory(): Configuration {
     LayoutModule,
     AppMaterialModule,
     NgxDatatableModule,
+    TableModule,
+    MultiSelectModule,
     AppComponentsModule,
     TrustHtmlModule,
     SafePipeModule,

@@ -9,6 +9,7 @@ import { HorizontalBarChartComponent } from '@app/shared/app-components/charts/h
 import { BarChartComponent } from '@app/shared/app-components/charts/bar-chart/bar-chart.component';
 import { GaugeChartComponent } from '@app/shared/app-components/charts/gauge-chart/gauge-chart.component';
 import { AppDatatableComponent } from '@app/shared/app-components/datatable/app-datatable.component';
+import { AppDataGridComponent } from '@app/shared/app-components/datagrid/app-datagrid.component';
 import { DynamicMenuComponent } from '@app/shared/app-components/dynamic-menu/dynamic-menu.component';
 import { GlobalInjectorModule } from '@app/shared/app-components/global-injector.module';
 import { HelpMenuComponent } from '@app/shared/app-components/help-menu/help-menu.component';
@@ -18,9 +19,14 @@ import { AppMaterialModule } from '@app/shared/app-material.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LineChartComponent } from '@app/shared/app-components/charts/line-chart/line-chart.component';
+import { TableModule } from 'primeng/table';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 const expose = [
   AppDatatableComponent,
+  AppDataGridComponent,
   AppDialogComponent,
   BreadcrumbsComponent,
   LicenseScanResultItemDatatableComponent,
@@ -45,6 +51,10 @@ const expose = [
     RouterModule,
     FlexLayoutModule,
     GlobalInjectorModule,
+    TableModule,
+    MultiSelectModule,
+    ButtonModule,
+    InputTextModule,
   ],
   providers: [],
 })

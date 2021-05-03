@@ -22,4 +22,6 @@ export default interface IDataTableColumns {
   resizeable?: boolean;
   sortable?: boolean;
   width?: number;
+  canSort?: boolean;
+  canFilter?: boolean;
 }

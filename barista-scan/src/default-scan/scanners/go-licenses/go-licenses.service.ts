@@ -44,13 +44,24 @@ export class GoLicensesService extends ScannerBaseService {
   }
 
   public convertCsvResultsToJson(csvText: string) {
+    let arr = csvText.split('\n');
+    arr = arr.filter(function(item) {
+      return item.indexOf('E0') !== 0;
+    });
+
+    arr = arr.filter(function(item) {
+      return item.indexOf('-') !== 0;
+    });
+
+    csvText = arr.join('\n');
+
     const json = parse(csvText, {
       // columns: true,
       skip_empty_lines: true,
       delimiter: ',',
       trim: true,
-      skip_lines_with_error: false,
-      quote: null,
+      skip_lines_with_error: true,
+      quote: false,
     });
 
     return json;

@@ -1,27 +1,19 @@
-<mat-form-field class="projects-filter-field">
-  <input matInput type="text" #projectsSearchInput placeholder="Search Filter" />
-  <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter = ''">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-form-field>
-
-<app-datatable
+<app-datagrid
   #searchProjectsDataTable
-  class="material striped"
+  [records]="projects"
   [columns]="columns"
-  [columnMode]="'force'"
-  [headerHeight]="50"
-  [footerHeight]="50"
-  [rowHeight]="'auto'"
-  [selected]="selected"
-  [selectionType]="'single'"
-  (select)="onSelect($event)"
-  [getPageResults]="getPagedResults.bind(this)"
->
-</app-datatable>
-<ng-template #nameTemplate let-row="row" let-value="value" ngx-datatable-cell-template>
+  styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
+  [initialFilter]="initialFilter"
+  (onRowSelected)="onRowSelect($event)"
+  [defaultSortField]="'name'"
+  [defaultSortOrder]="1"
+  [enableCaptionHeader]="true"
+></app-datagrid>
+
+<ng-template #nameTemplate let-row="rowData">
   {{ getName(row) }}
 </ng-template>
-<ng-template #statusTemplate let-row="row" let-value="value" ngx-datatable-cell-template>
-  <app-project-status-normal [project]="{ id: value }"></app-project-status-normal>
+
+<ng-template #statusTemplate let-row="rowData">
+  <app-project-status-normal [project]="{ id: row.id }"></app-project-status-normal>
 </ng-template>

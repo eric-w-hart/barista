@@ -49,7 +49,7 @@
                   [attr.required]="project.developmentType && project.developmentType.code != 'community'"
                   [matTooltip]="tooltips['gitUrl']"
                   [disabled]="project.pathToUploadFileForScanning ? '' : null"
-                  #gitHubUrlModel="ngModel"
+                  #gitHubUrlModel
                   appgithubValidator
                 />
                 <mat-error *ngIf="gitHubUrlModel.errors?.gitHubUrlDoesNotExist"

@@ -71,7 +71,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           .userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0)
           .subscribe((response: any) => {
             this.projects = response.data;
-            this.loading = false;
           });
         break;
       }
@@ -86,13 +85,14 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           )
           .subscribe((response: any) => {
             this.projects = response.data;
-            this.loading = false;
           });
       }
     }
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.getResults(5000);
+  }
 
   ngOnDestroy(): void {}
 
@@ -100,7 +100,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
       this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
 
-      this.loading = false;
+      this.loading = true;
       this.columns = [
         {
           header: 'Project Name',
@@ -125,7 +125,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       ];
     });
-    this.getResults(5000);
   }
 
   onRowSelect(event) {

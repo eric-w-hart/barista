@@ -35,6 +35,7 @@ import {
 } from '@nestjsx/crud';
 
 import { makeBadge, ValidationError } from 'badge-maker';
+import { ScanService } from '@app/services/scan/scan.service';
 
 @Crud({
   model: {
@@ -48,9 +49,6 @@ import { makeBadge, ValidationError } from 'badge-maker';
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
   constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {
-    const metadata = Swagger.getParams(this.getprojectonly);
-    const queryParamsMeta = Swagger.createQueryParamsMeta('getManyBase');
-    Swagger.setParams([...metadata, ...queryParamsMeta], this.getprojectonly);
   }
   get base(): CrudController<Project> {
     return this;
@@ -61,24 +59,137 @@ export class StatsController implements CrudController<Project> {
   async getMany(@ParsedRequest() req: CrudRequest) {
     const answer = (await this.base.getManyBase(req)) as Project[];
 
-    let i;
-    for (i = 0; i < answer.length; i++) {
-      const licenseStatus = await this.service.highestLicenseStatus(answer[i]);
-      const securityStatus = await this.service.highestSecurityStatus(answer[i]);
-      if (licenseStatus) {
-        answer[i].LatestLicenseStatus = licenseStatus;
-      }
-      if (securityStatus) {
-        answer[i].LatestSecurityStatus = securityStatus;
-      }
-    }
-    return answer;
-  }
+    const projectArray = answer.map(a => a.id);
+    const query = `select p.id, max(psst.sort_order) as maxSecurity, 
+                    case
+                    when max(psst.sort_order) = 3 then 'Red'
+                    when max(psst.sort_order) = 2 then 'Yellow'
+                    when max(psst.sort_order) = 1 then 'Green'
+                    else 'Green' end as latestSecurityStatus,
+                    null as latestLicenseStatus
+                    from project p 
+                    left join scan s2
+                    on p.id = s2."projectId" and 
+                    s2.id = ( 
+                    select Max(s3.id)
+                    from scan s3 
+                    where s3."projectId"  = p.id and s3.completed_at is not null)
+                    left join security_scan_result ssr 
+                    on ssr."scanId" = s2.id 
+                    left join security_scan_result_item ssri 
+                    on ssr.id = ssri."securityScanId" and not exists (
+                    select id from bom_security_exception bse
+                    where s2."projectId" = bse."projectId" and ssri."path" = bse."securityItemPath")
+                    left join project_scan_status_type psst 
+                    on ssri.project_scan_status_type_code = psst.code 
+                    where s2.completed_at is not null and p.id in (:...projectIds)
+                    group by p.id
+                    union
+                    select p.id, max(psst.sort_order) as maxSecurity,
+                    null as latestSecurityStatus,
+                    case
+                    when max(psst.sort_order) = 3 then 'Red'
+                    when max(psst.sort_order) = 2 then 'Yellow'
+                    when max(psst.sort_order) = 1 then 'Green'
+                    else 'Unknown' end as latestLicenseStatus
+                    from project p 
+                    left join scan s2 
+                    on p.id = s2."projectId" and 
+                    s2.id = ( 
+                    select Max(s3.id)
+                    from scan s3 
+                    where s3."projectId"  = p.id and s3.completed_at is not null)
+                    left join license_scan_result lsr 
+                    on lsr."scanId" = s2.id 
+                    left join 
+                    license_scan_result_item lsri 
+                    on lsr.id = lsri."licenseScanId" and not exists (
+                    select id from bom_license_exception ble 
+                    where s2."projectId" = ble."projectId" and lsri."displayIdentifier" = ble."licenseItemPath")
+                    left join project_scan_status_type psst 
+                    on lsri.project_scan_status_type_code = psst.code 
+                    where s2.completed_at is not null and p.id in (:...projectIds)
+                    group by p.id
+                    `;
 
-  @UseInterceptors(CrudRequestInterceptor)
-  @Get('/project-only')
-  async getprojectonly(@ParsedRequest() req: CrudRequest) {
-    return (await this.base.getManyBase(req)) as Project[];
+    const latestStatus = await this.rawQuery<any>(query, { projectIds: projectArray });
+
+    const licenseExceptionQuery = `select "projectId" as id, max(psst.sort_order) as maxSecurity, null as latestSecurityStatus, 
+                                    case
+                                    when max(psst.sort_order) = 3 then 'Red'
+                                    when max(psst.sort_order) = 2 then 'Yellow'
+                                    when max(psst.sort_order) = 1 then 'Green'
+                                    else 'Unknown' end as latestLicenseStatus
+                                    from bom_license_exception ble
+                                    left join project_scan_status_type psst 
+                                    on ble.project_scan_status_type_code = psst.code 
+                                    where "projectId" in (:...projectIds)
+                                    group by "projectId" `;
+
+    const licenseExceptions = await this.rawQuery<any> (licenseExceptionQuery,  { projectIds: projectArray });
+
+    const licenseManualQuery = `select
+                                  bml."projectId" as id ,
+                                  max(psst.sort_order) as maxSecurity,
+                                  null as latestSecurityStatus,
+                                  case
+                                      when max(psst.sort_order) = 3 then 'Red'
+                                      when max(psst.sort_order) = 2 then 'Yellow'
+                                      when max(psst.sort_order) = 1 then 'Green'
+                                      else 'Green'
+                                  end as latestLicenseStatus
+                              from
+                                  bom_manual_license bml
+                              left join project p2 on
+                                  p2.id = bml."projectId"
+                              left join license l2 on
+                                  bml."licenseId" = l2.id
+                              left join license_status_deployment_type lsdt on
+                                  lsdt.license_code = l2.code
+                                  and lsdt.deployment_type_code = p2.deployment_type_code
+                              left join project_scan_status_type psst on
+                                  lsdt.project_scan_status_type_code = psst.code
+                                  where bml."projectId" in (:...projectIds)
+                                  group by "projectId"`;
+
+    const licenseManual = await this.rawQuery<any> (licenseManualQuery,  { projectIds: projectArray });
+
+    answer.map(function(a) {
+      var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestlicensestatus);
+      if (latest?.latestsecuritystatus) {
+        a.latestSecurityStatus = latest.latestsecuritystatus;
+      } else {
+        if (a.globalSecurityException){
+          a.latestSecurityStatus = "Green";
+        } else {
+          a.latestSecurityStatus = 'Unknown';
+        }
+      }
+
+      var latest = latestStatus.find(stat => stat.id === a.id && !stat.latestsecuritystatus);
+      if (latest?.latestlicensestatus) {
+        var latestexception = licenseExceptions.find(exception => exception.id === a.id);
+        if (latestexception){
+          a.latestLicenseStatus = latest.maxsecurity < latestexception.maxsecurity ? latestexception.latestlicensestatus : latest.latestlicensestatus;
+        } else {
+          a.latestLicenseStatus = latest.latestlicensestatus;
+        }
+        var latestmanual = licenseManual.find(manual => manual.id === a.id);
+        if (latestmanual){
+          a.latestLicenseStatus = latest.maxsecurity < latestmanual.maxsecurity ? latestmanual.latestlicensestatus : latest.latestlicensestatus;
+        } else {
+          a.latestLicenseStatus = latest.latestlicensestatus;
+        }
+      } else {
+        if (a.globalLicenseException) {
+          a.latestLicenseStatus = 'Green';
+        } else {
+          a.latestLicenseStatus = 'Unknown';
+        }
+      }    
+    });
+
+    return answer;
   }
 
   createFormat(label: string, value: string, status: string) {
@@ -163,6 +274,7 @@ export class StatsController implements CrudController<Project> {
       .send(svg)
       .end();
   }
+
 
   @Get('/badges/:id/vulnerabilities')
   @Header('Content-Type', 'image/svg+xml')

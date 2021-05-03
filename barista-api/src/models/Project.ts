@@ -87,10 +87,10 @@ export class Project extends ModelBase {
   importMetaData: any;
 
   @ApiModelProperty()
-  LatestLicenseStatus: ProjectScanStatusType;
+  latestLicenseStatus: string;
 
   @ApiModelProperty()
-  LatestSecurityStatus: ProjectScanStatusType;
+  latestSecurityStatus: string;
 
   @ApiModelProperty({ type: type => BomLicenseException, isArray: true })
   @OneToMany(type => BomLicenseException, item => item.project)

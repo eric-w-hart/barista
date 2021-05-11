@@ -35,23 +35,19 @@ import {
 } from '@nestjsx/crud';
 
 import { makeBadge, ValidationError } from 'badge-maker';
-import { ScanService } from '@app/services/scan/scan.service';
-import { parse } from 'dotenv';
-import { logger } from 'elastic-apm-node';
 
-@Crud({
+Crud({
   model: {
     type: Project,
   },
   routes: {
     only: ['getManyBase'],
   },
-})
+});
 @ApiUseTags('Stats')
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
-  constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {
-  }
+  constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {}
   get base(): CrudController<Project> {
     return this;
   }
@@ -145,7 +141,6 @@ export class StatsController implements CrudController<Project> {
       .send(svg)
       .end();
   }
-
 
   @Get('/badges/:id/vulnerabilities')
   @Header('Content-Type', 'image/svg+xml')

@@ -56,7 +56,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           this.projects = response;
 
           // This is crazy....without it, sometimes the spinner won't go away.
-          this.sleep(1).then(() => {
+          this.sleep(500).then(() => {
             this.loading = false;
           });
         });
@@ -69,7 +69,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.projects = response;
 
             // This is crazy....without it, sometimes the spinner won't go away.
-            this.sleep(1).then(() => {
+            this.sleep(500).then(() => {
               this.loading = false;
             });
           });
@@ -84,13 +84,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {}
 
   ngOnInit() {
-    this.statuses = [
-      { label: 'Green', value: 'Green' },
-      { label: 'Yellow', value: 'Yellow' },
-      { label: 'Red', value: 'Red' },
-      { label: 'Unknown', value: 'Unknown' },
-    ];
-
     this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
       this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
 

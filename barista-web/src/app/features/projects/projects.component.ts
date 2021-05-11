@@ -48,27 +48,11 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   subscribedToEvent = false;
 
-  getPagedResults(query: any): Observable<any> {
-    switch (this.projectDataTableType) {
-      case ProjectDataTableType.user: {
-        return this.userApiService.userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0);
-      }
-      default: {
-        // Internal or community
-        return this.projectApiService.projectSearchGet(
-          this.projectDataTableType || 'internal',
-          query.perPage || 5000,
-          query.page || 0,
-          this.filter || '',
-        );
-      }
-    }
-  }
-
-  getResults(query: any) {
+  getResults() {
     switch (this.projectDataTableType) {
       case ProjectDataTableType.user: {
         this.projectApiService.projectsWithStatusSearchGet('true').subscribe((response: any) => {
+          this.loading = false;
           this.projects = response;
         });
         break;
@@ -77,6 +61,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.projectApiService
           .projectsWithStatusSearchGet(null, null, `developmentType.code||eq||${this.projectDataTableType}`)
           .subscribe((response: any) => {
+            this.loading = false;
             this.projects = response;
           });
       }
@@ -84,7 +69,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.getResults(5000);
+    this.getResults();
   }
 
   ngOnDestroy(): void {}

@@ -55,6 +55,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.projectApiService.projectsWithStatusSearchGet('true').subscribe((response: any) => {
           this.projects = response;
 
+          // This is crazy....without it, sometimes the spinner won't go away.
           this.sleep(1).then(() => {
             this.loading = false;
           });
@@ -66,6 +67,8 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           .projectsWithStatusSearchGet(null, null, `developmentType.code||eq||${this.projectDataTableType}`)
           .subscribe((response: any) => {
             this.projects = response;
+
+            // This is crazy....without it, sometimes the spinner won't go away.
             this.sleep(1).then(() => {
               this.loading = false;
             });

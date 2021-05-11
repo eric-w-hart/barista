@@ -53,8 +53,11 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     switch (this.projectDataTableType) {
       case ProjectDataTableType.user: {
         this.projectApiService.projectsWithStatusSearchGet('true').subscribe((response: any) => {
-          this.loading = false;
           this.projects = response;
+
+          this.sleep(1).then(() => {
+            this.loading = false;
+          });
         });
         break;
       }
@@ -62,8 +65,10 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.projectApiService
           .projectsWithStatusSearchGet(null, null, `developmentType.code||eq||${this.projectDataTableType}`)
           .subscribe((response: any) => {
-            this.loading = false;
             this.projects = response;
+            this.sleep(1).then(() => {
+              this.loading = false;
+            });
           });
       }
     }
@@ -135,5 +140,10 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return name;
+  }
+
+  // sleep time expects milliseconds
+  sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
   }
 }

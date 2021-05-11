@@ -45,6 +45,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   loading: boolean;
   systemConfiguration: Observable<SystemConfiguration>;
   projectIdHeader: string;
+  statuses: any[];
 
   subscribedToEvent = false;
 
@@ -75,6 +76,13 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {}
 
   ngOnInit() {
+    this.statuses = [
+      { label: 'Green', value: 'Green' },
+      { label: 'Yellow', value: 'Yellow' },
+      { label: 'Red', value: 'Red' },
+      { label: 'Unknown', value: 'Unknown' },
+    ];
+
     this.systemConfigService.apiService.systemConfigurationIdGet('default').subscribe((data) => {
       this.projectIdHeader = data.askIdDisplayName ? data.askIdDisplayName : 'Project ID';
 
@@ -100,14 +108,14 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           header: 'License State',
           field: 'latestLicenseStatus',
           sortable: true,
-          filter: true,
+          filter: false,
           cellTemplate: this.licenseStatusTemplate,
         },
         {
           header: 'Security State',
           field: 'latestSecurityStatus',
           sortable: true,
-          filter: true,
+          filter: false,
           cellTemplate: this.securityStatusTemplate,
         },
       ];

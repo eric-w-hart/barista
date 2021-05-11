@@ -29,7 +29,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiImplicitQuery, ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -42,6 +42,7 @@ import {
 } from '@nestjsx/crud';
 import gitP, { SimpleGit } from 'simple-git/promise';
 import { Response } from 'express';
+import { Swagger } from '@nestjsx/crud/lib/crud';
 
 @UseGuards(AuthGuard('jwt'))
 @ApiOAuth2Auth()
@@ -95,7 +96,11 @@ export class ProjectController implements CrudController<Project> {
     private licenseScanResultItemService: LicenseScanResultItemService,
     private securityScanResultItemService: SecurityScanResultItemService,
     private commandBus: CommandBus,
-  ) {}
+  ) {
+    const metadata = Swagger.getParams(this.getProjectsWithStatus);
+    const queryParamsMeta = Swagger.createQueryParamsMeta('getManyBase');
+    Swagger.setParams([...metadata, ...queryParamsMeta], this.getProjectsWithStatus);
+  }
 
   get base(): CrudController<Project> {
     return this;
@@ -224,6 +229,32 @@ export class ProjectController implements CrudController<Project> {
       });
 
     return await PaginateArrayResult(query, +page, +pageSize);
+  }
+
+  @Get('/projects-with-statuses')
+  @UseInterceptors(CrudRequestInterceptor)
+  @ApiResponse({ status: 200, type: Project, isArray: true })
+  @ApiImplicitQuery({
+    name: 'applyUserFilter',
+    required: false,
+    type: String, // Boolean doesn't work....always becomes a string...WTF?
+  })
+  async getProjectsWithStatus(
+    @ParsedRequest() req: CrudRequest,
+    @Query('applyUserFilter') applyUserFilter: string = 'false',
+    @Request() request,
+  ): Promise<Project[]> {
+    const { parsed, options } = req;
+
+    let userId = null;
+
+    if (applyUserFilter === 'true') {
+      userId = request.user.groups;
+      userId.push(request.user.id);
+    }
+
+    const answer = await this.service.getProjectsMany(parsed, options, userId);
+    return answer;
   }
 
   @Get('/validGithubRepo')

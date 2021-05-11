@@ -5,7 +5,7 @@ import { LicenseService } from '@app/services/license/license.service';
 import { ObligationService } from '@app/services/obligation/obligation.service';
 import PaginateArrayResult from '@app/shared/util/paginate-array-result';
 import { Body, Controller, Get, Post, Query, UseInterceptors } from '@nestjs/common';
-import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } from '@nestjsx/crud';
 
 @Crud({
@@ -13,7 +13,7 @@ import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } 
     type: Obligation,
   },
 })
-@ApiUseTags('Obligation')
+@ApiTags('Obligation')
 @Controller('obligation')
 export class ObligationController implements CrudController<Obligation> {
   constructor(public service: ObligationService, public licenseService: LicenseService) {}

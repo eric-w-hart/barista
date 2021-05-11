@@ -1,45 +1,45 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class JobInfoDto {
-  @ApiModelProperty()
+  @ApiProperty()
   attemptsMade: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   data: {
     scanId?: number;
   };
 
-  @ApiModelProperty()
+  @ApiProperty()
   delay: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   finishedOn: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   opts: {
     attempts: number;
     delay: number;
     timestamp: number;
   };
 
-  @ApiModelProperty()
+  @ApiProperty()
   processedOn: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   progress: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   returnvalue: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   stacktrace: any[];
 
-  @ApiModelProperty()
+  @ApiProperty()
   timestamp: number;
 }

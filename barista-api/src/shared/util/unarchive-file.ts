@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import unpacker = require('all-unpacker');
+import unpacker = require('node-unar');
 
 export async function unarchiveFile(filePath: string, targetDir: string = null, options: any = { noDirectory: true }) {
   if (targetDir) {

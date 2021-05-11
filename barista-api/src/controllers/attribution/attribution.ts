@@ -3,13 +3,13 @@ import { ScanService } from '@app/services/scan/scan.service';
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CrudRequestInterceptor } from '@nestjsx/crud';
 
 // @UseGuards(AuthGuard('jwt'))
-// @ApiOAuth2Auth()
+// @ApiBearerAuth()
 
-@ApiUseTags('Attribution')
+@ApiTags('Attribution')
 @Controller('attribution')
 export class AttributionController {
   constructor(public service: ScanService, private commandBus: CommandBus) {}

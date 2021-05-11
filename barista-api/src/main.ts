@@ -35,10 +35,9 @@ async function bootstrap() {
     .setTitle('Barista API')
     .setDescription('REST API documentation for the Barista system')
     .setVersion('1.0')
-    .addBearerAuth('Authorization', 'header')
-    .addOAuth2('accessCode')
+    .addBearerAuth()
+    .addOAuth2()
     .setBasePath('api/v1')
-    .setSchemes('https', 'http')
     .addTag('Attribution', 'Methods')
     .addTag('BomLicenseException', 'Methods')
     .addTag('BomManualLicense', 'Methods')
@@ -69,25 +68,25 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api/v1/api-docs', app, document);
 
-  const arena = Arena(
-    {
-      queues: [
-        {
-          name: 'scan-queue',
-          hostId: 'barista-queue',
-          host: process.env.REDIS_HOST || 'localhost',
-          port: Number(process.env.REDIS_PORT) || 6379,
-          prefix: '{barista}:',
-        },
-      ],
-    },
-    {
-      basePath: '/arena',
-      disableListen: true,
-    },
-  );
+  // const arena = Arena(
+  //   {
+  //     queues: [
+  //       {
+  //         name: 'scan-queue',
+  //         hostId: 'barista-queue',
+  //         host: process.env.REDIS_HOST || 'localhost',
+  //         port: Number(process.env.REDIS_PORT) || 6379,
+  //         prefix: '{barista}:',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     basePath: '/arena',
+  //     disableListen: true,
+  //   },
+  // );
 
-  app.use(arena);
+  //app.use(arena);
   app.enableCors();
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

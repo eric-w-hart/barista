@@ -1,24 +1,24 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity, Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export class ModelBase extends BaseEntity {
-  @ApiModelProperty()
+  @ApiProperty()
   @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'jsonb', nullable: true })
   metaData: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   tag: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @UpdateDateColumn({ name: 'updated_at', nullable: true })
   updatedAt: Date;
 }

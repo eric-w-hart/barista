@@ -29,7 +29,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -44,7 +44,7 @@ import gitP, { SimpleGit } from 'simple-git/promise';
 import { Response } from 'express';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   query: {
     join: {
@@ -87,7 +87,7 @@ import { Response } from 'express';
     type: Project,
   },
 })
-@ApiUseTags('Project')
+@ApiTags('Project')
 @Controller('project')
 export class ProjectController implements CrudController<Project> {
   constructor(

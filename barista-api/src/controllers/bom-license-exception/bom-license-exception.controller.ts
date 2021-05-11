@@ -5,7 +5,7 @@ import { ProjectService } from '@app/services/project/project.service';
 import { Body, Controller, Get, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -18,7 +18,7 @@ import {
 } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   model: {
     type: BomLicenseException,
@@ -51,7 +51,7 @@ import {
     exclude: ['createOneBase'],
   },
 })
-@ApiUseTags('BomLicenseException')
+@ApiTags('BomLicenseException')
 @Controller('bom-license-exception')
 export class BomLicenseExceptionController implements CrudController<BomLicenseException> {
   constructor(

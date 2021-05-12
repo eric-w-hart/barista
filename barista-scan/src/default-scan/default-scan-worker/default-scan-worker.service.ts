@@ -31,15 +31,17 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as path from 'path';
 import { join } from 'path';
-import * as Git from 'simple-git';
+import simpleGit, {SimpleGit} from 'simple-git';
 import * as tmp from 'tmp';
 import * as url from 'url';
+import { Processor, Process } from '@nestjs/bull';
 
 @Injectable()
+@Processor('scan-queue')
 export class DefaultScanWorkerService {
   private dataDir = tmp.dirSync({ unsafeCleanup: true });
   private doneCallback: DoneCallback;
-  private git = Git();
+  private git: SimpleGit = simpleGit();
   private job: Job;
   private jobInfo: DefaultScanWorkerJobInfo;
   private logger = new LoggerService('DefaultScanWorkerService');
@@ -221,7 +223,7 @@ export class DefaultScanWorkerService {
       });
     }
   }
-
+  @Process()
   async scan(job: Job<any>, callback: DoneCallback) {
     return new Promise<void>(async (resolve, reject) => {
       this.jobInfo = {};
@@ -318,7 +320,7 @@ export class DefaultScanWorkerService {
 
           for (const scanner of scanners) {
             scannerPromises.push(
-              new Promise(async scanPromiseResolve => {
+              new Promise<void>(async scanPromiseResolve => {
                 this.logger.log(`Starting ${scanner.name}`);
                 await scanner.execute(this.jobInfo);
 
@@ -421,9 +423,18 @@ this.logger.debug('before promises');
 
           scan.startedAt = new Date();
           await scan.save();
+          try {
+            this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions);
+            if (scan.project.customPackageManagerPath && scan.project.packageManager.code != PackageManagerEnum.GO.toString()) {
+                this.deleteFolderRecursive(
+                  this.jobInfo.tmpDir,
+                  path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
+                );
+              }
+              await doScanProcess();
+          }
+          catch (cloneError) {
 
-          this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions, async (cloneError, cloneResult) => {
-            if (cloneError) {
               await this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
 
               await scan.reload();
@@ -442,20 +453,7 @@ this.logger.debug('before promises');
               } catch (error) {
                 this.logger.error(error);
               }
-            } else {
-              if (scan.project.customPackageManagerPath && scan.project.packageManager.code != PackageManagerEnum.GO.toString()) {
-                this.deleteFolderRecursive(
-                  this.jobInfo.tmpDir,
-                  path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
-                );
-              }
-              await doScanProcess();
             }
-
-            if (cloneResult && cloneResult !== '') {
-              this.logger.log(`Clone Result: ${cloneResult}`);
-            }
-          });
         } else {
           this.logger.log('No pathToUploadFileForScanning and no gitURL, so isSourceCode = false');
           await doScanProcess(false);

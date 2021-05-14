@@ -33,8 +33,9 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() projectDataTableType: ProjectDataTableType | ProjectDevelopmentTypeEnum;
 
   @ViewChild('ProjectsDataGrid') projectsDataGrid: AppDataGridComponent;
-  @ViewChild('statusTemplate', { static: true }) statusTemplate;
   @ViewChild('nameTemplate', { static: true }) nameTemplate;
+  @ViewChild('licenseStatusTemplate', { static: true }) licenseStatusTemplate;
+  @ViewChild('securityStatusTemplate', { static: true }) securityStatusTemplate;
 
   columns: DataGridColumn[] = [];
   filter: string;
@@ -44,54 +45,40 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   loading: boolean;
   systemConfiguration: Observable<SystemConfiguration>;
   projectIdHeader: string;
+  statuses: any[];
 
   subscribedToEvent = false;
 
-  getPagedResults(query: any): Observable<any> {
+  getResults() {
     switch (this.projectDataTableType) {
       case ProjectDataTableType.user: {
-        return this.userApiService.userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0);
-      }
-      default: {
-        // Internal or community
-        return this.projectApiService.projectSearchGet(
-          this.projectDataTableType || 'internal',
-          query.perPage || 5000,
-          query.page || 0,
-          this.filter || '',
-        );
-      }
-    }
-  }
+        this.projectApiService.projectsWithStatusSearchGet('true').subscribe((response: any) => {
+          this.projects = response;
 
-  getResults(query: any) {
-    switch (this.projectDataTableType) {
-      case ProjectDataTableType.user: {
-        this.userApiService
-          .userProjectsGet(this.filter || '', query.perPage || 5000, query.page || 0)
-          .subscribe((response: any) => {
-            this.projects = response.data;
+          // This is crazy....without it, sometimes the spinner won't go away.
+          this.sleep(500).then(() => {
+            this.loading = false;
           });
+        });
         break;
       }
       default: {
-        // Internal or community
         this.projectApiService
-          .projectSearchGet(
-            this.projectDataTableType || 'internal',
-            query.perPage || 5000,
-            query.page || 0,
-            this.filter || '',
-          )
+          .projectsWithStatusSearchGet(null, null, `developmentType.code||eq||${this.projectDataTableType}`)
           .subscribe((response: any) => {
-            this.projects = response.data;
+            this.projects = response;
+
+            // This is crazy....without it, sometimes the spinner won't go away.
+            this.sleep(500).then(() => {
+              this.loading = false;
+            });
           });
       }
     }
   }
 
   ngAfterViewInit(): void {
-    this.getResults(5000);
+    this.getResults();
   }
 
   ngOnDestroy(): void {}
@@ -119,9 +106,18 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
           width: '100',
         },
         {
-          header: 'Status',
-          field: 'id',
-          cellTemplate: this.statusTemplate,
+          header: 'License State',
+          field: 'latestLicenseStatus',
+          sortable: true,
+          filter: false,
+          cellTemplate: this.licenseStatusTemplate,
+        },
+        {
+          header: 'Security State',
+          field: 'latestSecurityStatus',
+          sortable: true,
+          filter: false,
+          cellTemplate: this.securityStatusTemplate,
         },
       ];
     });
@@ -140,5 +136,10 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return name;
+  }
+
+  // sleep time expects milliseconds
+  sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
   }
 }

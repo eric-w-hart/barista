@@ -36,14 +36,14 @@ import {
 
 import { makeBadge, ValidationError } from 'badge-maker';
 
-Crud({
+@Crud({
   model: {
     type: Project,
   },
   routes: {
     only: ['getManyBase'],
   },
-});
+})
 @ApiUseTags('Stats')
 @Controller('stats')
 export class StatsController implements CrudController<Project> {

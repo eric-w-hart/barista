@@ -13,15 +13,17 @@ import { join } from 'path';
     TypeOrmModule.forRoot(),
     BullModule.forRoot({
       redis: {
-      enableReadyCheck: true,
-      host: process.env.REDIS_HOST || 'localhost',
-      port: Number(process.env.REDIS_PORT) || 6379,
+        enableReadyCheck: true,
+        host: process.env.REDIS_HOST || 'localhost',
+        port: Number(process.env.REDIS_PORT) || 6379,
       },
     }),
     BullModule.registerQueue({
       name: 'scan-queue',
-      processors: [join(__dirname, 'default-scan/default-scan-process.js')],
-    })
+      processors: [
+        { path: join(__dirname, 'default-scan/default-scan-process.js'), concurrency: 5, name: 'default-scan' },
+      ],
+    }),
   ],
   controllers: [AppController],
   providers: [QueueFeedback, AppService],

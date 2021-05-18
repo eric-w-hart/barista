@@ -9262,6 +9262,23 @@ pretty-format@^25.2.1, pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
+primeflex@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/primeflex/-/primeflex-2.0.0.tgz#b4152a97a455bbfad33503b6e10fe73d1f9e2228"
+  integrity sha1-tBUql6RVu/rTNQO24Q/nPR+eIig=
+
+primeicons@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-4.1.0.tgz#19eaef8ef5594b0006358ae64e738d03e167c9bb"
+  integrity sha1-GervjvVZSwAGNYrmTnONA+Fnybs=
+
+primeng@^11.3.1:
+  version "11.4.2"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-11.4.2.tgz#13078d0c555e9a5e4eb3c0b9c6e0e4a4e9204bb6"
+  integrity sha1-EweNDFVeml5Os8C5xuDkpOkgS7Y=
+  dependencies:
+    tslib "^2.0.0"
+
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"

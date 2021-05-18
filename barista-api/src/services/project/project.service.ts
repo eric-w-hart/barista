@@ -67,7 +67,7 @@ export class ProjectService extends AppServiceBase<Project> {
             where l.id = t.licenseId
             group by l.id`;
     const rows = await this.db.manager.query(query, [project.id]);
-    return rows.map(row => ({
+    return rows.map((row) => ({
       license: {
         name: row.name,
       },
@@ -102,11 +102,7 @@ export class ProjectService extends AppServiceBase<Project> {
   }
 
   async distinctUserIds(): Promise<any> {
-    return this.db
-      .createQueryBuilder('project')
-      .select('project.userId')
-      .addGroupBy('project.userId')
-      .getRawMany();
+    return this.db.createQueryBuilder('project').select('project.userId').addGroupBy('project.userId').getRawMany();
   }
 
   /**
@@ -277,20 +273,33 @@ export class ProjectService extends AppServiceBase<Project> {
     return conn.query(escapedQuery, escapedParams);
   }
 
-  async getProjectsMany(parsed: ParsedRequestParams, options: CrudRequestOptions, userId: string[]): Promise<Project[]> {
+  async getProjectsMany(
+    parsed: ParsedRequestParams,
+    options: CrudRequestOptions,
+    userId: string[],
+  ): Promise<Project[]> {
     let builder = await this.createBuilder(parsed, options);
 
-    if (userId) {
+    if (userId && parsed.filter.length) {
       builder = builder.andWhere('Project.userId IN (:...userId)', { userId });
+    } else if (userId) {
+      builder = builder.where('Project.userId IN (:...userId)', { userId });
     }
 
+    const log = new Logger('getProjectsMany');
+    log.error('before ' + builder.getSql());
     const projects = await builder.getMany();
 
-    if (!projects.length || (parsed.fields.length && (!parsed.fields.includes("latestSecurityStatus") && !parsed.fields.includes("latestLicenseStatus")))) {
+    if (
+      !projects.length ||
+      (parsed.fields.length &&
+        !parsed.fields.includes('latestSecurityStatus') &&
+        !parsed.fields.includes('latestLicenseStatus'))
+    ) {
       return projects;
     }
-
-    const projectArray = projects.map(project => project.id);
+    log.error('before latestStatus');
+    const projectArray = projects.map((project) => project.id);
     const query = ` select
                       p.id,
                       max(psst.sort_order) as maxSecurity,
@@ -377,6 +386,8 @@ export class ProjectService extends AppServiceBase<Project> {
 
     const latestStatus = await this.rawQuery<any>(query, { projectIds: projectArray });
 
+    log.error('after latestStatus');
+
     const licenseExceptionQuery = ` select
                                       "projectId" as id,
                                       max(psst.sort_order) as maxSecurity,
@@ -397,7 +408,7 @@ export class ProjectService extends AppServiceBase<Project> {
                                       "projectId"`;
 
     const licenseExceptions = await this.rawQuery<any>(licenseExceptionQuery, { projectIds: projectArray });
-
+    log.error('after licenseExceptions');
     const licenseManualQuery = `select
                                   bml."projectId" as id ,
                                   max(psst.sort_order) as maxSecurity,
@@ -425,33 +436,39 @@ export class ProjectService extends AppServiceBase<Project> {
                                   "projectId"`;
 
     const licenseManual = await this.rawQuery<any>(licenseManualQuery, { projectIds: projectArray });
-
+    log.error('after licenseManual');
     projects.map(function (project) {
-      var latest = latestStatus.find(stat => stat.id === project.id && !stat.latestlicensestatus);
-      if (!parsed.fields.length || parsed.fields.includes("latestSecurityStatus")) {
+      var latest = latestStatus.find((stat) => stat.id === project.id && !stat.latestlicensestatus);
+      if (!parsed.fields.length || parsed.fields.includes('latestSecurityStatus')) {
         if (latest?.latestsecuritystatus) {
           project.latestSecurityStatus = latest.latestsecuritystatus;
         } else {
           if (project.globalSecurityException) {
-            project.latestSecurityStatus = "Green";
+            project.latestSecurityStatus = 'Green';
           } else {
             project.latestSecurityStatus = 'Unknown';
           }
         }
       }
 
-      var latest = latestStatus.find(stat => stat.id === project.id && !stat.latestsecuritystatus);
-      if (!parsed.fields.length || parsed.fields.includes("latestLicenseStatus")) {
+      var latest = latestStatus.find((stat) => stat.id === project.id && !stat.latestsecuritystatus);
+      if (!parsed.fields.length || parsed.fields.includes('latestLicenseStatus')) {
         if (latest?.latestlicensestatus) {
-          var latestexception = licenseExceptions.find(exception => exception.id === project.id);
+          var latestexception = licenseExceptions.find((exception) => exception.id === project.id);
           if (latestexception) {
-            project.latestLicenseStatus = latest.maxsecurity < latestexception.maxsecurity ? latestexception.latestlicensestatus : latest.latestlicensestatus;
+            project.latestLicenseStatus =
+              latest.maxsecurity < latestexception.maxsecurity
+                ? latestexception.latestlicensestatus
+                : latest.latestlicensestatus;
           } else {
             project.latestLicenseStatus = latest.latestlicensestatus;
           }
-          var latestmanual = licenseManual.find(manual => manual.id === project.id);
+          var latestmanual = licenseManual.find((manual) => manual.id === project.id);
           if (latestmanual) {
-            project.latestLicenseStatus = latest.maxsecurity < latestmanual.maxsecurity ? latestmanual.latestlicensestatus : latest.latestlicensestatus;
+            project.latestLicenseStatus =
+              latest.maxsecurity < latestmanual.maxsecurity
+                ? latestmanual.latestlicensestatus
+                : latest.latestlicensestatus;
           } else {
             project.latestLicenseStatus = latest.latestlicensestatus;
           }
@@ -497,7 +514,7 @@ export class ProjectService extends AppServiceBase<Project> {
                     group by l.code)
                 group by loo."obligationCode")`;
 
-    return await PaginateRawQuery(this.db.manager, query, [projectId], page, pageSize, record => ({
+    return await PaginateRawQuery(this.db.manager, query, [projectId], page, pageSize, (record) => ({
       id: record.id,
       code: record.code,
       name: record.name,

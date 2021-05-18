@@ -11,11 +11,13 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
-import { CustomHttpParameterCodec }                          from '../encoder';
-import { Observable }                                        from 'rxjs';
+import { Inject, Injectable, Optional } from '@angular/core';
+import {
+    HttpClient, HttpHeaders, HttpParams,
+    HttpResponse, HttpEvent, HttpParameterCodec
+} from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
+import { Observable } from 'rxjs';
 
 import { LicenseDto } from '../model/license-dto';
 import { LicenseModuleDto } from '../model/license-module-dto';
@@ -28,14 +30,14 @@ import { ProjectDistinctVulnerabilityDto } from '../model/project-distinct-vulne
 import { ProjectScanStateDto } from '../model/project-scan-state-dto';
 import { SecurityScanResultItem } from '../model/security-scan-result-item';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
+import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+import { Configuration } from '../configuration';
 import { ScanBranchDto } from '../model/scan-branch';
 
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ProjectApiService {
 
@@ -44,7 +46,7 @@ export class ProjectApiService {
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
-    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
         if (configuration) {
             this.configuration = configuration;
         }
@@ -68,7 +70,7 @@ export class ProjectApiService {
     public projectBulkPost(bulkDto: object, observe?: 'body', reportProgress?: boolean): Observable<Array<Project>>;
     public projectBulkPost(bulkDto: object, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Project>>>;
     public projectBulkPost(bulkDto: object, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Project>>>;
-    public projectBulkPost(bulkDto: object, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectBulkPost(bulkDto: object, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (bulkDto === null || bulkDto === undefined) {
             throw new Error('Required parameter bulkDto was null or undefined when calling projectBulkPost.');
         }
@@ -130,9 +132,9 @@ export class ProjectApiService {
     public projectGet(fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Project>>;
     public projectGet(fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Project>>>;
     public projectGet(fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Project>>>;
-    public projectGet(fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectGet(fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (fields !== undefined && fields !== null) {
             queryParameters = queryParameters.set('fields', <any>fields);
         }
@@ -203,7 +205,7 @@ export class ProjectApiService {
     public projectIdBillOfMaterialsLicensesGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<LicenseScanResultItem>>;
     public projectIdBillOfMaterialsLicensesGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LicenseScanResultItem>>>;
     public projectIdBillOfMaterialsLicensesGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LicenseScanResultItem>>>;
-    public projectIdBillOfMaterialsLicensesGet(filterText: string, pageSize: number, page: number, id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdBillOfMaterialsLicensesGet(filterText: string, pageSize: number, page: number, id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (filterText === null || filterText === undefined) {
             throw new Error('Required parameter filterText was null or undefined when calling projectIdBillOfMaterialsLicensesGet.');
         }
@@ -217,7 +219,7 @@ export class ProjectApiService {
             throw new Error('Required parameter id was null or undefined when calling projectIdBillOfMaterialsLicensesGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (filterText !== undefined && filterText !== null) {
             queryParameters = queryParameters.set('filterText', <any>filterText);
         }
@@ -270,7 +272,7 @@ export class ProjectApiService {
     public projectIdBillOfMaterialsLicensesOnlyGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<LicenseDto>>;
     public projectIdBillOfMaterialsLicensesOnlyGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LicenseDto>>>;
     public projectIdBillOfMaterialsLicensesOnlyGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LicenseDto>>>;
-    public projectIdBillOfMaterialsLicensesOnlyGet(filterText: string, pageSize: number, page: number, id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdBillOfMaterialsLicensesOnlyGet(filterText: string, pageSize: number, page: number, id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (filterText === null || filterText === undefined) {
             throw new Error('Required parameter filterText was null or undefined when calling projectIdBillOfMaterialsLicensesOnlyGet.');
         }
@@ -284,7 +286,7 @@ export class ProjectApiService {
             throw new Error('Required parameter id was null or undefined when calling projectIdBillOfMaterialsLicensesOnlyGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (filterText !== undefined && filterText !== null) {
             queryParameters = queryParameters.set('filterText', <any>filterText);
         }
@@ -338,7 +340,7 @@ export class ProjectApiService {
     public projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet(filterText: string, pageSize: number, page: number, licenseId: number, id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<LicenseModuleDto>>;
     public projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet(filterText: string, pageSize: number, page: number, licenseId: number, id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LicenseModuleDto>>>;
     public projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet(filterText: string, pageSize: number, page: number, licenseId: number, id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LicenseModuleDto>>>;
-    public projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet(filterText: string, pageSize: number, page: number, licenseId: number, id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet(filterText: string, pageSize: number, page: number, licenseId: number, id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (filterText === null || filterText === undefined) {
             throw new Error('Required parameter filterText was null or undefined when calling projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet.');
         }
@@ -355,7 +357,7 @@ export class ProjectApiService {
             throw new Error('Required parameter id was null or undefined when calling projectIdBillOfMaterialsModulesFromLicenseLicenseIdGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (filterText !== undefined && filterText !== null) {
             queryParameters = queryParameters.set('filterText', <any>filterText);
         }
@@ -408,7 +410,7 @@ export class ProjectApiService {
     public projectIdBillOfMaterialsVulnerabilitiesGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<SecurityScanResultItem>>;
     public projectIdBillOfMaterialsVulnerabilitiesGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<SecurityScanResultItem>>>;
     public projectIdBillOfMaterialsVulnerabilitiesGet(filterText: string, pageSize: number, page: number, id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<SecurityScanResultItem>>>;
-    public projectIdBillOfMaterialsVulnerabilitiesGet(filterText: string, pageSize: number, page: number, id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdBillOfMaterialsVulnerabilitiesGet(filterText: string, pageSize: number, page: number, id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (filterText === null || filterText === undefined) {
             throw new Error('Required parameter filterText was null or undefined when calling projectIdBillOfMaterialsVulnerabilitiesGet.');
         }
@@ -422,7 +424,7 @@ export class ProjectApiService {
             throw new Error('Required parameter id was null or undefined when calling projectIdBillOfMaterialsVulnerabilitiesGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (filterText !== undefined && filterText !== null) {
             queryParameters = queryParameters.set('filterText', <any>filterText);
         }
@@ -473,7 +475,7 @@ export class ProjectApiService {
     public projectIdDelete(id: number, observe?: 'body', reportProgress?: boolean): Observable<Project>;
     public projectIdDelete(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Project>>;
     public projectIdDelete(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Project>>;
-    public projectIdDelete(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdDelete(id: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdDelete.');
         }
@@ -520,12 +522,12 @@ export class ProjectApiService {
     public projectIdGet(id: number, fields?: string, join?: string, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Project>;
     public projectIdGet(id: number, fields?: string, join?: string, cache?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Project>>;
     public projectIdGet(id: number, fields?: string, join?: string, cache?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Project>>;
-    public projectIdGet(id: number, fields?: string, join?: string, cache?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdGet(id: number, fields?: string, join?: string, cache?: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (fields !== undefined && fields !== null) {
             queryParameters = queryParameters.set('fields', <any>fields);
         }
@@ -575,7 +577,7 @@ export class ProjectApiService {
     public projectIdObligationsGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
     public projectIdObligationsGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
     public projectIdObligationsGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public projectIdObligationsGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdObligationsGet(id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdObligationsGet.');
         }
@@ -610,15 +612,15 @@ export class ProjectApiService {
     }
 
 
-           /**
-     * @param id
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
+    /**
+* @param id
+* @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+* @param reportProgress flag to report request and response progress.
+*/
     public projectIdAttributionGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
     public projectIdAttributionGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
     public projectIdAttributionGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public projectIdAttributionGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdAttributionGet(id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdObligationsGet.');
         }
@@ -652,14 +654,13 @@ export class ProjectApiService {
         );
     }
 
-/**
-     * @param id
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
+    /**
+         * @param id
+         * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+         * @param reportProgress flag to report request and response progress.
+         */
 
-    public projectIdAttributionDownload(id: string, observe?: 'response', reportProgress?: boolean): Observable<Blob>
-{
+    public projectIdAttributionDownload(id: string, observe?: 'response', reportProgress?: boolean): Observable<Blob> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdObligationsGet.');
         }
@@ -699,8 +700,7 @@ export class ProjectApiService {
      * @param reportProgress flag to report request and response progress.
      */
 
-    public githubUrlValid(githubUrl: string, observe?: 'response', reportProgress?: boolean): Observable<any>
-{
+    public githubUrlValid(githubUrl: string, observe?: 'response', reportProgress?: boolean): Observable<any> {
         if (githubUrl === null || githubUrl === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdObligationsGet.');
         }
@@ -735,11 +735,11 @@ export class ProjectApiService {
         }
 
         return this.httpClient.get(`${this.configuration.basePath}/project/validGithubRepo?githubUrl=${encodeURIComponent(String(githubUrl))}`,
-        {
-          responseType: 'text',
-          withCredentials: this.configuration.withCredentials,
-          headers: headers
-      }
+            {
+                responseType: 'text',
+                withCredentials: this.configuration.withCredentials,
+                headers: headers
+            }
         );
     }
 
@@ -753,7 +753,7 @@ export class ProjectApiService {
     public projectIdPatch(id: number, project: Project, observe?: 'body', reportProgress?: boolean): Observable<Project>;
     public projectIdPatch(id: number, project: Project, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Project>>;
     public projectIdPatch(id: number, project: Project, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Project>>;
-    public projectIdPatch(id: number, project: Project, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdPatch(id: number, project: Project, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdPatch.');
         }
@@ -809,7 +809,7 @@ export class ProjectApiService {
     public projectIdStatsLicensesGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<ProjectDistinctLicenseDto>>;
     public projectIdStatsLicensesGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ProjectDistinctLicenseDto>>>;
     public projectIdStatsLicensesGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ProjectDistinctLicenseDto>>>;
-    public projectIdStatsLicensesGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdStatsLicensesGet(id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdStatsLicensesGet.');
         }
@@ -852,7 +852,7 @@ export class ProjectApiService {
     public projectIdStatsProjectScanStatusGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<ProjectScanStateDto>;
     public projectIdStatsProjectScanStatusGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ProjectScanStateDto>>;
     public projectIdStatsProjectScanStatusGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ProjectScanStateDto>>;
-    public projectIdStatsProjectScanStatusGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdStatsProjectScanStatusGet(id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdStatsProjectScanStatusGet.');
         }
@@ -895,7 +895,7 @@ export class ProjectApiService {
     public projectIdStatsSeveritiesGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<ProjectDistinctSeverityDto>>;
     public projectIdStatsSeveritiesGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ProjectDistinctSeverityDto>>>;
     public projectIdStatsSeveritiesGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ProjectDistinctSeverityDto>>>;
-    public projectIdStatsSeveritiesGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdStatsSeveritiesGet(id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdStatsSeveritiesGet.');
         }
@@ -938,7 +938,7 @@ export class ProjectApiService {
     public projectIdStatsVulnerabilitiesGet(id: string, observe?: 'body', reportProgress?: boolean): Observable<Array<ProjectDistinctVulnerabilityDto>>;
     public projectIdStatsVulnerabilitiesGet(id: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ProjectDistinctVulnerabilityDto>>>;
     public projectIdStatsVulnerabilitiesGet(id: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ProjectDistinctVulnerabilityDto>>>;
-    public projectIdStatsVulnerabilitiesGet(id: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdStatsVulnerabilitiesGet(id: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling projectIdStatsVulnerabilitiesGet.');
         }
@@ -983,7 +983,7 @@ export class ProjectApiService {
     public projectIdUniqueBomObligationsGet(pageSize: number, page: number, id: number, observe?: 'body', reportProgress?: boolean): Observable<Array<ObligationSearchDto>>;
     public projectIdUniqueBomObligationsGet(pageSize: number, page: number, id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ObligationSearchDto>>>;
     public projectIdUniqueBomObligationsGet(pageSize: number, page: number, id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ObligationSearchDto>>>;
-    public projectIdUniqueBomObligationsGet(pageSize: number, page: number, id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectIdUniqueBomObligationsGet(pageSize: number, page: number, id: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (pageSize === null || pageSize === undefined) {
             throw new Error('Required parameter pageSize was null or undefined when calling projectIdUniqueBomObligationsGet.');
         }
@@ -994,7 +994,7 @@ export class ProjectApiService {
             throw new Error('Required parameter id was null or undefined when calling projectIdUniqueBomObligationsGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (pageSize !== undefined && pageSize !== null) {
             queryParameters = queryParameters.set('pageSize', <any>pageSize);
         }
@@ -1041,7 +1041,7 @@ export class ProjectApiService {
     public projectPost(project: Project, observe?: 'body', reportProgress?: boolean): Observable<Project>;
     public projectPost(project: Project, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Project>>;
     public projectPost(project: Project, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Project>>;
-    public projectPost(project: Project, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectPost(project: Project, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (project === null || project === undefined) {
             throw new Error('Required parameter project was null or undefined when calling projectPost.');
         }
@@ -1097,7 +1097,7 @@ export class ProjectApiService {
     public projectSearchGet(developmentType: string, pageSize: number, page: number, filterText: string, observe?: 'body', reportProgress?: boolean): Observable<Array<Project>>;
     public projectSearchGet(developmentType: string, pageSize: number, page: number, filterText: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Project>>>;
     public projectSearchGet(developmentType: string, pageSize: number, page: number, filterText: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Project>>>;
-    public projectSearchGet(developmentType: string, pageSize: number, page: number, filterText: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectSearchGet(developmentType: string, pageSize: number, page: number, filterText: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
         if (developmentType === null || developmentType === undefined) {
             throw new Error('Required parameter developmentType was null or undefined when calling projectSearchGet.');
         }
@@ -1111,7 +1111,7 @@ export class ProjectApiService {
             throw new Error('Required parameter filterText was null or undefined when calling projectSearchGet.');
         }
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
         if (developmentType !== undefined && developmentType !== null) {
             queryParameters = queryParameters.set('developmentType', <any>developmentType);
         }
@@ -1144,7 +1144,6 @@ export class ProjectApiService {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
-
         return this.httpClient.get<Array<Project>>(`${this.configuration.basePath}/project/search`,
             {
                 params: queryParameters,
@@ -1162,10 +1161,10 @@ export class ProjectApiService {
     public projectBranches(projectId: number, pageSize?: number, page?: number, filterText?: string, observe?: 'body', reportProgress?: boolean): Observable<Array<ScanBranchDto>>;
     public projectBranches(projectId: number, pageSize?: number, page?: number, filterText?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ScanBranchDto>>>;
     public projectBranches(projectId: number, pageSize?: number, page?: number, filterText?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ScanBranchDto>>>;
-    public projectBranches(projectId: number, pageSize: number, page: number, filterText: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public projectBranches(projectId: number, pageSize: number, page: number, filterText: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
-        let queryParameters = new HttpParams({encoder: this.encoder});
+        let queryParameters = new HttpParams({ encoder: this.encoder });
 
 
         let headers = this.defaultHeaders;
@@ -1187,7 +1186,6 @@ export class ProjectApiService {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
-
         return this.httpClient.get<Array<string>>(`${this.configuration.basePath}/project/${encodeURIComponent(String(projectId))}/gitbranches`,
             {
                 params: queryParameters,
@@ -1198,4 +1196,84 @@ export class ProjectApiService {
         );
     }
 
+    /**
+     * Retrieve many Project
+     * @param applyUserFilter &lt;h4&gt;Determines whether the results will be filtered to those belonging to the logged in user.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?applyUserFilter&#x3D;[true|false]&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?applyUserFilter&#x3D;true&lt;/strong&gt
+     * @param fields &lt;h4&gt;Selects fields that should be returned in the reponse body.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;field1,field2,...&lt;/strong&gt; &lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?fields&#x3D;email,name&lt;/strong&gt;
+     * @param filter &lt;h4&gt;Adds fields request condition (multiple conditions) to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?filter[]&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt; &lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter[]&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter[]&#x3D;isVillain||eq||false&amp;filter[]&#x3D;city||eq||Arkham&lt;/strong&gt; (multiple filters are treated as a combination of AND type of conditions)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter[]&#x3D;shots||in||12,26&lt;/strong&gt; (some conditions accept multiple values separated by commas)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?filter[]&#x3D;power||isnull&lt;/strong&gt; (some conditions don\&#39;t accept value)&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;Filter Conditions:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;eq&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&#x3D;&lt;/code&gt;, equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ne&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;!&#x3D;&lt;/code&gt;, not equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&lt;/code&gt;, greater than)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lt&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&lt;/code&gt;, lower that)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;gte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;gt;&#x3D;&lt;/code&gt;, greater than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;lte&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;&amp;lt;&#x3D;&lt;/code&gt;, lower than or equal)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;starts&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE val%&lt;/code&gt;, starts with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;ends&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val&lt;/code&gt;, ends with)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;cont&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;LIKE %val%&lt;/code&gt;, contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;excl&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT LIKE %val%&lt;/code&gt;, not contains)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;in&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IN&lt;/code&gt;, in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notin&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;NOT IN&lt;/code&gt;, not in range, &lt;strong&gt;&lt;em&gt;accepts multiple values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;isnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NULL&lt;/code&gt;, is NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;notnull&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;IS NOT NULL&lt;/code&gt;, not NULL, &lt;strong&gt;&lt;em&gt;doesn\&#39;t accept value&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;&lt;code&gt;between&lt;/code&gt;&lt;/strong&gt; (&lt;code&gt;BETWEEN&lt;/code&gt;, between, &lt;strong&gt;&lt;em&gt;accepts two values&lt;/em&gt;&lt;/strong&gt;)&lt;/li&gt;&lt;/ul&gt;
+     * @param or &lt;h4&gt;Adds &lt;code&gt;OR&lt;/code&gt; conditions to the request.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?or[]&#x3D;field||condition||value&lt;/strong&gt;&lt;br/&gt;It uses the same conditions as the filter parameter&lt;br/&gt;&lt;i&gt;Rules and &lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;If there is only &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as simple filter:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or[]&#x3D;name||eq||batman&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;multiple&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; present (without &lt;code&gt;filter&lt;/code&gt;) then it will be interpreted as a compination of &lt;code&gt;OR&lt;/code&gt; conditions, as follows:&lt;br&gt;&lt;code&gt;WHERE {or} OR {or} OR ...&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?or[]&#x3D;name||eq||batman&amp;or[]&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If there are &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;strong&gt;one&lt;/strong&gt; &lt;code&gt;filter&lt;/code&gt; then it will be interpreted as &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE {filter} OR {or}&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter[]&#x3D;name||eq||batman&amp;or[]&#x3D;name||eq||joker&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;&lt;ul&gt;&lt;li&gt;If present &lt;strong&gt;both&lt;/strong&gt; &lt;code&gt;or&lt;/code&gt; and &lt;code&gt;filter&lt;/code&gt; in any amount (&lt;strong&gt;one&lt;/strong&gt; or &lt;strong&gt;miltiple&lt;/strong&gt; each) then both interpreted as a combitation of &lt;code&gt;AND&lt;/code&gt; conditions and compared with each other by &lt;code&gt;OR&lt;/code&gt; condition, as follows:&lt;br&gt;&lt;code&gt;WHERE ({filter} AND {filter} AND ...) OR ({or} AND {or} AND ...)&lt;/code&gt;&lt;/li&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?filter[]&#x3D;type||eq||hero&amp;filter[]&#x3D;status||eq||alive&amp;or[]&#x3D;type||eq||villain&amp;or[]&#x3D;status||eq||dead&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;
+     * @param sort &lt;h4&gt;Adds sort by field (by multiple fields) and order to query result.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?sort[]&#x3D;field,ASC|DESC&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?sort[]&#x3D;name,ASC&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?sort[]&#x3D;name,ASC&amp;sort[]&#x3D;id,DESC&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;
+     * @param join &lt;h4&gt;Receive joined relational objects in GET result (with all or selected fields).&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;relation&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;relation||field1,field2,...&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;relation1||field11,field12,...&amp;join[]&#x3D;relation1.nested||field21,field22,...&amp;join[]&#x3D;...&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br/&gt;&lt;i&gt;Examples:&lt;/i&gt;&lt;/i&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;profile&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;profile||firstName,email&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;profile||firstName,email&amp;join[]&#x3D;notifications||content&amp;join[]&#x3D;tasks&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;?join[]&#x3D;relation1&amp;join[]&#x3D;relation1.nested&amp;join[]&#x3D;relation1.nested.deepnested&lt;/strong&gt;&lt;/li&gt;&lt;/ul&gt;&lt;strong&gt;&lt;i&gt;Notice:&lt;/i&gt;&lt;/strong&gt; &lt;code&gt;id&lt;/code&gt; field always persists in relational objects. To use nested relations, the parent level MUST be set before the child level like example above.
+     * @param perPage &lt;h4&gt;Receive &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?per_page&#x3D;10&lt;/strong&gt;
+     * @param offset &lt;h4&gt;Offset &lt;code&gt;N&lt;/code&gt; amount of entities.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?offset&#x3D;10&lt;/strong&gt;
+     * @param page &lt;h4&gt;Receive a portion of &lt;code&gt;limit&lt;/code&gt; entities (alternative to &lt;code&gt;offset&lt;/code&gt;). Will be applied if &lt;code&gt;limit&lt;/code&gt; is set up.&lt;/h4&gt;&lt;i&gt;Syntax:&lt;/i&gt; &lt;strong&gt;?page&#x3D;number&lt;/strong&gt;&lt;br/&gt;&lt;i&gt;Example:&lt;/i&gt; &lt;strong&gt;?page&#x3D;2&lt;/strong&gt;
+     * @param cache &lt;h4&gt;Reset cache (if was enabled) and receive entities from the DB.&lt;/h4&gt;&lt;i&gt;Usage:&lt;/i&gt; &lt;strong&gt;?cache&#x3D;0&lt;/strong&gt;
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public projectsWithStatusSearchGet(applyUserFilter?: string, fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Project>>;
+    public projectsWithStatusSearchGet(applyUserFilter?: string, fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Project>>>;
+    public projectsWithStatusSearchGet(applyUserFilter?: string, fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Project>>>;
+    public projectsWithStatusSearchGet(applyUserFilter?: string, fields?: string, filter?: string, or?: string, sort?: string, join?: string, perPage?: number, offset?: number, page?: number, cache?: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        let queryParameters = new HttpParams({ encoder: this.encoder });
+        if (applyUserFilter !== undefined && applyUserFilter !== null) {
+            queryParameters = queryParameters.set('applyUserFilter', <any>applyUserFilter);
+        }
+        if (fields !== undefined && fields !== null) {
+            queryParameters = queryParameters.set('fields', <any>fields);
+        }
+        if (filter !== undefined && filter !== null) {
+            queryParameters = queryParameters.set('filter[]', <any>filter);
+        }
+        if (or !== undefined && or !== null) {
+            queryParameters = queryParameters.set('or[]', <any>or);
+        }
+        if (sort !== undefined && sort !== null) {
+            queryParameters = queryParameters.set('sort[]', <any>sort);
+        }
+        if (join !== undefined && join !== null) {
+            queryParameters = queryParameters.set('join[]', <any>join);
+        }
+        if (perPage !== undefined && perPage !== null) {
+            queryParameters = queryParameters.set('per_page', <any>perPage);
+        }
+        if (offset !== undefined && offset !== null) {
+            queryParameters = queryParameters.set('offset', <any>offset);
+        }
+        if (page !== undefined && page !== null) {
+            queryParameters = queryParameters.set('page', <any>page);
+        }
+        if (cache !== undefined && cache !== null) {
+            queryParameters = queryParameters.set('cache', <any>cache);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (oauth2) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        return this.httpClient.get<Array<Project>>(`${this.configuration.basePath}/project/projects-with-statuses`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 }

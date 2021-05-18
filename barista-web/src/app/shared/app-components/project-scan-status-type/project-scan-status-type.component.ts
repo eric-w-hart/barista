@@ -9,5 +9,7 @@ export class ProjectScanStatusTypeComponent implements OnInit {
   constructor() {}
   @Input() statusCode: string;
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.statusCode = this.statusCode.toLowerCase();
+  }
 }

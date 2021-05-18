@@ -8,12 +8,17 @@
   [defaultSortField]="'name'"
   [defaultSortOrder]="1"
   [enableCaptionHeader]="true"
+  [tableLoading]="loading"
 ></app-datagrid>
 
 <ng-template #nameTemplate let-row="rowData">
   {{ getName(row) }}
 </ng-template>
 
-<ng-template #statusTemplate let-row="rowData">
-  <app-project-status-normal [project]="{ id: row.id }"></app-project-status-normal>
+<ng-template #licenseStatusTemplate let-row="rowData">
+  <app-project-scan-status-type [statusCode]="row.latestLicenseStatus"></app-project-scan-status-type>
+</ng-template>
+
+<ng-template #securityStatusTemplate let-row="rowData">
+  <app-project-scan-status-type [statusCode]="row.latestSecurityStatus"></app-project-scan-status-type>
 </ng-template>

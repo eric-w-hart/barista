@@ -53,5 +53,7 @@ export interface Project {
     securityExceptions: Array<BomSecurityException>;
     userId: string;
     wasImported: boolean;
+    latestSecurityStatus: string;
+    latestLicenseStatus: string;
 }
 

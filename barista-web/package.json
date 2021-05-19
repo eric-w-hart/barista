@@ -75,8 +75,8 @@
   },
   "devDependencies": {
     "@angular-builders/jest": "^9.0.0",
-    "@angular-devkit/build-angular": "~0.1102.13",
-    "@angular/cli": "~11.2.13",
+    "@angular-devkit/build-angular": "~12.0.0",
+    "@angular/cli": "~12.0.0",
     "@angular/compiler-cli": "~12.0.0",
     "@angular/language-service": "~12.0.0",
     "@openapitools/openapi-generator-cli": "^2.1.16",

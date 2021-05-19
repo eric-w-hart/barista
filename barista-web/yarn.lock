@@ -165,10 +165,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/cdk@^10.2.7":
-  version "10.2.7"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/cdk/-/cdk-10.2.7.tgz#0ff82eb91b2653ea26909c57a460d4593b44f186"
-  integrity sha1-D/guuRsmU+omkJxXpGDUWTtE8YY=
+"@angular/cdk@^11.2.12":
+  version "11.2.12"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/cdk/-/cdk-11.2.12.tgz#c1c9c8d4a5763745fe2d324fc253f221b9c2b1b3"
+  integrity sha1-wcnI1KV2N0X+LTJPwlPyIbnCsbM=
   dependencies:
     tslib "^2.0.0"
   optionalDependencies:
@@ -271,10 +271,10 @@
   resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/language-service/-/language-service-11.2.14.tgz#452369cdffe76ac6d07836596fb47f9e69a6d119"
   integrity sha1-RSNpzf/nasbQeDZZb7R/nmmm0Rk=
 
-"@angular/material@^10.2.7":
-  version "10.2.7"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/material/-/material-10.2.7.tgz#b84aeeca997dc64fbcc7969540e22434315bab68"
-  integrity sha1-uEruypl9xk+8x5aVQOIkNDFbq2g=
+"@angular/material@^11.2.12":
+  version "11.2.12"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/material/-/material-11.2.12.tgz#625778113075bddb92f13ab03a8a513178f2b5a8"
+  integrity sha1-Yld4ETB1vduS8TqwOopRMXjytag=
   dependencies:
     tslib "^2.0.0"
 

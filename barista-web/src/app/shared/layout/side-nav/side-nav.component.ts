@@ -24,7 +24,7 @@ export class SideNavComponent implements OnInit {
   }
 
   // tslint:disable:member-ordering
-  expanded: boolean;
+  expanded: boolean = false;
   @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
   @Input() depth: number;
   // tslint:enable:member-ordering

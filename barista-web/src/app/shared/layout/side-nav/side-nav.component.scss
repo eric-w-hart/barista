@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import 'variables';
 
 :host {
@@ -7,12 +8,12 @@
   width: 100%;
 
   .mat-list-item.active {
-    background-color: mat-color($primary, 50);
+    background-color: mat.get-color-from-palette($primary, 50);
   }
   &:hover,
   &:focus {
     >.mat-list-item:not(.expanded) {
-      background-color: mat-color($primary, 100) !important;
+      background-color: mat.get-color-from-palette($primary, 100) !important;
     }
   }
 }

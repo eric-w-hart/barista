@@ -1,24 +1,25 @@
 
+@use '~@angular/material' as mat;
 @import 'variables';
 
 
-$red: mat-palette($mat-red);
-$yellow: mat-palette($mat-yellow);
-$green: mat-palette($mat-green);
-$grey: mat-palette($mat-grey);
+$red: mat.define-palette(mat.$red-palette);
+$yellow: mat.define-palette(mat.$yellow-palette);
+$green: mat.define-palette(mat.$green-palette);
+$grey: mat.define-palette(mat.$grey-palette);
 
 .red-icon {
-  color: mat-color($red, 700);
+  color: mat.get-color-from-palette($red, 700);
 }
 
 .yellow-icon {
-  color: mat-color($yellow, 700);
+  color: mat.get-color-from-palette($yellow, 700);
 }
 
 .green-icon {
-  color: mat-color($green);
+  color: mat.get-color-from-palette($green);
 }
 
 .unknown-icon {
-  color: mat-color($grey);
+  color: mat.get-color-from-palette($grey);
 }

@@ -1,16 +1,16 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$primary: mat-palette($mat-brown);
-$accent:  mat-palette($mat-lime, 300, 100, 700);
+$primary: mat.define-palette(mat.$brown-palette);
+$accent:  mat.define-palette(mat.$lime-palette, 300, 100, 700);
 
 // The warn palette is optional (defaults to red).
-$warn:    mat-palette($mat-red);
+$warn:    mat.define-palette(mat.$red-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$coffee-theme: mat-light-theme($primary, $accent, $warn);
+$coffee-theme: mat.define-light-theme($primary, $accent, $warn);
 
 $accent-color: #f5ebe0; // linen
 $primary-color: #5c392a; // van dyke brown

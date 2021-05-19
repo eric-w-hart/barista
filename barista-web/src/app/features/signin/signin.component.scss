@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import 'variables';
 
 .example-fill-remaining-space {
@@ -38,5 +39,5 @@ mat-form-field.mat-form-field {
 }
 
 .mat-form-field.mat-focused .mat-form-field-ripple.mat-accent {
-  background-color: mat-color($accent);
+  background-color: mat.get-color-from-palette($accent);
 }

@@ -158,19 +158,19 @@
     ora "5.3.0"
     rxjs "6.6.3"
 
-"@angular/animations@^11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/animations/-/animations-11.2.14.tgz#cf119ea779bf11bd3759f1355c85e4e8e9e7bb03"
-  integrity sha1-zxGep3m/Eb03WfE1XIXk6OnnuwM=
+"@angular/animations@^12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/animations/-/animations-12.0.0.tgz#5f845b1a58ffb6f3ea6103edf0756ac65320b725"
+  integrity sha1-X4RbGlj/tvPqYQPt8HVqxlMgtyU=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
-"@angular/cdk@^10.2.7":
-  version "10.2.7"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/cdk/-/cdk-10.2.7.tgz#0ff82eb91b2653ea26909c57a460d4593b44f186"
-  integrity sha1-D/guuRsmU+omkJxXpGDUWTtE8YY=
+"@angular/cdk@^12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/cdk/-/cdk-12.0.0.tgz#86064923870a7f1d6094d08dc7951e41d8972aaa"
+  integrity sha1-hgZJI4cKfx1glNCNx5UeQdiXKqo=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
   optionalDependencies:
     parse5 "^5.0.0"
 
@@ -202,32 +202,31 @@
     universal-analytics "0.4.23"
     uuid "8.3.2"
 
-"@angular/common@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/common/-/common-11.2.14.tgz#52887277b0ae0438e584f9ae97b417ee51a694b5"
-  integrity sha1-Uohyd7CuBDjlhPmul7QX7lGmlLU=
+"@angular/common@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/common/-/common-12.0.0.tgz#a4b992f3af997e9e957500148100f3f2a90ad3e9"
+  integrity sha1-pLmS86+Zfp6VdQAUgQDz8qkK0+k=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
-"@angular/compiler-cli@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/compiler-cli/-/compiler-cli-11.2.14.tgz#fdd22aeec25aa2477595bed631d19e977254ecc5"
-  integrity sha1-/dIq7sJaokd1lb7WMdGel3JU7MU=
+"@angular/compiler-cli@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/compiler-cli/-/compiler-cli-12.0.0.tgz#64c37b60be3c21d9443accdc113b587214e76a0d"
+  integrity sha1-ZMN7YL48IdlEOszcETtYchTnag0=
   dependencies:
     "@babel/core" "^7.8.6"
     "@babel/types" "^7.8.6"
     canonical-path "1.0.0"
     chokidar "^3.0.0"
     convert-source-map "^1.5.1"
-    dependency-graph "^0.7.2"
-    fs-extra "4.0.2"
+    dependency-graph "^0.11.0"
     magic-string "^0.25.0"
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
-    semver "^6.3.0"
+    semver "^7.0.0"
     source-map "^0.6.1"
     sourcemap-codec "^1.4.8"
-    tslib "^2.0.0"
+    tslib "^2.1.0"
     yargs "^16.2.0"
 
 "@angular/compiler@9.0.0":
@@ -235,69 +234,69 @@
   resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/compiler/-/compiler-9.0.0.tgz#87e0bef4c369b6cadae07e3a4295778fc93799d5"
   integrity sha1-h+C+9MNptsra4H46QpV3j8k3mdU=
 
-"@angular/compiler@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/compiler/-/compiler-11.2.14.tgz#9d3ea26b4d2d858aab935f69af9e201f53453a0f"
-  integrity sha1-nT6ia00thYqrk19pr54gH1NFOg8=
+"@angular/compiler@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/compiler/-/compiler-12.0.0.tgz#bb0d4f464fee4803dbda49d862474f771c31f633"
+  integrity sha1-uw1PRk/uSAPb2knYYkdPdxwx9jM=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 "@angular/core@9.0.0":
   version "9.0.0"
   resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/core/-/core-9.0.0.tgz#227dc53e1ac81824f998c6e76000b7efc522641e"
   integrity sha1-In3FPhrIGCT5mMbnYAC378UiZB4=
 
-"@angular/core@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/core/-/core-11.2.14.tgz#3ebe298c79d5413dc670d56b7f503bd4d788d4a8"
-  integrity sha1-Pr4pjHnVQT3GcNVrf1A71NeI1Kg=
+"@angular/core@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/core/-/core-12.0.0.tgz#d16a217f0919b3b161229118c52b1f703815eb71"
+  integrity sha1-0WohfwkZs7FhIpEYxSsfcDgV63E=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 "@angular/flex-layout@^9.0.0-beta.29":
   version "9.0.0-beta.31"
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/@angular/flex-layout/-/flex-layout-9.0.0-beta.31.tgz#9c0672acafa87de4759f7d0a9aab004e7da105d2"
   integrity sha1-nAZyrK+ofeR1n30KmqsATn2hBdI=
 
-"@angular/forms@^11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/forms/-/forms-11.2.14.tgz#dc858408f7647f4fd033996a03aa74df18a02079"
-  integrity sha1-3IWECPdkf0/QM5lqA6p03xigIHk=
+"@angular/forms@^12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/forms/-/forms-12.0.0.tgz#faf5e3e36a8c4f57f42a5b3dd11786f39c94d693"
+  integrity sha1-+vXj42qMT1f0Kls90ReG85yU1pM=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
-"@angular/language-service@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/language-service/-/language-service-11.2.14.tgz#452369cdffe76ac6d07836596fb47f9e69a6d119"
-  integrity sha1-RSNpzf/nasbQeDZZb7R/nmmm0Rk=
+"@angular/language-service@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/language-service/-/language-service-12.0.0.tgz#b404961f60d944ea013833b282c144b3228f439d"
+  integrity sha1-tASWH2DZROoBODOygsFEsyKPQ50=
 
-"@angular/material@^10.2.7":
-  version "10.2.7"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/material/-/material-10.2.7.tgz#b84aeeca997dc64fbcc7969540e22434315bab68"
-  integrity sha1-uEruypl9xk+8x5aVQOIkNDFbq2g=
+"@angular/material@^12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/material/-/material-12.0.0.tgz#07eb6ad3c661ae3ab8e65df803eae47fd149735f"
+  integrity sha1-B+tq08Zhrjq45l34A+rkf9FJc18=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
-"@angular/platform-browser-dynamic@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/platform-browser-dynamic/-/platform-browser-dynamic-11.2.14.tgz#3c7fff1a1daacba5390acf033d28c377ec281166"
-  integrity sha1-PH//Gh2qy6U5Cs8DPSjDd+woEWY=
+"@angular/platform-browser-dynamic@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/platform-browser-dynamic/-/platform-browser-dynamic-12.0.0.tgz#295036e7b487b6dbe3b13db763a371675d391ee6"
+  integrity sha1-KVA257SHttvjsT23Y6NxZ105HuY=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
-"@angular/platform-browser@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/platform-browser/-/platform-browser-11.2.14.tgz#e52ad7a54a42a865033a17e57e213013919f1b1d"
-  integrity sha1-5SrXpUpCqGUDOhflfiEwE5GfGx0=
+"@angular/platform-browser@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/platform-browser/-/platform-browser-12.0.0.tgz#097805ad9a5db044dc0a74c1294cdfa5122eca4c"
+  integrity sha1-CXgFrZpdsETcCnTBKUzfpRIuykw=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
-"@angular/router@~11.2.14":
-  version "11.2.14"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/router/-/router-11.2.14.tgz#4a8eb6d010a1a45c8e7f0c3b5b705959bdb69294"
-  integrity sha1-So620BChpFyOfww7W3BZWb22kpQ=
+"@angular/router@~12.0.0":
+  version "12.0.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/@angular/router/-/router-12.0.0.tgz#646a6492dfd35459c50a11c7d21a2200631f4c5c"
+  integrity sha1-ZGpkkt/TVFnFChHH0hoiAGMfTFw=
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.10.4"
@@ -4819,10 +4818,10 @@ depd@~2.0.0:
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/depd/-/depd-2.0.0.tgz#b696163cc757560d09cf22cc8fad1571b79e76df"
   integrity sha1-tpYWPMdXVg0JzyLMj60Vcbeedt8=
 
-dependency-graph@^0.7.2:
-  version "0.7.2"
-  resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/dependency-graph/-/dependency-graph-0.7.2.tgz#91db9de6eb72699209d88aea4c1fd5221cac1c49"
-  integrity sha1-kdud5utyaZIJ2IrqTB/VIhysHEk=
+dependency-graph@^0.11.0:
+  version "0.11.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/dependency-graph/-/dependency-graph-0.11.0.tgz#ac0ce7ed68a54da22165a85e97a01d53f5eb2e27"
+  integrity sha1-rAzn7WilTaIhZahel6AdU/XrLic=
 
 des.js@^1.0.0:
   version "1.0.1"
@@ -5766,15 +5765,6 @@ from@~0:
   version "0.1.7"
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/from/-/from-0.1.7.tgz#83c60afc58b9c56997007ed1a768b3ab303a44fe"
   integrity sha1-g8YK/Fi5xWmXAH7Rp2izqzA6RP4=
-
-fs-extra@4.0.2:
-  version "4.0.2"
-  resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/fs-extra/-/fs-extra-4.0.2.tgz#f91704c53d1b461f893452b0c307d9997647ab6b"
-  integrity sha1-+RcExT0bRh+JNFKwwwfZmXZHq2s=
-  dependencies:
-    graceful-fs "^4.1.2"
-    jsonfile "^4.0.0"
-    universalify "^0.1.0"
 
 fs-extra@9.0.1:
   version "9.0.1"
@@ -11948,6 +11938,11 @@ tslib@^1.10.0, tslib@^1.7.1, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha1-yIHhPMcBWJTtkUhi0nZDb6mkcEM=
 
+tslib@^2.1.0:
+  version "2.2.0"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
+  integrity sha1-+yxHWXfjXiQTEe3iaTzuHsZpj1w=
+
 tslint-config-prettier@^1.18.0:
   version "1.18.0"
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/tslint-config-prettier/-/tslint-config-prettier-1.18.0.tgz#75f140bde947d35d8f0d238e0ebf809d64592c37"
@@ -12094,10 +12089,10 @@ typescript@^2.4.2:
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
   integrity sha1-HL9h0F1rliaSROtqO85L2RTg8Aw=
 
-typescript@~4.0.7:
-  version "4.0.7"
-  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/typescript/-/typescript-4.0.7.tgz#7168032c43d2a2671c95c07812f69523c79590af"
-  integrity sha1-cWgDLEPSomcclcB4EvaVI8eVkK8=
+typescript@~4.2.4:
+  version "4.2.4"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
+  integrity sha1-hhC1l0feAo/aiYqK7w4QPxVtCWE=
 
 uglify-js@^2.6.1:
   version "2.8.29"
@@ -12903,7 +12898,14 @@ yocto-queue@^0.1.0:
   resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha1-ApTrPe4FAo0x7hpfosVWpqrxChs=
 
-zone.js@~0.10.2, zone.js@~0.10.3:
+zone.js@~0.10.3:
   version "0.10.3"
   resolved "https://repo1.uhc.com/artifactory/api/npm/npm-virtual/zone.js/-/zone.js-0.10.3.tgz#3e5e4da03c607c9dcd92e37dd35687a14a140c16"
   integrity sha1-Pl5NoDxgfJ3NkuN901aHoUoUDBY=
+
+zone.js@~0.11.4:
+  version "0.11.4"
+  resolved "https://repo1.uhc.com:443/artifactory/api/npm/npm-virtual/zone.js/-/zone.js-0.11.4.tgz#0f70dcf6aba80f698af5735cbb257969396e8025"
+  integrity sha1-D3Dc9quoD2mK9XNcuyV5aTlugCU=
+  dependencies:
+    tslib "^2.0.0"

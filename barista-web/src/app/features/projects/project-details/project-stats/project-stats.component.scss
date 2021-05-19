@@ -1,5 +1,5 @@
-@use '~@angular/material' as mat;
 @import 'variables';
+@import '~@angular/material/theming';
 $page-padding: 30px;
 $column-margin: 15px;
 
@@ -15,7 +15,7 @@ $column-margin: 15px;
   flex: 1 0 auto;
   width: 100%;
   height: vh;
-  @include mat.elevation(2);
+  @include mat-elevation(2);
 }
 
 // Page:

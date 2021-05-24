@@ -422,7 +422,7 @@ export class DefaultScanWorkerService {
           scan.startedAt = new Date();
           await scan.save();
           try {
-            this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions);
+            await this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions);
             if (
               scan.project.customPackageManagerPath &&
               scan.project.packageManager.code != PackageManagerEnum.GO.toString()

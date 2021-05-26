@@ -14,7 +14,7 @@ export class NpmService extends DepClientBaseService {
   packageManagerCode = PackageManagerEnum.NPM;
 
   async command(workingDir: string, options?: any): Promise<string> {
-    let command = 'NODE_ENV=production; yarn install --loglevel verbose ';
+    let command = 'NODE_ENV=production; yarn config set "strict-ssl" false; yarn install --loglevel verbose ';
     const config = await SystemConfiguration.defaultConfiguration();
 
     const homeNpmrc = path.join(process.env.HOME, '.npmrc');

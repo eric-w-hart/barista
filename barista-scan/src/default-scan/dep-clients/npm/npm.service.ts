@@ -14,7 +14,7 @@ export class NpmService extends DepClientBaseService {
   packageManagerCode = PackageManagerEnum.NPM;
 
   async command(workingDir: string, options?: any): Promise<string> {
-    let command = `NODE_ENV=production; yarn import; rm ./package-lock.json; sed -i '' 's,https://registry.yarnpkg.com,https://repo1.uhc.com/artifactory/api/npm/npm-virtual,g' yarn.lock;`;
+    let command = `NODE_ENV=production; yarn import; rm ./package-lock.json; sed -i 's,https://registry.yarnpkg.com,https://repo1.uhc.com/artifactory/api/npm/npm-virtual,g' ./yarn.lock;`;
     const config = await SystemConfiguration.defaultConfiguration();
 
     const homeNpmrc = path.join(process.env.HOME, '.npmrc');

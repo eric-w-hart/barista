@@ -10,11 +10,12 @@ export class NpmService extends DepClientBaseService {
   constructor() {
     super();
   }
-  logger = new Logger('GolangService');
+  logger = new Logger('NPMService');
   packageManagerCode = PackageManagerEnum.NPM;
 
   async command(workingDir: string, options?: any): Promise<string> {
-    let command = 'NODE_ENV=production; yarn install --loglevel verbose --no-lockfile';
+    let command =
+      "NODE_ENV=production; yarn import; rm ./package-lock.json; sed -i '' 's,https://registry.yarnpkg.com,https://repo1.uhc.com/artifactory/api/npm/npm-virtual,g' yarn.lock; yarn install";
     const config = await SystemConfiguration.defaultConfiguration();
 
     const homeNpmrc = path.join(process.env.HOME, '.npmrc');

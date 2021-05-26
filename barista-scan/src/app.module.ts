@@ -13,7 +13,6 @@ import { join } from 'path';
     TypeOrmModule.forRoot(),
     BullModule.forRoot({
       redis: {
-        enableReadyCheck: true,
         host: process.env.REDIS_HOST || 'localhost',
         port: Number(process.env.REDIS_PORT) || 6379,
       },

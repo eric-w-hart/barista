@@ -14,9 +14,17 @@ export class NpmService extends DepClientBaseService {
   packageManagerCode = PackageManagerEnum.NPM;
 
   async command(workingDir: string, options?: any): Promise<string> {
-    let command = `NODE_ENV=production; yarn import; rm ./package-lock.json; yarn install `;
     const config = await SystemConfiguration.defaultConfiguration();
 
+    let command = `NODE_ENV=production `;
+
+    const packageLock = path.join(workingDir, 'package-lock.json');
+    if (fs.existsSync(packageLock)) {
+      command = `${command} && yarn import && rm ./package-lock.json `;
+    }
+    // if (config.npmRegistry) {
+    //   command = `${command} && sed 's,https://registry.yarnpkg.com,${config.npmRegistry},g' ./yarn.lock `;
+    // }
     const homeNpmrc = path.join(process.env.HOME, '.npmrc');
     if (fs.existsSync(homeNpmrc)) {
       this.logger.debug(
@@ -26,10 +34,10 @@ export class NpmService extends DepClientBaseService {
       // If we don't have an .npmrc in our home directory
       // And if a registry has been configured, then let's set it here...
       if (config.npmRegistry) {
-        command = `npm config set registry ${config.npmRegistry} && sed -i 's,https://registry.yarnpkg.com,${config.npmRegistry},g' ./yarn.lock && ${command}`;
+        command = `npm config set registry ${config.npmRegistry} && ${command}`;
       }
     }
-
+    command = `${command} && yarn install --ignore-scripts`;
     // If we are running on a real server (not development)
     // and a cache from the system config directory exists
     // then let's use it for the NPM cache.
@@ -39,7 +47,7 @@ export class NpmService extends DepClientBaseService {
       if (!fs.existsSync(cacheSubDirectory)) {
         fs.mkdirSync(cacheSubDirectory);
       }
-      command = `${command} --cache ${config.npmCacheDirectory} --ignore-scripts`;
+      command = `${command} --cache ${config.npmCacheDirectory} `;
     }
 
     return command;

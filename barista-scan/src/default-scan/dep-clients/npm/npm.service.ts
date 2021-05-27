@@ -14,7 +14,7 @@ export class NpmService extends DepClientBaseService {
   packageManagerCode = PackageManagerEnum.NPM;
 
   async command(workingDir: string, options?: any): Promise<string> {
-    let command = `NODE_ENV=production; yarn import; rm ./package-lock.json; sed -i 's,https://registry.yarnpkg.com,https://repo1.uhc.com/artifactory/api/npm/npm-virtual,g' ./yarn.lock; yarn install `;
+    let command = `NODE_ENV=production; yarn import; rm ./package-lock.json; yarn install `;
     const config = await SystemConfiguration.defaultConfiguration();
 
     const homeNpmrc = path.join(process.env.HOME, '.npmrc');
@@ -26,7 +26,7 @@ export class NpmService extends DepClientBaseService {
       // If we don't have an .npmrc in our home directory
       // And if a registry has been configured, then let's set it here...
       if (config.npmRegistry) {
-        command = `npm config set registry ${config.npmRegistry} && ${command}`;
+        command = `npm config set registry ${config.npmRegistry} && sed -i 's,https://registry.yarnpkg.com,${config.npmRegistry},g' ./yarn.lock && ${command}`;
       }
     }
 

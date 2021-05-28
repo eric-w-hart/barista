@@ -23,7 +23,7 @@ export class NpmService extends DepClientBaseService {
       command = `${command} && yarn import && rm ./package-lock.json `;
     }
     if (config.npmRegistry) {
-      command = `${command} && sed -i 's,https://registry.yarnpkg.com,${config.npmRegistry},g' ./yarn.lock `;
+      command = `${command} && perl -pi -e 's,https://registry.yarnpkg.com,${config.npmRegistry},g' ./yarn.lock `;
     }
     const homeNpmrc = path.join(process.env.HOME, '.npmrc');
     if (fs.existsSync(homeNpmrc)) {

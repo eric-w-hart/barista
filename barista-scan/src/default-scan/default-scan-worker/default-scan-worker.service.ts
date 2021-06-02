@@ -344,6 +344,7 @@ export class DefaultScanWorkerService {
 
           try {
             const licenseAttribtions = await this.scanService.distinctLicenseAttributions(scan.id);
+            this.logger.log('After distinctLicenseAttributions');
 
             const projectAttribution = new ProjectAttribution();
             projectAttribution.attribution = '';
@@ -372,8 +373,10 @@ export class DefaultScanWorkerService {
                 '-------------------------------------------------------------------------------------------------------------------------------';
               projectAttribution.attribution += '\n\n';
             });
-
+            this.logger.log('Before insertAttribution');
             await this.projectAttributionService.insertAttribution(projectAttribution);
+            this.logger.log('After insertAttribution');
+            this.logger.log(`${process.env.NODE_ENV}`);
           } catch (error) {
             this.logger.error(error);
           }

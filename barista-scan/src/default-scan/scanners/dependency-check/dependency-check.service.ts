@@ -47,6 +47,8 @@ export class DependencyCheckService extends ScannerBaseService {
     --dbDriverName org.postgresql.Driver  \
     --dbPassword $DB_PASSWORD \
     --dbUser $DB_USER`;
+    } else {
+      return '';
     }
   }
 
@@ -196,7 +198,7 @@ export class DependencyCheckService extends ScannerBaseService {
 
         const securityScanResult = await this.securityScanResultService.insertResult(rawScanResult, scan);
 
-        await this.postProcess(securityScanResult, jobInfo).catch(error => {
+        await this.postProcess(securityScanResult, jobInfo).catch((error) => {
           this.logger.error(error, null, 'postProcess');
         });
 

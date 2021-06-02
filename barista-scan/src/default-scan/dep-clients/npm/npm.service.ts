@@ -37,7 +37,7 @@ export class NpmService extends DepClientBaseService {
         command = `npm config set registry ${config.npmRegistry} && ${command}`;
       }
     }
-    command = `${command} && yarn install --ignore-scripts`;
+    command = `${command} && yarn install --ignore-scripts --production=true`;
     // If we are running on a real server (not development)
     // and a cache from the system config directory exists
     // then let's use it for the NPM cache.

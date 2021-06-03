@@ -55,7 +55,7 @@ export class DependencyCheckService extends ScannerBaseService {
   public async command(jobInfo: DefaultScanWorkerJobInfo) {
     let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh \
     --project ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
-    --format ALL --scan ${jobInfo.tmpDir}`;
+    --format ALL --scan ${jobInfo.tmpDir} --nodeAuditSkipDevDependencies`;
 
     command = `${command} ${await this.check_db()} `;
 

@@ -2,11 +2,11 @@ import { ProjectAttribution } from '@app/models';
 import { ProjectAttributionService } from '@app/services/project-attribution/project-attribution.service';
 import { Body, Controller, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequest, CrudRequestInterceptor, ParsedRequest } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   model: {
     type: ProjectAttribution,
@@ -30,7 +30,7 @@ import { Crud, CrudController, CrudRequest, CrudRequestInterceptor, ParsedReques
     exclude: ['createOneBase'],
   },
 })
-@ApiUseTags('ProjectNotes')
+@ApiTags('ProjectNotes')
 @Controller('project-notes')
 export class ProjectAttributionController implements CrudController<ProjectAttribution> {
   constructor(public service: ProjectAttributionService) {}

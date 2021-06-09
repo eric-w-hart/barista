@@ -1,39 +1,39 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index } from 'typeorm';
 import { ModelBase } from './ModelBase';
 
 @Entity()
 @Index(['indentifier'])
 export class ClearlyDefined extends ModelBase {
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   copyrights: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column()
   indentifier: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   license: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   licensetext: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   name: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   uuid: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   version: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   website: string;
 }

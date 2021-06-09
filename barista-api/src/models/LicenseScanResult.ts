@@ -1,4 +1,4 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { LicenseScanResultItem } from './LicenseScanResultItem';
 import { ModelBase } from './ModelBase';
@@ -6,7 +6,7 @@ import { Scan } from './Scan';
 
 @Entity()
 export class LicenseScanResult extends ModelBase {
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'completed_at', nullable: true })
   completedAt: Date;
 
@@ -16,17 +16,17 @@ export class LicenseScanResult extends ModelBase {
   @OneToMany(type => LicenseScanResultItem, resultItem => resultItem.licenseScan)
   licenseScanResultItems: LicenseScanResultItem[];
 
-  @ApiModelProperty({ type: type => Scan })
+  @ApiProperty({ type: type => Scan })
   @ManyToOne(type => Scan, result => result.licenseScanResults, {
     onDelete: 'CASCADE',
   })
   scan: Scan;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'scan_tool' })
   scanTool: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'started_at', nullable: true })
   startedAt: Date;
 }

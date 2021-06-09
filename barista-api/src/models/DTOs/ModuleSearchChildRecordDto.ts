@@ -1,12 +1,12 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ModuleSearchChildRecordDto {
-  @ApiModelProperty()
+  @ApiProperty()
   entityCreationDate: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   entityName: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   projectId: number;
 }

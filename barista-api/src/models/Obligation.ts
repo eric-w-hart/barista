@@ -1,19 +1,19 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { License } from './License';
 import { ModelBase } from './ModelBase';
 
 @Entity()
 export class Obligation extends ModelBase {
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ unique: true })
   code: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column()
   desc: string;
 
-  @ApiModelProperty({ type: type => License, isArray: true })
+  @ApiProperty({ type: type => License, isArray: true })
   @ManyToMany(type => License, license => license.obligations, {
     nullable: true,
   })
@@ -30,7 +30,7 @@ export class Obligation extends ModelBase {
   })
   licenses: License[];
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column()
   name: string;
 }

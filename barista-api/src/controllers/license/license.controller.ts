@@ -4,11 +4,11 @@ import { License } from '@app/models/License';
 import { LicenseService } from '@app/services/license/license.service';
 import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } from '@nestjsx/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   model: {
     type: License,
@@ -22,7 +22,7 @@ import { Crud, CrudController, CrudRequestInterceptor, GetManyDefaultResponse } 
     ],
   },
 })
-@ApiUseTags('License')
+@ApiTags('License')
 @Controller('license')
 export class LicenseController implements CrudController<License> {
   constructor(public service: LicenseService) {}

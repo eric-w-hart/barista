@@ -1,6 +1,6 @@
 import { ProjectAttribution } from './ProjectAttribution';
 import { ProjectScanStatusType } from './ProjectScanStatusType';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BomLicenseException } from './BomLicenseException';
 import { BomManualLicense } from './BomManualLicense';
@@ -16,33 +16,33 @@ import { Scan } from './Scan';
 
 @Entity()
 export class Project extends ModelBase {
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '' })
   askID: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '' })
   configuration: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '', nullable: true })
   currentVersion: string;
 
   /**
    * A custom name for the package manager file, if any.
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'custom_package_manager_filename', nullable: true })
   customPackageManagerFilename: string;
 
   /**
    * This is the location of the corresponding package specification relative to the project's root in source control.
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'custom_package_manager_path', nullable: true })
   customPackageManagerPath: string;
 
-  @ApiModelProperty({ type: type => DeploymentType })
+  @ApiProperty({ type: type => DeploymentType })
   @JoinColumn({
     name: 'deployment_type_code',
     referencedColumnName: 'code',
@@ -54,11 +54,11 @@ export class Project extends ModelBase {
   })
   deploymentType: DeploymentType;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '' })
   description: string;
 
-  @ApiModelProperty({ type: type => ProjectDevelopmentType })
+  @ApiProperty({ type: type => ProjectDevelopmentType })
   @JoinColumn({
     name: 'development_type_code',
     referencedColumnName: 'code',
@@ -70,44 +70,44 @@ export class Project extends ModelBase {
   })
   developmentType: ProjectDevelopmentType;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'git_url', nullable: true })
   gitUrl: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true, default: false })
   globalLicenseException: boolean;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true, default: false })
   globalSecurityException: boolean;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'jsonb', nullable: true })
   importMetaData: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   latestLicenseStatus: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   latestSecurityStatus: string;
 
-  @ApiModelProperty({ type: type => BomLicenseException, isArray: true })
+  @ApiProperty({ type: type => BomLicenseException, isArray: true })
   @OneToMany(type => BomLicenseException, item => item.project)
   licenseExceptions: BomLicenseException[];
 
-  @ApiModelProperty({ type: type => BomManualLicense, isArray: true })
+  @ApiProperty({ type: type => BomManualLicense, isArray: true })
   @OneToMany(type => BomManualLicense, item => item.project)
   manualLicenses: BomManualLicense[];
-  @ApiModelProperty()
+  @ApiProperty()
   @Column()
   name: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '', nullable: true })
   outputEmail: string;
 
-  @ApiModelProperty({ type: type => OutputFormatType })
+  @ApiProperty({ type: type => OutputFormatType })
   @JoinColumn({
     name: 'output_format_code',
     referencedColumnName: 'code',
@@ -120,11 +120,11 @@ export class Project extends ModelBase {
   })
   outputFormat: OutputFormatType;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '', nullable: true })
   owner: string;
 
-  @ApiModelProperty({ type: type => PackageManager })
+  @ApiProperty({ type: type => PackageManager })
   @JoinColumn({
     name: 'package_manager_code',
     referencedColumnName: 'code',
@@ -137,19 +137,19 @@ export class Project extends ModelBase {
   })
   packageManager: PackageManager;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '', nullable: true })
   pathToUploadFileForScanning: string;
 
-  @ApiModelProperty({ type: type => ProjectAttribution, isArray: true })
+  @ApiProperty({ type: type => ProjectAttribution, isArray: true })
   @OneToMany(type => ProjectAttribution, projectAttribution => projectAttribution.project)
   projectAttributions: ProjectAttribution[];
 
-  @ApiModelProperty({ type: type => ProjectNote, isArray: true })
+  @ApiProperty({ type: type => ProjectNote, isArray: true })
   @OneToMany(type => ProjectNote, projectNote => projectNote.project)
   projectNotes: ProjectNote[];
 
-  @ApiModelProperty({ type: type => ProjectStatusType })
+  @ApiProperty({ type: type => ProjectStatusType })
   @JoinColumn({
     name: 'project_status_code',
     referencedColumnName: 'code',
@@ -162,20 +162,20 @@ export class Project extends ModelBase {
   })
   projectStatus: ProjectStatusType;
 
-  @ApiModelProperty({ type: type => Scan, isArray: true })
+  @ApiProperty({ type: type => Scan, isArray: true })
   @OneToMany(type => Scan, scan => scan.project)
   scans: Scan[];
 
-  @ApiModelProperty({ type: type => BomSecurityException, isArray: true })
+  @ApiProperty({ type: type => BomSecurityException, isArray: true })
   @OneToMany(type => BomSecurityException, item => item.project)
   securityExceptions: BomSecurityException[];
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '', nullable: false, width: 64 })
   @Index('project_user_idx1')
   userId: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true })
   wasImported: boolean;
 }

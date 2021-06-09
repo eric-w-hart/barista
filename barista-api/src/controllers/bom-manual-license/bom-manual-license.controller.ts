@@ -6,7 +6,7 @@ import { ProjectService } from '@app/services/project/project.service';
 import { Body, Controller, Get, Post, Query, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -20,7 +20,7 @@ import * as pit from 'p-iteration';
 
 // tslint:disable:object-literal-key-quotes
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   model: {
     type: BomManualLicense,
@@ -52,7 +52,7 @@ import * as pit from 'p-iteration';
 })
 // tslint:enable:object-literal-key-quotes
 
-@ApiUseTags('BomManualLicense')
+@ApiTags('BomManualLicense')
 @Controller('bom-manual-license')
 export class BomManualLicenseController implements CrudController<BomManualLicense> {
   constructor(
@@ -89,7 +89,7 @@ export class BomManualLicenseController implements CrudController<BomManualLicen
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @ApiOAuth2Auth()
+  @ApiBearerAuth()
   @Get()
   @UseInterceptors(CrudRequestInterceptor)
   @ApiResponse({ status: 200, type: BomManualLicense, isArray: true })

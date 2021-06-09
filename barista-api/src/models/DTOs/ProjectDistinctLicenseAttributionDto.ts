@@ -1,22 +1,22 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { ClearlyDefined } from '../ClearlyDefined';
 
 export class ProjectDistinctLicenseAttributionDto {
-  @ApiModelProperty()
+  @ApiProperty()
   clearDefined: ClearlyDefined;
 
-  @ApiModelProperty()
+  @ApiProperty()
   license: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   licenselink: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   packageName: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   publisherName: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   publisherUrl: any;
 }

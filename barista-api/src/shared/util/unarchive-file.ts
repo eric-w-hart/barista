@@ -1,5 +1,4 @@
 import { Logger } from '@nestjs/common';
-import unpacker = require('all-unpacker');
 
 export async function unarchiveFile(filePath: string, targetDir: string = null, options: any = { noDirectory: true }) {
   if (targetDir) {
@@ -7,16 +6,17 @@ export async function unarchiveFile(filePath: string, targetDir: string = null, 
   }
 
   const logger = new Logger('unarchiveFile');
+  const decompress = require('decompress');
 
   try {
     return new Promise((resolve, reject) => {
-      unpacker.unpack(filePath, options, (err, files, text) => {
-        if (err) {
+      decompress(filePath, targetDir)
+        .then(files => {
+          resolve({ files });
+        })
+        .catch(err => {
           reject(err);
-        } else {
-          resolve({ files, text });
-        }
-      });
+        });
     });
   } catch (error) {
     const message = `unarchiveFile(${filePath}) error: ${error}`;

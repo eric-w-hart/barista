@@ -25,16 +25,16 @@ export class NpmService extends DepClientBaseService {
     if (config.npmRegistry) {
       command = `${command} && perl -pi -e 's,https://registry.yarnpkg.com,${config.npmRegistry},g' ./yarn.lock `;
     }
-    const homeNpmrc = path.join(process.env.HOME, '.npmrc');
-    if (fs.existsSync(homeNpmrc)) {
+    const homeYarnrc = path.join(process.env.HOME, '.yarnc');
+    if (fs.existsSync(homeYarnrc)) {
       this.logger.debug(
-        `.npmrc found at ${homeNpmrc}, ignoring the configuration value at SystemConfiguration.defaultConfiguration().npmRegistry`,
+        `.yarnrc found at ${homeYarnrc}, ignoring the configuration value at SystemConfiguration.defaultConfiguration().NpmRegistry`,
       );
     } else {
-      // If we don't have an .npmrc in our home directory
+      // If we don't have an .yarnrc in our home directory
       // And if a registry has been configured, then let's set it here...
       if (config.npmRegistry) {
-        command = `npm config set registry ${config.npmRegistry} && ${command}`;
+        command = `yarn config set registry ${config.npmRegistry} && ${command}`;
       }
     }
     command = `${command} && yarn install --ignore-scripts --production=true`;

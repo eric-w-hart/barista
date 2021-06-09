@@ -93,7 +93,6 @@
     "module-alias": "^2.2.2",
     "nestjs-config": "^1.4.7",
     "nestjs-typeorm-paginate": "^2.4.0",
-    "node-unar": "^1.0.6",
     "nodemailer": "^6.6.0",
     "p-iteration": "^1.1.8",
     "passport": "^0.4.1",

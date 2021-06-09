@@ -86,9 +86,7 @@ export class ScanController implements CrudController<Scan> {
     const scan = await this.service.db.save({ project, deploymentType: project.deploymentType, tag: branch });
 
     // Add it to the queue
-    this.logger.debug('scanid = ' + scan.id);
     const jobInfo = await this.queue.add('default-scan', { scanId: scan.id }, { attempts: 1 });
-    this.logger.debug('jobinfo' + jobInfo)
 
     await this.service.db.update(
       {

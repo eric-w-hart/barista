@@ -287,7 +287,7 @@ export class ProjectService extends AppServiceBase<Project> {
     }
 
     const log = new Logger('getProjectsMany');
-    log.error('before ' + builder.getSql());
+
     const projects = await builder.getMany();
 
     if (
@@ -298,7 +298,6 @@ export class ProjectService extends AppServiceBase<Project> {
     ) {
       return projects;
     }
-    log.error('before latestStatus');
     const projectArray = projects.map((project) => project.id);
     const query = ` select
                       p.id,
@@ -386,8 +385,6 @@ export class ProjectService extends AppServiceBase<Project> {
 
     const latestStatus = await this.rawQuery<any>(query, { projectIds: projectArray });
 
-    log.error('after latestStatus');
-
     const licenseExceptionQuery = ` select
                                       "projectId" as id,
                                       max(psst.sort_order) as maxSecurity,
@@ -408,7 +405,7 @@ export class ProjectService extends AppServiceBase<Project> {
                                       "projectId"`;
 
     const licenseExceptions = await this.rawQuery<any>(licenseExceptionQuery, { projectIds: projectArray });
-    log.error('after licenseExceptions');
+
     const licenseManualQuery = `select
                                   bml."projectId" as id ,
                                   max(psst.sort_order) as maxSecurity,
@@ -436,7 +433,7 @@ export class ProjectService extends AppServiceBase<Project> {
                                   "projectId"`;
 
     const licenseManual = await this.rawQuery<any>(licenseManualQuery, { projectIds: projectArray });
-    log.error('after licenseManual');
+
     projects.map(function (project) {
       var latest = latestStatus.find((stat) => stat.id === project.id && !stat.latestlicensestatus);
       if (!parsed.fields.length || parsed.fields.includes('latestSecurityStatus')) {

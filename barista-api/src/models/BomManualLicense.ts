@@ -1,5 +1,5 @@
 import { ProjectScanStatusType } from '@app/models/ProjectScanStatusType';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BomItemBase } from './BomItemBase';
 import { License } from './License';
@@ -10,7 +10,7 @@ export class BomManualLicense extends BomItemBase {
   /**
    * Is this the default license for the project?
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'is_default', nullable: false, default: false })
   isDefault: boolean;
   /**
@@ -21,24 +21,24 @@ export class BomManualLicense extends BomItemBase {
     nullable: false,
     onDelete: 'NO ACTION',
   })
-  @ApiModelProperty({ type: type => License })
+  @ApiProperty({ type: type => License })
   license: License;
 
   /**
    * The name of the product associated with the license
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'product_name', nullable: false })
   productName: string;
 
   /**
    * The canonical version of the product associated with the license
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'product_version', nullable: false })
   productVersion: string;
 
-  @ApiModelProperty({ type: type => Project })
+  @ApiProperty({ type: type => Project })
   @ManyToOne(type => Project, project => project.manualLicenses, {
     eager: true,
 
@@ -49,13 +49,13 @@ export class BomManualLicense extends BomItemBase {
   /**
    * The ProjectScanStatusType (Not tracked in the DB, for API responses only)
    */
-  @ApiModelProperty({ type: type => ProjectScanStatusType })
+  @ApiProperty({ type: type => ProjectScanStatusType })
   projectScanStatus: ProjectScanStatusType;
 
   /**
    * The referenceUrl for more information
    */
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ name: 'reference_url', nullable: true })
   referenceUrl: string;
 }

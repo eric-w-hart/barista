@@ -16,7 +16,7 @@ export abstract class ScannerBaseService implements Scanner {
   protected startedAt: Date;
   protected toolsDir = ScannerBaseService.toolsDir;
 
-  abstract async command(jobInfo: DefaultScanWorkerJobInfo);
+  abstract command(jobInfo: DefaultScanWorkerJobInfo);
 
   public async execute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
     this.startedAt = new Date();

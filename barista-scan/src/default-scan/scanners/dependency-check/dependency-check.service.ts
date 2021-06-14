@@ -47,13 +47,15 @@ export class DependencyCheckService extends ScannerBaseService {
     --dbDriverName org.postgresql.Driver  \
     --dbPassword $DB_PASSWORD \
     --dbUser $DB_USER`;
+    } else {
+      return '';
     }
   }
 
   public async command(jobInfo: DefaultScanWorkerJobInfo) {
     let command = `${this.toolsDir}/dependency-check/bin/dependency-check.sh \
     --project ${jobInfo.projectName} --out ${jobInfo.dataDir}/dependency-check/ \
-    --format ALL --scan ${jobInfo.tmpDir}`;
+    --format ALL --scan ${jobInfo.tmpDir} --nodeAuditSkipDevDependencies`;
 
     command = `${command} ${await this.check_db()} `;
 
@@ -196,7 +198,7 @@ export class DependencyCheckService extends ScannerBaseService {
 
         const securityScanResult = await this.securityScanResultService.insertResult(rawScanResult, scan);
 
-        await this.postProcess(securityScanResult, jobInfo).catch(error => {
+        await this.postProcess(securityScanResult, jobInfo).catch((error) => {
           this.logger.error(error, null, 'postProcess');
         });
 

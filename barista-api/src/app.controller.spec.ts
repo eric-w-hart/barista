@@ -5,7 +5,7 @@ import { License } from '@app/models';
 import { LicenseService } from '@app/services/license/license.service';
 import { mockRepository } from '@app/shared/util/test/Repository.mock';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BullModule, getQueueToken } from 'nest-bull';
+import { BullModule, getQueueToken } from '@nestjs/bull';
 import { AppController } from './app.controller';
 
 describe('AppController', () => {

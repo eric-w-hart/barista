@@ -1,12 +1,12 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ObligationSearchDto {
-  @ApiModelProperty()
+  @ApiProperty()
   code: string;
-  @ApiModelProperty()
+  @ApiProperty()
   desc: string;
-  @ApiModelProperty()
+  @ApiProperty()
   id: number;
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
 }

@@ -5,7 +5,7 @@ import { shellExecute } from '@app/shared/util/shell-execute';
 export abstract class DepClientBaseService implements DepClient {
   abstract packageManagerCode;
 
-  protected abstract async command(workingDir: string, options?: any): Promise<string>;
+  protected abstract command(workingDir: string, options?: any): Promise<string>;
 
   async fetchDependencies(workingDir: string, options: any, logDir: string): Promise<void> {
     return shellExecute(

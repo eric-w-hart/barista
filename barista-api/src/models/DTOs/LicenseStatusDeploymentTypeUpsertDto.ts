@@ -1,15 +1,15 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LicenseStatusDeploymentTypeUpsertDto {
-  @ApiModelProperty()
+  @ApiProperty()
   deploymentTypeCode: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   licenseCode: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   licenseFilter: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   scanStatusCode: string;
 }

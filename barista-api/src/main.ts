@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CrudConfigService } from '@nestjsx/crud';
 import Arena from 'bull-arena';
+import Bull from 'bull';
 import * as dotenv from 'dotenv';
 import 'module-alias/register';
 import 'reflect-metadata';
@@ -35,10 +36,9 @@ async function bootstrap() {
     .setTitle('Barista API')
     .setDescription('REST API documentation for the Barista system')
     .setVersion('1.0')
-    .addBearerAuth('Authorization', 'header')
-    .addOAuth2('accessCode')
+    .addBearerAuth()
+    .addOAuth2()
     .setBasePath('api/v1')
-    .setSchemes('https', 'http')
     .addTag('Attribution', 'Methods')
     .addTag('BomLicenseException', 'Methods')
     .addTag('BomManualLicense', 'Methods')
@@ -71,13 +71,13 @@ async function bootstrap() {
 
   const arena = Arena(
     {
+      Bull,
       queues: [
         {
           name: 'scan-queue',
           hostId: 'barista-queue',
           host: process.env.REDIS_HOST || 'localhost',
           port: Number(process.env.REDIS_PORT) || 6379,
-          prefix: '{barista}:',
         },
       ],
     },

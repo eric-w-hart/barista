@@ -1,32 +1,32 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export class OptionValueModelBase extends BaseEntity {
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: false, unique: true, length: 64, primary: true })
   code: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @CreateDateColumn({ name: 'created_at', nullable: false })
   createdAt: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'text', default: '' })
   description: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: false, name: 'is_default', default: false })
   isDefault: boolean;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ type: 'jsonb', nullable: true })
   metaData: any;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Column({ nullable: true, name: 'sort_order', default: 0 })
   sortOrder: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @UpdateDateColumn({ name: 'updated_at', nullable: true })
   updatedAt: Date;
 }

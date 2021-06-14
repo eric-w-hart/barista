@@ -23,7 +23,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from 'bull';
 import * as _ from 'lodash';
-import { InjectQueue } from 'nest-bull';
+import { InjectQueue } from '@nestjs/bull';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()

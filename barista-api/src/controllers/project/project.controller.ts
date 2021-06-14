@@ -29,7 +29,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiImplicitQuery, ApiOAuth2Auth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -45,7 +45,7 @@ import { Response } from 'express';
 import { Swagger } from '@nestjsx/crud/lib/crud';
 
 @UseGuards(AuthGuard('jwt'))
-@ApiOAuth2Auth()
+@ApiBearerAuth()
 @Crud({
   query: {
     join: {
@@ -88,7 +88,7 @@ import { Swagger } from '@nestjsx/crud/lib/crud';
     type: Project,
   },
 })
-@ApiUseTags('Project')
+@ApiTags('Project')
 @Controller('project')
 export class ProjectController implements CrudController<Project> {
   constructor(
@@ -234,7 +234,7 @@ export class ProjectController implements CrudController<Project> {
   @Get('/projects-with-statuses')
   @UseInterceptors(CrudRequestInterceptor)
   @ApiResponse({ status: 200, type: Project, isArray: true })
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'applyUserFilter',
     required: false,
     type: String, // Boolean doesn't work....always becomes a string...WTF?
@@ -289,7 +289,7 @@ export class ProjectController implements CrudController<Project> {
       const branches = this.git.listRemote(gitOptions);
       const array = (await branches).substring(1, (await branches).length - 1).split('\n');
       const branchesAndTags = [];
-      array.forEach(element => {
+      array.forEach((element) => {
         const branch = element.indexOf('refs/heads/');
         const branchName = element.substring(branch + 11);
         const scanBranchDto = new ScanBranchDto();
@@ -349,10 +349,7 @@ export class ProjectController implements CrudController<Project> {
     const project = await this.service.db.findOne(Number(id));
     if (project) {
       const attribution = await this.service.getprojectAttribution(project);
-      return res
-        .status(200)
-        .send(attribution.licenseText)
-        .end();
+      return res.status(200).send(attribution.licenseText).end();
     }
   }
 

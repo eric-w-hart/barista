@@ -19,7 +19,7 @@ import {
   UseInterceptors,
   Logger,
 } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Swagger } from '@nestjsx/crud/lib/crud';
 
@@ -44,7 +44,7 @@ import { makeBadge, ValidationError } from 'badge-maker';
     only: ['getManyBase'],
   },
 })
-@ApiUseTags('Stats')
+@ApiTags('Stats')
 @Controller('stats')
 export class StatsController implements CrudController<Project> {
   constructor(public service: ProjectService, private licenseScanResultItemService: LicenseScanResultItemService) {}
@@ -199,7 +199,7 @@ export class StatsController implements CrudController<Project> {
 
   // What are the top 10 component licenses in use and how many components are using each license?
   @Get('/components')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,
@@ -228,7 +228,7 @@ export class StatsController implements CrudController<Project> {
 
   // What are the top 10 components in use and how many times is each used across all projects scanned?
   @Get('/components/scans')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,
@@ -257,7 +257,7 @@ export class StatsController implements CrudController<Project> {
 
   // How many new projects are being added each month?
   @Get('/projects')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,
@@ -283,7 +283,7 @@ export class StatsController implements CrudController<Project> {
 
   // How many project scans are being done each month?
   @Get('/projects/scans')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,
@@ -309,7 +309,7 @@ export class StatsController implements CrudController<Project> {
 
   // What are the top 10 critical vulnerabilities discovered across all projects scanned?
   @Get('/vulnerabilities')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,
@@ -343,7 +343,7 @@ export class StatsController implements CrudController<Project> {
   // What is our monthly license compliance index as defined by the formula:
   // total number of not approved licenses detected in scans (i.e. yellow or red status) divided by total number of approved licenses found in scans (i.e. green status)
   @Get('/licensenoncompliance/index')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,
@@ -391,7 +391,7 @@ export class StatsController implements CrudController<Project> {
   // What is our monthly severe vulnerability index as defined by the formula:
   // total number of critical or high vulnerabilities detected in scans divided by total number of packages found in scans
   @Get('/highvulnerability/index')
-  @ApiImplicitQuery({
+  @ApiQuery({
     name: 'filterbyuser',
     required: false,
     type: String,

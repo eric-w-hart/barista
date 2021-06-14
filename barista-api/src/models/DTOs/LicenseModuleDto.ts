@@ -1,21 +1,21 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LicenseModuleDto {
-  @ApiModelProperty()
+  @ApiProperty()
   licenseScanResultItemId: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   modulePath: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   publisherEmail: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   publisherName: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   publisherUrl: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   scanCode: string;
 }

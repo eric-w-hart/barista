@@ -31,15 +31,16 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as path from 'path';
 import { join } from 'path';
-import * as Git from 'simple-git';
+import simpleGit, { SimpleGit } from 'simple-git';
 import * as tmp from 'tmp';
 import * as url from 'url';
+import { Processor, Process } from '@nestjs/bull';
 
 @Injectable()
 export class DefaultScanWorkerService {
   private dataDir = tmp.dirSync({ unsafeCleanup: true });
   private doneCallback: DoneCallback;
-  private git = Git();
+  private git: SimpleGit = simpleGit();
   private job: Job;
   private jobInfo: DefaultScanWorkerJobInfo;
   private logger = new LoggerService('DefaultScanWorkerService');
@@ -153,8 +154,8 @@ export class DefaultScanWorkerService {
 
       if (project.customPackageManagerPath) {
         options.customPackageManagerPath = project.customPackageManagerPath;
-        if (project.packageManager.code != PackageManagerEnum.GO.toString()){
-        workingDirectory = join(jobInfo.tmpDir, project.customPackageManagerPath);
+        if (project.packageManager.code != PackageManagerEnum.GO.toString()) {
+          workingDirectory = join(jobInfo.tmpDir, project.customPackageManagerPath);
         }
       }
 
@@ -163,7 +164,7 @@ export class DefaultScanWorkerService {
       } else if (project.packageManager.code === PackageManagerEnum.NUGET.toString()) {
         // If this is a nuget project, let's look for a solution file in the root of the repo if one does not exist.
         // Let's check for a .sln file since the user did not specify one
-        const slnFiles = fs.readdirSync(workingDirectory).filter(fn => fn.endsWith('.sln'));
+        const slnFiles = fs.readdirSync(workingDirectory).filter((fn) => fn.endsWith('.sln'));
 
         if (slnFiles && slnFiles.length > 0) {
           // If we did find a solution file in the working directory, let's go ahead and take the first one we find
@@ -221,7 +222,6 @@ export class DefaultScanWorkerService {
       });
     }
   }
-
   async scan(job: Job<any>, callback: DoneCallback) {
     return new Promise<void>(async (resolve, reject) => {
       this.jobInfo = {};
@@ -318,7 +318,7 @@ export class DefaultScanWorkerService {
 
           for (const scanner of scanners) {
             scannerPromises.push(
-              new Promise(async scanPromiseResolve => {
+              new Promise<void>(async (scanPromiseResolve) => {
                 this.logger.log(`Starting ${scanner.name}`);
                 await scanner.execute(this.jobInfo);
 
@@ -333,16 +333,12 @@ export class DefaultScanWorkerService {
               }),
             );
           }
-this.logger.debug('before promises');
+
           await Promise.all(scannerPromises);
-          this.logger.debug('after promises before reload');
 
           await scan.reload();
-          this.logger.debug('after reload before new date');
           scan.completedAt = new Date();
-          this.logger.debug('after new date befoe save');
           await scan.save();
-          this.logger.debug('after save');
 
           this.logger.log('Updating Attributions');
 
@@ -352,7 +348,7 @@ this.logger.debug('before promises');
             const projectAttribution = new ProjectAttribution();
             projectAttribution.attribution = '';
             projectAttribution.project = scan.project;
-            licenseAttribtions.forEach(license => {
+            licenseAttribtions.forEach((license) => {
               projectAttribution.attribution += 'Package: ';
               projectAttribution.attribution += license.packageName + '\n\n';
               projectAttribution.attribution += 'License: ';
@@ -421,41 +417,38 @@ this.logger.debug('before promises');
 
           scan.startedAt = new Date();
           await scan.save();
-
-          this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions, async (cloneError, cloneResult) => {
-            if (cloneError) {
-              await this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
-
-              await scan.reload();
-              scan.completedAt = new Date();
-              await scan.save();
-
-              const scanLog = this.scanLogService.db.create();
-              scanLog.scan = scan;
-              scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
-              await scanLog.save();
-
-              this.cleanup(this.jobInfo, null, resolve, reject);
-
-              try {
-                await this.scanService.sendMailOnScanCompletion(scan);
-              } catch (error) {
-                this.logger.error(error);
-              }
-            } else {
-              if (scan.project.customPackageManagerPath && scan.project.packageManager.code != PackageManagerEnum.GO.toString()) {
-                this.deleteFolderRecursive(
-                  this.jobInfo.tmpDir,
-                  path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
-                );
-              }
-              await doScanProcess();
+          try {
+            await this.git.clone(gitUrl, this.jobInfo.tmpDir, gitOptions);
+            if (
+              scan.project.customPackageManagerPath &&
+              scan.project.packageManager.code != PackageManagerEnum.GO.toString()
+            ) {
+              this.deleteFolderRecursive(
+                this.jobInfo.tmpDir,
+                path.join(this.jobInfo.tmpDir, scan.project.customPackageManagerPath),
+              );
             }
+            await doScanProcess();
+          } catch (cloneError) {
+            await this.logger.error(`Clone Error: ${this.replaceGitHubPasswordInString(cloneError, gitUrl)}`);
 
-            if (cloneResult && cloneResult !== '') {
-              this.logger.log(`Clone Result: ${cloneResult}`);
+            await scan.reload();
+            scan.completedAt = new Date();
+            await scan.save();
+
+            const scanLog = this.scanLogService.db.create();
+            scanLog.scan = scan;
+            scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
+            await scanLog.save();
+
+            this.cleanup(this.jobInfo, null, resolve, reject);
+
+            try {
+              await this.scanService.sendMailOnScanCompletion(scan);
+            } catch (error) {
+              this.logger.error(error);
             }
-          });
+          }
         } else {
           this.logger.log('No pathToUploadFileForScanning and no gitURL, so isSourceCode = false');
           await doScanProcess(false);

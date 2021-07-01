@@ -5,7 +5,8 @@ category: Copyleft Limited
 owner: GTK+ Team
 homepage_url: https://github.com/GNOME/glib-networking/blob/2.57.2/LICENSE_EXCEPTION
 is_exception: yes
-standard_notice: |-
+spdx_license_key: LicenseRef-scancode-openssl-exception-lgpl-2.0-plus
+standard_notice: |
     LICENSE EXCEPTION FOR OPENSSL
     * In addition, as a special exception, the copyright holders give
     * permission to link the code of portions of this program with the

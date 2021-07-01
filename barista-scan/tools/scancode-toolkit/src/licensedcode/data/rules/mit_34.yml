@@ -1,4 +1,7 @@
 license_expression: mit
-is_license_tag: yes
-minimum_coverage: 100
-relevance: 99
+is_license_notice: yes
+relevance: 100
+referenced_filenames:
+    - LICENSE
+ignorable_urls:
+    - https://opensource.org/licenses/MIT

@@ -1,33 +1,13 @@
 #
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
 
-from collections import OrderedDict
 
 from commoncode.datautils import Boolean
 from commoncode.fileset import get_matches
@@ -35,8 +15,8 @@ from plugincode.pre_scan import PreScanPlugin
 from plugincode.pre_scan import pre_scan_impl
 from plugincode.post_scan import PostScanPlugin
 from plugincode.post_scan import post_scan_impl
-from scancode import CommandLineOption
-from scancode import PRE_SCAN_GROUP
+from commoncode.cliutils import PluggableCommandLineOption
+from commoncode.cliutils import PRE_SCAN_GROUP
 
 """
 Tag files as "key" or important and top-level files.
@@ -44,7 +24,6 @@ Tag files as "key" or important and top-level files.
 
 # Tracing flag
 TRACE = False
-
 
 def logger_debug(*args):
     pass
@@ -72,7 +51,7 @@ if TRACE:
 
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, unicode) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 
 @pre_scan_impl
@@ -80,7 +59,7 @@ class FileClassifier(PreScanPlugin):
     """
     Classify a file such as a COPYING file or a package manifest with a flag.
     """
-    resource_attributes = OrderedDict([
+    resource_attributes = dict([
         ('is_legal',
          Boolean(help='True if this file is likely a "legal", license-related'
                       'file such as a COPYING or LICENSE file.')),
@@ -90,8 +69,8 @@ class FileClassifier(PreScanPlugin):
                       'as a Maven pom.xml or an npm package.json')),
 
         ('is_readme',
-
          Boolean(help='True if this file is likely a README file.')),
+
         ('is_top_level',
          Boolean(help='True if this file is "top-level" file located either at '
                       'the root of a package or in a well-known common location.')),
@@ -121,7 +100,7 @@ class FileClassifier(PreScanPlugin):
     sort_order = 50
 
     options = [
-        CommandLineOption(('--classify',),
+        PluggableCommandLineOption(('--classify',),
             is_flag=True, default=False,
             help='Classify files with flags telling if the file is a legal, '
                  'or readme or test file, etc.',
@@ -188,11 +167,14 @@ class PackageTopAndKeyFilesTagger(PostScanPlugin):
             # What if we scanned a single file and we do not have a root proper?
             return
 
+        root_path = codebase.root.path
+
         has_packages = hasattr(codebase.root, 'packages')
         if not has_packages:
+            # FIXME: this is not correct... we may still have cases where this
+            # is wrong: e.g. a META-INF directory and we may not have a package 
             return
 
-        root_path = codebase.root.path
 
         for resource in codebase.walk(topdown=True):
             packages_info = resource.packages or []
@@ -213,6 +195,8 @@ class PackageTopAndKeyFilesTagger(PostScanPlugin):
                     logger_debug('PackageTopAndKeyFilesTagger: extra_key_files:', extra_key_files)
 
                 if not (extra_root_dirs or extra_key_files):
+                    # FIXME: this is not correct!
+                    # we may still have other files under the actual root.
                     continue
 
                 if not descendants:
@@ -222,10 +206,10 @@ class PackageTopAndKeyFilesTagger(PostScanPlugin):
 
                     if TRACE:
                         logger_debug('PackageTopAndKeyFilesTagger: descendants')
-                        for rpath, desc in descendants.iteritems():
-                            logger_debug('rapth:', rpath, 'desc:', desc)
+                        for rpath, desc in descendants.items():
+                            logger_debug('rpath:', rpath, 'desc:', desc)
 
-                for rpath, desc in descendants.iteritems():
+                for rpath, desc in descendants.items():
                     if extra_root_dirs and get_matches(rpath, extra_root_dirs):
                         if TRACE:
                             logger_debug('PackageTopAndKeyFilesTagger: get_matches for:', rpath, desc)
@@ -252,20 +236,24 @@ LEGAL_STARTS_ENDS = (
     'copying',
     'copyright',
     'copyrights',
+
+    'copyleft',
     'notice',
     'license',
     'licenses',
     'licence',
     'licences',
+    'licensing',
+    'licencing',
+
     'legal',
     'eula',
     'agreement',
     'copyleft',
-    'licensing',
-    'licencing',
     'patent',
     'patents',
 )
+
 
 _MANIFEST_ENDS = {
     '.about': 'ABOUT file',
@@ -279,26 +267,34 @@ _MANIFEST_ENDS = {
     '+manifest': 'freebsd',
     '.gemspec': 'gem',
     '/metadata': 'gem',
+    # the extracted metadata of a gem archive
+    '/metadata.gz-extract': 'gem',
     '/build.gradle': 'gradle',
-    '.cabal': 'haskell',
-    '/haxelib.json': 'haxelib',
+    '/project.clj': 'clojure',
     '.pom': 'maven',
     '/pom.xml': 'maven',
+
+    '.cabal': 'haskell',
+    '/haxelib.json': 'haxe',
     '/package.json': 'npm',
     '.nuspec': 'nuget',
     '.pod': 'perl',
     '/meta.yml': 'perl',
     '/dist.ini': 'perl',
+
     '/pipfile': 'pypi',
     '/setup.cfg': 'pypi',
     '/setup.py': 'pypi',
+    '/PKG-INFO': 'pypi',
+    '/pyproject.toml': 'pypi', 
     '.spec': 'rpm',
     '/cargo.toml': 'rust',
     '.spdx': 'spdx',
+    '/dependencies': 'generic',
 
     # note that these two cannot be top-level for now
-    '/debian/copyright': 'deb',
-    '/meta-inf/manifest.mf': 'maven',
+    'debian/copyright': 'deb',
+    'meta-inf/manifest.mf': 'maven',
 
     # TODO: Maven also has sometimes a pom under META-INF/
     # 'META-INF/manifest.mf': 'JAR and OSGI',

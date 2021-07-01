@@ -5,9 +5,10 @@ category: Copyleft Limited
 owner: Cygwin Project
 homepage_url: http://cygwin.com/licensing.html
 is_exception: yes
+spdx_license_key: LicenseRef-scancode-cygwin-exception-2.0
 text_urls:
     - http://cygwin.com/cgi-bin/cvsweb.cgi/src/winsup/CYGWIN_LICENSE?cvsroot=src
-standard_notice: |-
+standard_notice: |
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License (GPL) version 2, as
     published by the Free Software Foundation.

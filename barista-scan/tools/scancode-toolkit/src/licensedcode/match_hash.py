@@ -1,34 +1,18 @@
 #
-# Copyright (c) 2015 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import print_function, absolute_import
 
 from array import array
 from hashlib import md5
 
-from licensedcode.spans import Span
+
 from licensedcode.match import LicenseMatch
+from licensedcode.spans import Span
 
 """
 Matching strategy using hashes to match a whole text chunk at once.
@@ -44,7 +28,7 @@ if TRACE :
     logger = logging.getLogger(__name__)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, basestring) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
     # logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
     logging.basicConfig(stream=sys.stdout)
@@ -61,7 +45,8 @@ def tokens_hash(tokens):
     """
     Return a digest binary string computed from a sequence of numeric token ids.
     """
-    return md5(array('h', tokens).tostring()).digest()
+    as_bytes = array('h', tokens).tobytes()
+    return md5(as_bytes).digest()
 
 
 def index_hash(rule_tokens):
@@ -71,7 +56,7 @@ def index_hash(rule_tokens):
     return tokens_hash(rule_tokens)
 
 
-def hash_match(idx, query_run):
+def hash_match(idx, query_run, **kwargs):
     """
     Return a sequence of LicenseMatch by matching the query_tokens sequence
     against the idx index.
@@ -83,11 +68,11 @@ def hash_match(idx, query_run):
     if rid is not None:
         rule = idx.rules_by_rid[rid]
         itokens = idx.tids_by_rid[rid]
-        len_junk = idx.len_junk
+        len_legalese = idx.len_legalese
         logger_debug('match_hash: Match:', rule.identifier)
         qspan = Span(range(query_run.start, query_run.end + 1))
         ispan = Span(range(0, rule.length))
-        hispan = Span(p for p in ispan if itokens[p] >= len_junk)
+        hispan = Span(p for p in ispan if itokens[p] < len_legalese)
         match = LicenseMatch(rule, qspan, ispan, hispan, query_run.start, matcher=MATCH_HASH, query=query_run.query)
         matches.append(match)
     return matches

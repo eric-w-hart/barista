@@ -134,10 +134,20 @@ export class LicenseNugetService extends ScannerBaseService {
   public async postExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
     return new Promise<DefaultScanWorkerJobInfo>(async (resolve, reject) => {
       try {
+        this.logger.debug("jobInfo:")
+        this.logger.debug(jobInfo);
+        
         // Get all nNuSpecs from the file system
         const filenames = await this.getPackageSpecFilenames(path.join(jobInfo.tmpDir, 'dependencies'));
+
+        this.logger.debug("filenames:");
+        this.logger.debug(filenames);
+
         // Convert each into json
         const nuspecs = await this.getPackageSpecJson(filenames);
+
+        this.logger.debug("nuspecs:");
+        this.logger.debug(JSON.stringify(nuspecs));
 
         // Update scan object with a scan result object here...
         const scan: Scan = await this.scanService.findOne(jobInfo.scanId);
@@ -253,6 +263,7 @@ export class LicenseNugetService extends ScannerBaseService {
 
     // Copy Files
     files.forEach(file => {
+      this.logger.debug("Copying file - " + file);
       if (file) {
         try {
           shelljs.cp(file, tmpDir.name);

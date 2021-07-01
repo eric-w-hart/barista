@@ -4,7 +4,8 @@ name: OpenSSL exception to AGPL 3.0
 category: Copyleft Limited
 owner: MongoDB
 is_exception: yes
-standard_notice: |-
+spdx_license_key: LicenseRef-scancode-openssl-exception-agpl-3.0
+standard_notice: |
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
     published by the Free Software Foundation, either version 3 of the

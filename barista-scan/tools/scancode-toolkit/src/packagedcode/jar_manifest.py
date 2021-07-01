@@ -1,48 +1,20 @@
 
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from collections import OrderedDict
 import re
+
+import attr
 
 from commoncode.fileutils import as_posixpath
 from packagedcode.utils import normalize_vcs_url
 from packagedcode.maven import parse_scm_connection
-
-# Python 2 and 3 support
-try:
-    # Python 2
-    unicode
-    str_orig = str
-    bytes = str  # NOQA
-    str = unicode  # NOQA
-except NameError:
-    # Python 3
-    unicode = str  # NOQA
+from packagedcode.models import Package
 
 
 """
@@ -55,18 +27,42 @@ See https://github.com/shevek/jdiagnostics/blob/master/src/main/java/org/anarres
 """
 
 
+@attr.s()
+class JavaArchive(Package):
+    metafiles = ('META-INF/MANIFEST.MF',)
+    extensions = ('.jar', '.war', '.ear')
+    filetypes = ('java archive ', 'zip archive',)
+    mimetypes = ('application/java-archive', 'application/zip',)
+    default_type = 'jar'
+    default_primary_language = 'Java'
+
+    @classmethod
+    def recognize(cls, location):
+        if is_manifest(location):
+            yield parse_manifest(location)
+
+    @classmethod
+    def get_package_root(cls, manifest_resource, codebase):
+        if manifest_resource.path.lower().endswith('meta-inf/manifest.mf'):
+            # the root is the parent of META-INF
+            return manifest_resource.parent(codebase).parent(codebase)
+        else:
+            return manifest_resource
+
+
 def is_manifest(location):
     """
     Return Trye if the file at location is a Manifest.
     """
-    return as_posixpath(location).endswith('META-INF/MANIFEST.MF')
+    return as_posixpath(location).lower().endswith('meta-inf/manifest.mf')
 
 
 def parse_manifest(location):
     """
     Return a Manifest parsed from the file at `location` or None if this
     cannot be parsed.         """
-    with open(location, 'rb') as manifest:
+    mode = 'r'
+    with open(location, mode) as manifest:
         return parse_manifest_data(manifest.read())
 
 
@@ -85,7 +81,7 @@ def parse_section(section):
     """
     Return a mapping of key/values for a manifest `section` string
     """
-    data = OrderedDict()
+    data = {}
     for line in section.splitlines(False):
         if not line:
             continue
@@ -201,7 +197,7 @@ def get_normalized_package_data(manifest_main_section):
     ##############################
     package_type = namespace = name = version = None
     descriptions = []
-    
+
     # FIXME: may be we should then return each "personality"
     # we have several cases for names:
     # this is built with gradle and we have good id data
@@ -214,7 +210,7 @@ def get_normalized_package_data(manifest_main_section):
 
     # we have been created by maven archiver
     elif i_title and i_vendid and i_version:
-        # TODO: improve name and namespace if ns is in name 
+        # TODO: improve name and namespace if ns is in name
         namespace = i_vendid
         name = i_title
         package_type = 'maven' if (i_title_is_id and not name.startswith(namespace)) else 'jar'
@@ -260,7 +256,7 @@ def get_normalized_package_data(manifest_main_section):
         description = None
 
     # create the mapping we will return
-    package = OrderedDict()
+    package = {}
     package['type'] = package_type
     package['namespace'] = namespace
     package['name'] = name
@@ -291,14 +287,14 @@ def get_normalized_package_data(manifest_main_section):
     # Implementation-Vendor: The Apache Software Foundation
     i_vend = dget('Implementation-Vendor')
     if i_vend:
-        parties.append(OrderedDict(role='vendor', name=i_vend))
+        parties.append(dict(role='vendor', name=i_vend))
 
     # Specification-Vendor: Sun Microsystems, Inc.
     s_vend = dget('Specification-Vendor')
     if s_vend == i_vend:
         s_vend = None
     if s_vend:
-        parties.append(OrderedDict(role='spec-vendor', name=s_vend))
+        parties.append(dict(role='spec-vendor', name=s_vend))
 
     # Bundle-Vendor: %providerName
     # Bundle-Vendor: %provider_name
@@ -306,7 +302,7 @@ def get_normalized_package_data(manifest_main_section):
     # Bundle-Vendor: http://supercsv.sourceforge.net/ and http://spiffyframe
     b_vend = dget('Bundle-Vendor') or dget('BundleVendor')
     if b_vend:
-        v = OrderedDict(role='vendor', name=b_vend)
+        v = dict(role='vendor', name=b_vend)
         if v not in parties:
             parties.append(v)
 
@@ -315,7 +311,7 @@ def get_normalized_package_data(manifest_main_section):
     m_email = dget('Module-Email')
     m_owner = dget('Module-Owner')
     if m_owner:
-        o = OrderedDict(role='owner', name=m_owner)
+        o = dict(role='owner', name=m_owner)
         if m_email and m_email != m_owner:
             o['email'] = m_email
         parties.append(o)

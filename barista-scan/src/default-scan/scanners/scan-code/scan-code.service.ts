@@ -55,16 +55,19 @@ export class ScanCodeService extends ScannerBaseService {
           map((items: any[]) => {
             return items
               .map((item: any) => {
+                let licenses=[];
                 if (item.licenses) {
                   // Let's invert the license/file so that each license will have a reference to it's file
                   // so we can report it later
-                  item.licenses.forEach(license => {
+                  licenses = item.licenses.filter((license:any) => {return license.key !== "unknown-license-reference";});
+
+                  licenses.forEach(license => {
                     const file = cloneDeep(item);
                     delete file.licenses;
                     license.file = file;
                   });
                 }
-                return item.licenses;
+                return licenses;
               })
               .reduce((previousValue: any[], currentValue: any[], currentIndex: number, array: any[]) => {
                 if (currentValue.length > 0) {
@@ -175,6 +178,10 @@ export class ScanCodeService extends ScannerBaseService {
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
     const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
+
+    this.logger.debug("Brian, Brian, Brian");
+    this.logger.debug("Running command");
+
 
     shellExecuteSync(
       command,

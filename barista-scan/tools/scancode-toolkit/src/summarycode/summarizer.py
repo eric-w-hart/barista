@@ -1,44 +1,24 @@
 #
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from collections import Counter
-from collections import OrderedDict
 
 import attr
 
 from plugincode.post_scan import PostScanPlugin
 from plugincode.post_scan import post_scan_impl
-from scancode import CommandLineOption
-from scancode import POST_SCAN_GROUP
+from commoncode.cliutils import PluggableCommandLineOption
+from commoncode.cliutils import POST_SCAN_GROUP
 from summarycode.utils import sorted_counter
 from summarycode.utils import get_resource_summary
 from summarycode.utils import set_resource_summary
+
 
 # Tracing flags
 TRACE = False
@@ -58,7 +38,7 @@ if TRACE or TRACE_LIGHT:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, unicode) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 """
 top_level:
@@ -114,10 +94,10 @@ class ScanSummary(PostScanPlugin):
     """
     sort_order = 10
 
-    codebase_attributes = dict(summary=attr.ib(default=attr.Factory(OrderedDict)))
+    codebase_attributes = dict(summary=attr.ib(default=attr.Factory(dict)))
 
     options = [
-        CommandLineOption(('--summary',),
+        PluggableCommandLineOption(('--summary',),
             is_flag=True, default=False,
             help='Summarize license, copyright and other scans at the codebase level.',
             help_group=POST_SCAN_GROUP)
@@ -137,14 +117,14 @@ class ScanSummaryWithDetails(PostScanPlugin):
     Summarize a scan at the codebase level and keep file and directory details.
     """
     # mapping of summary data at the codebase level for the whole codebase
-    codebase_attributes = dict(summary=attr.ib(default=attr.Factory(OrderedDict)))
+    codebase_attributes = dict(summary=attr.ib(default=attr.Factory(dict)))
     # store summaries at the file and directory level in this attribute when
     # keep details is True
-    resource_attributes = dict(summary=attr.ib(default=attr.Factory(OrderedDict)))
+    resource_attributes = dict(summary=attr.ib(default=attr.Factory(dict)))
     sort_order = 100
 
     options = [
-        CommandLineOption(('--summary-with-details',),
+        PluggableCommandLineOption(('--summary-with-details',),
             is_flag=True, default=False,
             help='Summarize license, copyright and other scans at the codebase level, '
                  'keeping intermediate details at the file and directory level.',
@@ -311,10 +291,10 @@ class ScanKeyFilesSummary(PostScanPlugin):
     sort_order = 150
 
     # mapping of summary data at the codebase level for key files
-    codebase_attributes = dict(summary_of_key_files=attr.ib(default=attr.Factory(OrderedDict)))
+    codebase_attributes = dict(summary_of_key_files=attr.ib(default=attr.Factory(dict)))
 
     options = [
-        CommandLineOption(('--summary-key-files',),
+        PluggableCommandLineOption(('--summary-key-files',),
             is_flag=True, default=False,
             help='Summarize license, copyright and other scans for key, '
                  'top-level files. Key files are top-level codebase files such '
@@ -353,7 +333,7 @@ def summarize_codebase_key_files(codebase, **kwargs):
         if k in really_summarizable_attributes]
 
     # create one counter for each summarized attribute
-    summarizable_values_by_key = OrderedDict([(key, []) for key in summarizable_attributes])
+    summarizable_values_by_key = dict([(key, []) for key in summarizable_attributes])
 
     # filter to get only key files
     key_files = (res for res in codebase.walk(topdown=True)
@@ -374,7 +354,7 @@ def summarize_codebase_key_files(codebase, **kwargs):
         summarized = summarize_values(values, key)
         summary_counters.append((key, summarized))
 
-    sorted_summaries = OrderedDict(
+    sorted_summaries = dict(
         [(key, sorted_counter(counter)) for key, counter in summary_counters])
 
     codebase.attributes.summary_of_key_files = sorted_summaries
@@ -391,7 +371,7 @@ class ScanByFacetSummary(PostScanPlugin):
     codebase_attributes = dict(summary_by_facet=attr.ib(default=attr.Factory(list)))
 
     options = [
-        CommandLineOption(('--summary-by-facet',),
+        PluggableCommandLineOption(('--summary-by-facet',),
             is_flag=True, default=False,
             help='Summarize license, copyright and other scans and group the '
                  'results by facet.',
@@ -419,8 +399,8 @@ def summarize_codebase_by_facet(codebase, **kwargs):
         logger_debug('summarize_codebase_by_facet for attributes:', summarizable_attributes)
 
     # create one group of by-facet values lists for each summarized attribute
-    summarizable_values_by_key_by_facet = OrderedDict([
-        (facet, OrderedDict([(key, []) for key in summarizable_attributes]))
+    summarizable_values_by_key_by_facet = dict([
+        (facet, dict([(key, []) for key in summarizable_attributes]))
         for facet in facet_module.FACETS
     ])
 
@@ -446,10 +426,10 @@ def summarize_codebase_by_facet(codebase, **kwargs):
             for key, values in summarizable_values_by_key.items()
         )
 
-        sorted_summaries = OrderedDict(
+        sorted_summaries = dict(
             [(key, sorted_counter(counter)) for key, counter in summary_counters])
 
-        facet_summary = OrderedDict(facet=facet)
+        facet_summary = dict(facet=facet)
         facet_summary['summary'] = sorted_summaries
         final_summaries.append(facet_summary)
 

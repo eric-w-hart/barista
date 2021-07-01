@@ -1,30 +1,11 @@
 #
-# Copyright (c) 2016-2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import io
 import json
@@ -34,7 +15,6 @@ import unicodedata
 
 import chardet
 
-from commoncode.system import on_linux
 from textcode import pdf
 from textcode import markup
 from textcode import sfdb
@@ -65,7 +45,7 @@ if TRACE:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, unicode) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 
 def numbered_text_lines(location, demarkup=False, plain_text=False):
@@ -88,13 +68,12 @@ def numbered_text_lines(location, demarkup=False, plain_text=False):
     if not location:
         return iter([])
 
-    if not isinstance(location, basestring):
+    if not isinstance(location, str):
         # not a path: wrap an iterator on location which should be a sequence
         # of lines
         if TRACE:
             logger_debug('numbered_text_lines:', 'location is not a file')
         return enumerate(iter(location), 1)
-
 
     if plain_text:
         if TRACE:
@@ -106,7 +85,9 @@ def numbered_text_lines(location, demarkup=False, plain_text=False):
     if TRACE:
         logger_debug('numbered_text_lines: T.filetype_file:', T.filetype_file)
         logger_debug('numbered_text_lines: T.is_text_with_long_lines:', T.is_text_with_long_lines)
+        logger_debug('numbered_text_lines: T.is_binary:', T.is_binary)
 
+    # TODO: we should have a command line to force digging inside binaries
     if not T.contains_text:
         return iter([])
 
@@ -145,12 +126,9 @@ def numbered_text_lines(location, demarkup=False, plain_text=False):
     if T.is_text:
         numbered_lines = enumerate(unicode_text_lines(location), 1)
         # text with very long lines such minified JS, JS map files or large JSON
-        locale = b'locale' if on_linux else u'locale'
-        package_json = b'package.json' if on_linux else u'package.json'
-
-        if (not location.endswith(package_json)
+        if (not location.endswith('package.json')
             and (T.is_text_with_long_lines or T.is_compact_js
-              or T.filetype_file == 'data' or locale in location)):
+              or T.filetype_file == 'data' or 'locale' in location)):
 
             numbered_lines = break_numbered_unicode_text_lines(numbered_lines)
             if TRACE:
@@ -205,7 +183,7 @@ def break_numbered_unicode_text_lines(numbered_lines, split=u'([",\'])', max_len
         if len(line) > max_len:
             # spli then reassemble in more reasonable chunks
             splitted = splitter(line)
-            chunks = (splitted[i:i + chunk_len] for i in xrange(0, len(splitted), chunk_len))
+            chunks = (splitted[i:i + chunk_len] for i in range(0, len(splitted), chunk_len))
             for chunk in chunks:
                 full_chunk = u''.join(chunk)
                 if full_chunk:
@@ -248,8 +226,9 @@ def as_unicode(line):
 
     TODO: Add file/magic detection, unicodedmanit/BS3/4
     """
-    if isinstance(line, unicode):
-        return line
+    if isinstance(line, str):
+        return remove_null_bytes(line)
+
     try:
         s = line.decode('UTF-8')
     except UnicodeDecodeError:
@@ -268,11 +247,22 @@ def as_unicode(line):
             except UnicodeDecodeError:
                 try:
                     enc = chardet.detect(line)['encoding']
-                    s = unicode(line, enc)
+                    s = str(line, enc)
                 except UnicodeDecodeError:
                     # fall-back to strings extraction if all else fails
                     s = strings.string_from_string(s)
-    return s
+    return remove_null_bytes(s)
+
+
+def remove_null_bytes(s):
+    """
+    Return a string replacing by a space all null bytes.
+
+    There are some rare cases where we can have binary strings that are not
+    caught early when detecting a file type, but only late at the line level.
+    This help catch most of these cases.
+    """
+    return s.replace('\x00', ' ')
 
 
 def remove_verbatim_cr_lf_tab_chars(s):
@@ -291,9 +281,8 @@ def unicode_text_lines(location):
     contains text. Open the file as binary with universal new lines then try to
     decode each line as Unicode.
     """
-    # FIXME: the U mode is going to be deprecated
-    with open(location, 'rbU') as f:
-        for line in f:
+    with open(location, 'rb') as f:
+        for line in f.read().splitlines(True):
             yield remove_verbatim_cr_lf_tab_chars(as_unicode(line))
 
 

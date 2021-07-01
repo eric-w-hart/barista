@@ -177,7 +177,7 @@ export class ScanCodeService extends ScannerBaseService {
     const config = await SystemConfiguration.defaultConfiguration();
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
-    const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
+    const command = `python3 --version &&  ${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
 
     this.logger.debug("Brian, Brian, Brian");
     this.logger.debug("Running command");

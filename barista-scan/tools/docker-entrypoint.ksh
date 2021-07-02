@@ -2,8 +2,8 @@
 # This command file will set up pyenv and then run whatever CMD is passed from Dockerfile
 
 export PATH="$HOME/.pyenv/bin:$PATH" \
-    && eval "$(pyenv init -)"   \
-    && eval "$(pyenv virtualenv-init -)"
+    && eval "$(pyenv init --path)"   \
+    && eval "$(pyenv virtualenv-init --path)"
 
 
 # set up the pre-defined python versions
@@ -21,8 +21,8 @@ cd $a
 
 echo "3.7.5" > .python-version
 export PATH="$HOME/.pyenv/bin:$PATH" \
-    && eval "$(pyenv init -)"   \
-    && eval "$(pyenv virtualenv-init -)"
+    && eval "$(pyenv init --path)"   \
+    && eval "$(pyenv virtualenv-init --path)"
 
 # if still no pythons, download a default v2 and a default v3
 test -x /usr/src/app/.pyenv/versions/2.7.17/bin/python2.7 || pyenv install 2.7.17

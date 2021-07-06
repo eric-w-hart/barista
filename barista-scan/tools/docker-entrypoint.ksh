@@ -1,6 +1,8 @@
 #!/bin/bash
 # This command file will set up pyenv and then run whatever CMD is passed from Dockerfile
 
+mkdir /usr/src/app/.pyenv/versions
+
 export PATH="$HOME/.pyenv/bin:$PATH" \
     && eval "$(pyenv init --path)"   \
     && eval "$(pyenv virtualenv-init -)"

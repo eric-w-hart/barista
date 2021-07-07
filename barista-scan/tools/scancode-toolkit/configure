@@ -91,6 +91,7 @@ if [[ "$CONFIGURE_DEV_MODE" == 1 ]]; then
 fi
 
 # Run configure scripts proper and activate
+echo $CONFIGURE_PYTHON_EXECUTABLE
 
 $CONFIGURE_PYTHON_EXECUTABLE "$PROJECT_ROOT_DIR/etc/configure.py" $CLI_ARGS
 

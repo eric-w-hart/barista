@@ -40,6 +40,9 @@ RUN ln -fs /bin/bash /bin/sh
 
 COPY --from=go /usr/local/go /usr/local/go
 ENV PATH="/usr/local/go/bin:$PATH"
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
 RUN go version
 
 RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses

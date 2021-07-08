@@ -34,7 +34,7 @@ RUN mkdir -p -v -m 770  /usr/src/app/tools/scancode-toolkit/lib \
     /usr/src/app/.python-version \
     /usr/src/app/.cache \
     && chown -R 1011 .npm \
-    && chown -R 1011 /usr/src/app/tools/scancode-toolkit/*
+    && chmod -R 777 /usr/src/app/tools/scancode-toolkit/*
 
 RUN ln -fs /bin/bash /bin/sh
 

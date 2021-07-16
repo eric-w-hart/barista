@@ -6,7 +6,7 @@ import { LicenseScanResultService } from '@app/services/license-scan-result/lice
 import { LicenseService } from '@app/services/license/license.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { getFileContentsSync } from '@app/shared/util/get-file-contents-sync';
-import { shellExecuteSync } from '@app/shared/util/shell-execute';
+import { shellExecute } from '@app/shared/util/shell-execute';
 import { Injectable, Logger } from '@nestjs/common';
 import * as execa from 'execa';
 import { cloneDeep } from 'lodash';
@@ -177,13 +177,9 @@ export class ScanCodeService extends ScannerBaseService {
     const config = await SystemConfiguration.defaultConfiguration();
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
-    const command = `python3 --version &&  ${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
+    const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
 
-    this.logger.debug("Brian, Brian, Brian");
-    this.logger.debug("Running command");
-
-
-    shellExecuteSync(
+    await shellExecute(
       command,
       {
         shell: true,

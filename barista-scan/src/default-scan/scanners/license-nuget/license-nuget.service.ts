@@ -134,20 +134,11 @@ export class LicenseNugetService extends ScannerBaseService {
   public async postExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
     return new Promise<DefaultScanWorkerJobInfo>(async (resolve, reject) => {
       try {
-        this.logger.debug("jobInfo:")
-        this.logger.debug(jobInfo);
-        
         // Get all nNuSpecs from the file system
         const filenames = await this.getPackageSpecFilenames(path.join(jobInfo.tmpDir, 'dependencies'));
 
-        this.logger.debug("filenames:");
-        this.logger.debug(filenames);
-
         // Convert each into json
         const nuspecs = await this.getPackageSpecJson(filenames);
-
-        this.logger.debug("nuspecs:");
-        this.logger.debug(JSON.stringify(nuspecs));
 
         // Update scan object with a scan result object here...
         const scan: Scan = await this.scanService.findOne(jobInfo.scanId);
@@ -176,6 +167,10 @@ export class LicenseNugetService extends ScannerBaseService {
     });
   }
 
+
+  //  This is probably the code I need to modify - BKM
+
+
   public async postProcess(
     licenseScanResult: LicenseScanResult,
     nuspecs: any[],
@@ -190,6 +185,8 @@ export class LicenseNugetService extends ScannerBaseService {
             const packageName = this.getPackageName(nuspec);
 
             await this.fetchLicense(nuspec);
+
+            // The next line copies the code and runs the scan - BKM
             const rawScanCodeResult = await this.scanForLicenses(nuspec, jobInfo);
             const scanCodeOutput = await this.scanCodeService.extractLicenseInformation(rawScanCodeResult);
 
@@ -208,6 +205,7 @@ export class LicenseNugetService extends ScannerBaseService {
 
       const config = await SystemConfiguration.defaultConfiguration();
       const results = await pAll(operations, { concurrency: config.maxProcesses });
+      
 
       await pit.forEachSeries(results, async (result: any) => {
         if (result.scanCodeOutput && result.packageName) {
@@ -263,7 +261,6 @@ export class LicenseNugetService extends ScannerBaseService {
 
     // Copy Files
     files.forEach(file => {
-      this.logger.debug("Copying file - " + file);
       if (file) {
         try {
           shelljs.cp(file, tmpDir.name);

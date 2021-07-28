@@ -45,7 +45,7 @@ export class ScanCodeService extends ScannerBaseService {
     return this.licenseService.db.save(newLicense as License);
   }
 
-  async extractLicenseInformation(json: any) {
+  async extractLicenseInformation(json: any, pathToMatch: string) {
     return new Promise<any>((resolve, reject) => {
       const fileKey = 'files';
 
@@ -55,11 +55,16 @@ export class ScanCodeService extends ScannerBaseService {
           map((items: any[]) => {
             return items
               .map((item: any) => {
+                if (item.path.indexOf(pathToMatch)===-1) {
+                  return [];
+                }
+
                 let licenses=[];
                 if (item.licenses) {
                   // Let's invert the license/file so that each license will have a reference to it's file
                   // so we can report it later
-                  licenses = item.licenses.filter((license:any) => {return license.key !== "unknown-license-reference";});
+
+                  licenses = item.licenses.filter((license:any) => {return license.key !== "unknown-license-reference" && license.key !== "proprietary-license";});
 
                   licenses.forEach(license => {
                     const file = cloneDeep(item);
@@ -147,7 +152,7 @@ export class ScanCodeService extends ScannerBaseService {
   public async postProcess(licenseScanResult: LicenseScanResult): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       // Extract licenses
-      const rawLicenses = await this.extractLicenseInformation(licenseScanResult.jsonResults);
+      const rawLicenses = await this.extractLicenseInformation(licenseScanResult.jsonResults, null);
 
       await pit.forEachSeries(rawLicenses, async (item: any) => {
         const license = await this.upsertLicense(item);
@@ -177,7 +182,7 @@ export class ScanCodeService extends ScannerBaseService {
     const config = await SystemConfiguration.defaultConfiguration();
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
-    const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
+    const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --ignore "/*/*/*/*.*"  --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
 
     await shellExecute(
       command,

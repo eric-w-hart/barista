@@ -161,9 +161,6 @@ export class DependencyCheckService extends ScannerBaseService {
   public async postExecute(jobInfo: DefaultScanWorkerJobInfo): Promise<DefaultScanWorkerJobInfo> {
     return new Promise<DefaultScanWorkerJobInfo>(async (resolve, reject) => {
       try {
-        this.logger.debug("Brian - Start Timing Log:");
-        const startTime = Date();
-        this.logger.debug(startTime.toLocaleString());
         const htmlFile = `${jobInfo.dataDir}/dependency-check/dependency-check-report.html`;
         let html = null;
         if (fs.existsSync(htmlFile)) {
@@ -205,13 +202,7 @@ export class DependencyCheckService extends ScannerBaseService {
           this.logger.error(error, null, 'postProcess');
         });
 
-        securityScanResult.completedAt = new Date();
         await securityScanResult.save();
-
-        this.logger.debug("Brian - End Timing Log:");
-        this.logger.debug(startTime.toLocaleString());
-        this.logger.debug(Date().toLocaleString());
-
 
         resolve(jobInfo);
       } catch (error) {

@@ -83,8 +83,8 @@ export class LicenseNugetService extends ScannerBaseService {
         this.logger.error(`fetchLicense() error: ${error}`);
       });
 
-      if (response && !_.isEmpty(response.data)) {
-        licenseText = htmlToText.fromString(response.data);
+      if (response && !_.isEmpty(response)) {
+        licenseText = htmlToText.fromString(response);
 
         this.logger.log(`fetchLicense() writing file...`);
         fs.writeFileSync(file, licenseText);
@@ -176,19 +176,37 @@ export class LicenseNugetService extends ScannerBaseService {
     nuspecs: any[],
     jobInfo?: DefaultScanWorkerJobInfo,
   ): Promise<void> {
+    const that = this;
     return new Promise<void>(async resolve => {
+      const licenseFetchOperations = [];
       const operations = [];
+      const config = await SystemConfiguration.defaultConfiguration();
+
+      let rawScanCodeResult;
+      if (nuspecs.length > 0) {
+        nuspecs.forEach(nuspec => {
+          const licenseFetchOperation = async () => {
+            try {
+              await that.fetchLicense(nuspec);
+            } catch (e) {
+              this.logger.debug(`postProcess:Operation error: ${JSON.stringify(e)}`);
+            }
+          };
+  
+          licenseFetchOperations.push(licenseFetchOperation);
+        });
+
+        const licenseFetchResults = await pAll(licenseFetchOperations, { concurrency: config.maxProcesses });
+
+        rawScanCodeResult = await this.scanForLicenses(nuspecs[0], jobInfo);
+      }
 
       nuspecs.forEach(nuspec => {
         const operation = async () => {
           try {
             const packageName = this.getPackageName(nuspec);
 
-            await this.fetchLicense(nuspec);
-
-            // The next line copies the code and runs the scan - BKM
-            const rawScanCodeResult = await this.scanForLicenses(nuspec, jobInfo);
-            const scanCodeOutput = await this.scanCodeService.extractLicenseInformation(rawScanCodeResult);
+            const scanCodeOutput = await this.scanCodeService.extractLicenseInformation(rawScanCodeResult, nuspec.dir.substring(nuspec.dir.indexOf("dependencies/") + 13));
 
             return {
               scanCodeOutput,
@@ -203,9 +221,8 @@ export class LicenseNugetService extends ScannerBaseService {
         operations.push(operation);
       });
 
-      const config = await SystemConfiguration.defaultConfiguration();
+      //const config = await SystemConfiguration.defaultConfiguration();
       const results = await pAll(operations, { concurrency: config.maxProcesses });
-      
 
       await pit.forEachSeries(results, async (result: any) => {
         if (result.scanCodeOutput && result.packageName) {
@@ -254,23 +271,8 @@ export class LicenseNugetService extends ScannerBaseService {
   }
 
   public async scanForLicenses(nuspec: any, jobInfo?: DefaultScanWorkerJobInfo) {
-    const tmpDir = tmp.dirSync();
 
-    // Get Files
-    const files = getDirFiles(`${nuspec.dir}/`);
-
-    // Copy Files
-    files.forEach(file => {
-      if (file) {
-        try {
-          shelljs.cp(file, tmpDir.name);
-        } catch (e) {
-          this.logger.error(`scanForLicenses() ${nuspec.id} error: ${e}`);
-        }
-      }
-    });
-
-    const scanResults = await this.scanCodeService.scanDir(tmpDir.name, jobInfo);
+    const scanResults = await this.scanCodeService.scanDir(path.join(jobInfo.tmpDir, 'dependencies'), jobInfo);
     return scanResults;
   }
 }

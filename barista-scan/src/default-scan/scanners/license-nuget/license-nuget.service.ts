@@ -62,10 +62,10 @@ export class LicenseNugetService extends ScannerBaseService {
         return rp(url);
       };
 
-      this.logger.log(`BARISTA_OSS_USERNAME:${!_.isEmpty(BARISTA_OSS_USERNAME)}\n \
-      BARISTA_OSS_PASSWORD:${!_.isEmpty(BARISTA_OSS_PASSWORD)}\n \
-      HTTPS_PROXY_SERVER: ${HTTPS_PROXY_SERVER}\n \
-      HTTPS_PROXY_PORT: ${HTTPS_PROXY_PORT}`);
+      // this.logger.log(`BARISTA_OSS_USERNAME:${!_.isEmpty(BARISTA_OSS_USERNAME)}\n \
+      // BARISTA_OSS_PASSWORD:${!_.isEmpty(BARISTA_OSS_PASSWORD)}\n \
+      // HTTPS_PROXY_SERVER: ${HTTPS_PROXY_SERVER}\n \
+      // HTTPS_PROXY_PORT: ${HTTPS_PROXY_PORT}`);
 
       if (BARISTA_OSS_USERNAME && BARISTA_OSS_PASSWORD && HTTPS_PROXY_SERVER && HTTPS_PROXY_PORT) {
         const proxy = `http://${BARISTA_OSS_USERNAME}:${BARISTA_OSS_PASSWORD}@${HTTPS_PROXY_SERVER}:${HTTPS_PROXY_PORT}`;

@@ -47,7 +47,7 @@ ENV LANG=C.UTF-8
 
 RUN go version
 
-RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses
+#RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses
 RUN chmod -R g+rwx /usr/src/app/go/
 
 USER 1011

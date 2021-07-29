@@ -44,13 +44,13 @@ export class LicenseNugetService extends ScannerBaseService {
     const url = nuspec.licenseUrl;
 
     if (nuspec && !_.isEmpty(url)) {
-      this.logger.log(`fetchLicense() found a licenseUrl [${url}] for nuspec: ${nuspec.id}`);
+      //this.logger.log(`fetchLicense() found a licenseUrl [${url}] for nuspec: ${nuspec.id}`);
       const file = tmp.tmpNameSync({
         prefix: 'license-',
         postfix: '.txt',
         dir: nuspec.dir,
       });
-      this.logger.log(`fetchLicense() generated tmp filename: ${file}`);
+      //this.logger.log(`fetchLicense() generated tmp filename: ${file}`);
 
       const BARISTA_OSS_USERNAME = process.env.BARISTA_OSS_USERNAME;
       const BARISTA_OSS_PASSWORD = process.env.BARISTA_OSS_PASSWORD;
@@ -58,7 +58,7 @@ export class LicenseNugetService extends ScannerBaseService {
       const HTTPS_PROXY_PORT = process.env.HTTPS_PROXY_PORT;
 
       let requestFn = () => {
-        this.logger.log('--- NOT Adding proxy information to the NVD fetch.');
+        //this.logger.log('--- NOT Adding proxy information to the NVD fetch.');
         return rp(url);
       };
 
@@ -71,7 +71,7 @@ export class LicenseNugetService extends ScannerBaseService {
         const proxy = `http://${BARISTA_OSS_USERNAME}:${BARISTA_OSS_PASSWORD}@${HTTPS_PROXY_SERVER}:${HTTPS_PROXY_PORT}`;
 
         requestFn = () => {
-          this.logger.log('+++ Adding proxy information to the NVD fetch.');
+          //this.logger.log('+++ Adding proxy information to the NVD fetch.');
           return rp({
             url,
             proxy,
@@ -86,7 +86,7 @@ export class LicenseNugetService extends ScannerBaseService {
       if (response && !_.isEmpty(response)) {
         licenseText = htmlToText.fromString(response);
 
-        this.logger.log(`fetchLicense() writing file...`);
+        this.logger.log(`fetchLicense() writing file ${file}`);
         fs.writeFileSync(file, licenseText);
       } else {
         this.logger.error(`fetchLicense() response.data was empty!`);

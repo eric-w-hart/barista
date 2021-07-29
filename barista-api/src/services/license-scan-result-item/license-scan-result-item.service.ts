@@ -154,6 +154,9 @@ export class LicenseScanResultItemService extends AppServiceBase<LicenseScanResu
       resultItem.licenseScan = licenseScanResult;
       await resultItem.save();
 
+      this.logger.log(`SAVING licenseResultItem.path: ${resultItem.path}`);
+      
+
       // this.logger.log(
       //   `SAVING licenseResultItem.path: ${resultItem.path}\n \
       //       licenseResultItem.id: ${resultItem.id}\n \

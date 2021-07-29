@@ -83,6 +83,8 @@ export class SecurityScanResultItemService extends AppServiceBase<SecurityScanRe
         projectScanStatus = vulnerabilityStatusDeploymentType.projectScanStatus;
       } else {
         // tslint:disable-next-line:max-line-length
+        this.logger.debug(`*** No VulnerabilityStatusDeploymentType found for ${partial.path}`);
+
         // this.logger.debug(
         //   `*** No VulnerabilityStatusDeploymentType found for [${JSON.stringify(
         //     resultItemStatus,
@@ -96,6 +98,8 @@ export class SecurityScanResultItemService extends AppServiceBase<SecurityScanRe
       resultItem.securityScanResultItemStatus = resultItemStatus;
       resultItem.securityScan = securityScanResult;
       resultItem.save();
+
+      this.logger.log(`SAVING securityResultItem.path: ${partial.path}`)
 
       // this.logger.log(
       //   `SAVING securityResultItem.path: ${partial.path}\n \

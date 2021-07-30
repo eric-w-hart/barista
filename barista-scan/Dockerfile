@@ -2,7 +2,7 @@ ARG BASETAG=compose
 ARG REPO=""
 ARG DOCKER=""
 
-FROM ${DOCKER}golang:1.15 as go
+FROM ${DOCKER}golang:1.16 as go
 
 FROM ${REPO}barista-scanbase:${BASETAG}
 ADD tools/docker-entrypoint.ksh /docker-entrypoint.ksh
@@ -33,12 +33,18 @@ RUN mkdir -p -v -m 770  /usr/src/app/tools/scancode-toolkit/lib \
     && chmod -R g+rwx   .pyenv \
     /usr/src/app/.python-version \
     /usr/src/app/.cache \
-    && chown -R 1011 .npm
+    && chown -R 1011 .npm 
+    
+RUN mkdir /usr/src/app/tools/scancode-toolkit/src/licensedcode/data/cache \
+    && chmod -R g+rw /usr/src/app/tools/scancode-toolkit/src/licensedcode/data/cache
 
 RUN ln -fs /bin/bash /bin/sh
 
 COPY --from=go /usr/local/go /usr/local/go
 ENV PATH="/usr/local/go/bin:$PATH"
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
 RUN go version
 
 RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses

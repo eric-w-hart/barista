@@ -83,13 +83,15 @@ export class SecurityScanResultItemService extends AppServiceBase<SecurityScanRe
         projectScanStatus = vulnerabilityStatusDeploymentType.projectScanStatus;
       } else {
         // tslint:disable-next-line:max-line-length
-        this.logger.debug(
-          `*** No VulnerabilityStatusDeploymentType found for [${JSON.stringify(
-            resultItemStatus,
-            null,
-            2,
-          )}] + [${JSON.stringify(deploymentType, null, 2)}]`,
-        );
+        this.logger.debug(`*** No VulnerabilityStatusDeploymentType found for ${partial.path}`);
+
+        // this.logger.debug(
+        //   `*** No VulnerabilityStatusDeploymentType found for [${JSON.stringify(
+        //     resultItemStatus,
+        //     null,
+        //     2,
+        //   )}] + [${JSON.stringify(deploymentType, null, 2)}]`,
+        // );
       }
 
       resultItem.projectScanStatus = projectScanStatus;
@@ -97,12 +99,14 @@ export class SecurityScanResultItemService extends AppServiceBase<SecurityScanRe
       resultItem.securityScan = securityScanResult;
       resultItem.save();
 
-      this.logger.log(
-        `SAVING securityResultItem.path: ${partial.path}\n \
-            securityResultItem.id: ${partial.id}\n \
-            SecurityScanResult.id:${securityScanResult.id}\n \
-            Scan.id:${securityScanResult.scan.id}`,
-      );
+      this.logger.log(`SAVING securityResultItem.path: ${partial.path}`)
+
+      // this.logger.log(
+      //   `SAVING securityResultItem.path: ${partial.path}\n \
+      //       securityResultItem.id: ${partial.id}\n \
+      //       SecurityScanResult.id:${securityScanResult.id}\n \
+      //       Scan.id:${securityScanResult.scan.id}`,
+      // );
 
       return resultItem;
     } catch (ex) {

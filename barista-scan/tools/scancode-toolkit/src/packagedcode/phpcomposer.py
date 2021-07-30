@@ -1,32 +1,12 @@
 #
-# Copyright (c) 2017 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from collections import OrderedDict
 from functools import partial
 import io
 import json
@@ -34,11 +14,12 @@ import logging
 import sys
 
 import attr
-from six import string_types
 
 from commoncode import filetype
 from commoncode import fileutils
 from packagedcode import models
+from packagedcode.utils import combine_expressions
+
 
 """
 Parse PHP composer package manifests, see https://getcomposer.org/ and
@@ -62,14 +43,18 @@ if TRACE:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, string_types) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 
 @attr.s()
 class PHPComposerPackage(models.Package):
-    metafiles = ('composer.json',)
-    filetypes = ('.json',)
+    metafiles = (
+        'composer.json',
+        'composer.lock',
+    )
+    extensions = ('.json', '.lock',)
     mimetypes = ('application/json',)
+
     default_type = 'composer'
     default_primary_language = 'PHP'
     default_web_baseurl = 'https://packagist.org'
@@ -78,46 +63,91 @@ class PHPComposerPackage(models.Package):
 
     @classmethod
     def recognize(cls, location):
-        return parse(location)
+        for package in parse(location):
+            yield package
 
     @classmethod
     def get_package_root(cls, manifest_resource, codebase):
         return manifest_resource.parent(codebase)
 
     def repository_homepage_url(self, baseurl=default_web_baseurl):
-        return '{}/packages/{}/{}'.format(baseurl, self.namespace, self.name)
+        if self.namespace:
+            return '{}/packages/{}/{}'.format(baseurl, self.namespace, self.name)
+        else:
+            return '{}/packages/{}'.format(baseurl, self.name)
 
     def api_data_url(self, baseurl=default_api_baseurl):
-        return '{}/packages/{}/{}.json'.format(baseurl, self.namespace, self.name)
+        if self.namespace:
+            return '{}/packages/{}/{}.json'.format(baseurl, self.namespace, self.name)
+        else:
+            return '{}/packages/{}.json'.format(baseurl, self.name)
 
     def compute_normalized_license(self):
         """
         Per https://getcomposer.org/doc/04-schema.md#license this is an expression
         """
-        return models.Package.compute_normalized_license(self)
+        return compute_normalized_license(self.declared_license)
+
+
+def compute_normalized_license(declared_license):
+    """
+    Return a normalized license expression string detected from a list of
+    declared license items or string type.
+    """
+    if not declared_license:
+        return
+
+    detected_licenses = []
+
+    if isinstance(declared_license, str):
+        if declared_license == 'proprietary':
+            return declared_license
+        if '(' in declared_license and ')' in declared_license and ' or ' in declared_license:
+            declared_license = declared_license.strip().rstrip(')').lstrip('(')
+            declared_license = declared_license.split(' or ')
+        else:
+            return models.compute_normalized_license(declared_license)
+
+    if isinstance(declared_license, list):
+        for declared in declared_license:
+            detected_license = models.compute_normalized_license(declared)
+            detected_licenses.append(detected_license)
+    else:
+        declared_license = repr(declared_license)
+        detected_license = models.compute_normalized_license(declared_license)
+
+    if detected_licenses:
+        # build a proper license expression: the defaultfor composer is OR
+        return combine_expressions(detected_licenses, 'OR')
 
 
 def is_phpcomposer_json(location):
-    return (filetype.is_file(location) and fileutils.file_name(location).lower() == 'composer.json')
+    return filetype.is_file(location) and fileutils.file_name(location).lower() == 'composer.json'
+
+
+def is_phpcomposer_lock(location):
+    return filetype.is_file(location) and fileutils.file_name(location).lower() == 'composer.lock'
 
 
 def parse(location):
     """
-    Return a Package object from a composer.json file or None.
-    Note that this is NOT exactly the packagist .json format and this is NOT the
-    composer.lock format (allare closely related of course but have important
-    (even if minor) differences.
+    Yield Package objects from a composer.json or composer.lock file. Note that
+    this is NOT exactly the packagist .json format (all are closely related of
+    course but have important (even if minor) differences.
     """
-    if not is_phpcomposer_json(location):
-        return
+    if is_phpcomposer_json(location):
+        with io.open(location, encoding='utf-8') as loc:
+            package_data = json.load(loc)
+        yield build_package_from_json(package_data)
 
-    with io.open(location, encoding='utf-8') as loc:
-        package_data = json.load(loc, object_pairs_hook=OrderedDict)
+    elif is_phpcomposer_lock(location):
+        with io.open(location, encoding='utf-8') as loc:
+            package_data = json.load(loc)
+        for package in build_packages_from_lock(package_data):
+            yield package
 
-    return build_package(package_data)
 
-
-def build_package(package_data):
+def build_package_from_json(package_data):
     """
     Return a composer Package object from a package data mapping or None.
     """
@@ -153,7 +183,7 @@ def build_package(package_data):
 
     for source, target in plain_fields:
         value = package_data.get(source)
-        if isinstance(value, string_types):
+        if isinstance(value, str):
             value = value.strip()
             if value:
                 setattr(package, target, value)
@@ -171,14 +201,15 @@ def build_package(package_data):
         ('conflict', partial(_deps_mapper, scope='conflict', is_runtime=True, is_optional=True)),
         ('replace', partial(_deps_mapper, scope='replace', is_runtime=True, is_optional=True)),
         ('suggest', partial(_deps_mapper, scope='suggest', is_runtime=True, is_optional=True)),
-
+        ('source', source_mapper),
+        ('dist', dist_mapper)
     ]
 
     for source, func in field_mappers:
         logger.debug('parse: %(source)r, %(func)r' % locals())
         value = package_data.get(source)
         if value:
-            if isinstance(value, string_types):
+            if isinstance(value, str):
                 value = value.strip()
             if value:
                 func(value, package)
@@ -200,25 +231,11 @@ def licensing_mapper(licenses, package, is_private=False):
     license and the `is_private` Fkag is True, we return a "proprietary-license"
     license.
     """
-    if not licenses:
+    if not licenses and is_private:
+        package.declared_license = 'proprietary-license'
         return package
 
-    if isinstance(licenses, list):
-        # For a package, when there is a choice between licenses
-        # ("disjunctive license"), multiple can be specified as array.
-        # build a proper license expression: the defaultfor composer is OR
-        lics = [l.strip() for l in licenses if l and l.strip()]
-        lics = ' OR '.join(lics)
-
-    elif not isinstance(licenses, string_types):
-        lics = repr(licenses)
-    else:
-        lics = licenses
-
-    if not lics and is_private:
-        lics ='proprietary-license'
-
-    package.declared_license = lics or None
+    package.declared_license = licenses
     return package
 
 
@@ -243,6 +260,34 @@ def support_mapper(support, package):
     # TODO: there are many other information we ignore for now
     package.bug_tracking_url = support.get('issues') or None
     package.code_view_url = support.get('source') or None
+    return package
+
+
+def source_mapper(source, package):
+    """
+    Add vcs_url from source tag, if present. Typically only present in
+    composer.lock
+    """
+    tool = source.get('type')
+    if not tool:
+        return package
+    url = source.get('url')
+    if not url:
+        return package
+    version = source.get('reference')
+    package.vcs_url = '{tool}+{url}@{version}'.format(**locals())
+    return package
+
+
+def dist_mapper(dist, package):
+    """
+    Add download_url from source tag, if present. Typically only present in
+    composer.lock
+    """
+    url = dist.get('url')
+    if not url:
+        return package
+    package.download_url = url
     return package
 
 
@@ -316,3 +361,27 @@ def parse_person(persons):
                 url and url.strip('() '))
     else:
         raise ValueError('Incorrect PHP composer persons: %(persons)r' % locals())
+
+
+def build_dep_package(package, scope, is_runtime, is_optional):
+    return models.DependentPackage(
+        purl=package.purl,
+        scope=scope,
+        is_runtime=is_runtime,
+        is_optional=is_optional,
+        is_resolved=True,
+    )
+
+
+def build_packages_from_lock(package_data):
+    """
+    Yield composer Package objects from a package data mapping that originated
+    from a composer.lock file
+    """
+    packages = [build_package_from_json(p) for p in package_data.get('packages', [])]
+    packages_dev = [build_package_from_json(p) for p in package_data.get('packages-dev', [])]
+    required_deps = [build_dep_package(p, scope='require', is_runtime=True, is_optional=False) for p in packages]
+    required_dev_deps = [build_dep_package(p, scope='require-dev', is_runtime=False, is_optional=True) for p in packages_dev]
+    yield PHPComposerPackage(dependencies=required_deps + required_dev_deps)
+    for package in packages + packages_dev:
+        yield package

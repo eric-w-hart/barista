@@ -1,55 +1,36 @@
 #
-# Copyright (c) 2017 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from collections import OrderedDict
 import io
 import logging
 import os.path
 from os.path import dirname
 from os.path import join
 from pprint import pformat
-import re
 
 import attr
 import javaproperties
 from lxml import etree
 from packageurl import PackageURL
-from pymaven import pom
 from pymaven import artifact
+from pymaven import pom
 
 from commoncode import filetype
 from commoncode import fileutils
 from packagedcode import models
+from packagedcode.models import Package
+from packagedcode.utils import combine_expressions
 from packagedcode.utils import normalize_vcs_url
 from packagedcode.utils import VCS_URLS
 from textcode import analysis
 from typecode import contenttype
-from packagedcode.models import Package
+from pymaven.pom import strip_namespace
 
 
 TRACE = False
@@ -66,7 +47,6 @@ Support Maven2 POMs.
 Attempts to resolve Maven properties when possible.
 """
 
-
 @attr.s()
 class MavenPomPackage(models.Package):
     metafiles = ('*.pom', 'pom.xml',)
@@ -80,14 +60,17 @@ class MavenPomPackage(models.Package):
 
     @classmethod
     def recognize(cls, location):
-        return parse(location)
+        yield parse(location)
 
     @classmethod
     def get_package_root(cls, manifest_resource, codebase):
-        if manifest_resource.name.endswith('pom.xml'):
+        if manifest_resource.name.endswith(('pom.xml', '.pom',)):
             # the root is either the parent or further up for poms stored under
             # a META-INF dir
-            package_data = manifest_resource.packages[0]
+            package_data = manifest_resource.packages
+            if not package_data:
+                return manifest_resource
+            package_data = package_data[0]
             package = Package.create(**package_data)
             ns = package.namespace
             name = package.name
@@ -97,15 +80,10 @@ class MavenPomPackage(models.Package):
                     if ancestor.name == 'META-INF':
                         jar_root_dir = ancestor.parent(codebase)
                         return jar_root_dir
-    
+
             return manifest_resource.parent(codebase)
 
-        elif manifest_resource.path.endswith('META-INF/MANIFEST.MF'):
-            # the root is the parent of META-INF
-            return manifest_resource.parent(codebase).parent(codebase)
-
-        else:
-            return manifest_resource
+        return manifest_resource
 
     def repository_homepage_url(self, baseurl=default_web_baseurl):
         return build_url(
@@ -145,6 +123,84 @@ class MavenPomPackage(models.Package):
             filename=filename,
             baseurl=baseurl)
 
+    def compute_normalized_license(self):
+        return compute_normalized_license(self.declared_license)
+
+    @classmethod
+    def extra_key_files(cls):
+        return [
+            'META-INF/MANIFEST.MF',
+            'META-INF/LICENSE',
+        ]
+
+    @classmethod
+    def extra_root_dirs(cls):
+        return [
+            'META-INF'
+        ]
+
+
+def compute_normalized_license(declared_license):
+    """
+    Return a detected license expression from a declared license mapping.
+    """
+    if not declared_license:
+        return
+
+    detected_licenses = []
+
+    for license_declaration in declared_license:
+        # 1. try detection on the value of name if not empty and keep this
+        name = license_declaration.get('name')
+        via_name = models.compute_normalized_license(name)
+
+        # 2. try detection on the value of url  if not empty and keep this
+        url = license_declaration.get('url')
+        via_url = models.compute_normalized_license(url)
+
+        # 3. try detection on the value of comment  if not empty and keep this
+        comments = license_declaration.get('comments')
+        via_comments = models.compute_normalized_license(comments)
+
+        if via_name:
+            # The name should have precedence and any unknowns
+            # in url and comment should be ignored.
+            if via_url == 'unknown':
+                via_url = None
+            if via_comments == 'unknown':
+                via_comments = None
+
+        # Check the three detections to decide which license to keep
+        name_and_url = via_name == via_url
+        name_and_comment = via_name == via_comments
+        all_same = name_and_url and name_and_comment
+
+        if via_name:
+            if all_same:
+                detected_licenses.append(via_name)
+
+            # name and (url or comment) are same
+            elif name_and_url and not via_comments:
+                detected_licenses.append(via_name)
+            elif name_and_comment and not via_url:
+                detected_licenses.append(via_name)
+
+            else:
+                # we have some non-unknown license detected in url or comment
+                detections = via_name, via_url, via_comments
+                detections = [l for l in detections if l]
+                if detections:
+                    combined_expression = combine_expressions(detections)
+                    if combined_expression:
+                        detected_licenses.append(combined_expression)
+        elif via_url:
+            detected_licenses.append(via_url)
+        elif via_comments:
+            detected_licenses.append(via_comments)
+
+    if detected_licenses:
+        return combine_expressions(detected_licenses)
+
 
 def build_url(group_id, artifact_id, version, filename, baseurl='http://repo1.maven.org/maven2'):
     """
@@ -183,7 +239,7 @@ class ParentPom(artifact.Artifact):
         self.parent = None
         self.properties = {}
         # TODO: ????
-        # self.pom_data/self._xml = None
+        # self.pom_data/self.pom_data = None
 
     def resolve(self, **properties):
         """
@@ -200,16 +256,13 @@ class ParentPom(artifact.Artifact):
         """
         Return a mapping representing this POM
         """
-        return OrderedDict([
+        return dict([
             ('group_id', self.group_id),
             ('artifact_id', self.artifact_id),
             ('version', str(self.version) if self.version else None),
             ('classifier', self.classifier),
             ('type', self.type),
         ])
-
-
-STRIP_NAMESPACE_RE = re.compile(r"<project(.|\s)*?>", re.UNICODE)
 
 
 class MavenPom(pom.Pom):
@@ -219,43 +272,39 @@ class MavenPom(pom.Pom):
         Build a POM from a location or unicode text.
         """
         assert (location or text) and (not (location and text))
-        # NOTE: most of this is derived from pymaven.Pom.__init__
+
         if location:
             try:
                 with io.open(location, encoding='utf-8') as fh:
-                    xml = fh.read()
+                    xml_text = fh.read()
             except UnicodeDecodeError as _a:
-                xml = analysis.unicode_text(location)
+                xml_text = analysis.unicode_text(location)
         else:
-            xml = text
+            xml_text = text
+        xml_text = strip_namespace(xml_text)
+        xml_text = xml_text.encode('utf-8')
+        if TRACE:
+            logger.debug('MavenPom.__init__: xml_text: {}'.format(xml_text))
 
-        xml = xml[xml.find('<project'):]
-        xml = STRIP_NAMESPACE_RE.sub('<project>', xml, 1)
-
-        parser = etree.XMLParser(
-            recover=True,
-            # we keep comments in case there is a license in the comments
-            remove_comments=False,
-            remove_pis=True,
-            remove_blank_text=True, resolve_entities=False
-        )
-
-        self._xml = etree.fromstring(xml, parser=parser)
+        self._pom_data = etree.fromstring(xml_text, parser=pom.POM_PARSER)
 
         # collect and then remove XML comments from the XML elements tree
         self.comments = self._get_comments()
-        etree.strip_tags(self._xml, etree.Comment)
+        etree.strip_tags(self._pom_data, etree.Comment)
 
-        # FIXME: we do not use a client for now. There are pending issues at pymaven to address this
+        # FIXME: we do not use a client for now.
+        # There are pending issues at pymaven to address this
         self._client = None
 
         self.model_version = self._get_attribute('modelVersion')
         if not self.model_version:
-            # for version 3
+            # for older POM version 3
             self.model_version = self._get_attribute('pomVersion')
         self.group_id = self._get_attribute('groupId')
         self.artifact_id = self._get_attribute('artifactId')
-        if TRACE: logger.debug('MavenPom.__init__: self.artifact_id: {}'.format(self.artifact_id))
+        if TRACE:
+            logger.debug('MavenPom.__init__: self.artifact_id: {}'.format(self.artifact_id))
+
         self.version = self._get_attribute('version')
         self.classifier = self._get_attribute('classifier')
         self.packaging = self._get_attribute('packaging') or 'jar'
@@ -280,7 +329,7 @@ class MavenPom(pom.Pom):
         # FIXME: this attribute should be collected with the parent but
         # is not retrieved yet by pymaven it points to the relative path
         # where to find the full parent POM
-        self.parent_relative_path = self._get_attribute('relativePath')  # or '../pom.xml'
+        self.parent_relative_path = self._get_attribute('relativePath')  # or '../pom.xml_text'
 
         # FIXME: Other types that are not collected for now (or
         # indirectly through dependencies management) include: build,
@@ -524,7 +573,7 @@ class MavenPom(pom.Pom):
     def _get_attribute(self, xpath, xml=None):
         """Return a single value text attribute for a given xpath or None."""
         if xml is None:
-            xml = self._xml
+            xml = self.pom_data
         attr = xml.findtext(xpath)
         val = attr and attr.strip() or None
         if TRACE:
@@ -534,24 +583,24 @@ class MavenPom(pom.Pom):
         return val
 
     def _get_attributes_list(self, xpath, xml=None):
-        """Return a list of text attribute values for a given xpath or empty list."""
+        """Return a list of text attributes for a given xpath or empty list."""
         if xml is None:
-            xml = self._xml
+            xml = self.pom_data
         attrs = xml.findall(xpath)
         attrs = [attr.text for attr in attrs]
         return [attr.strip() for attr in attrs if attr and attr.strip()]
 
     def _get_comments(self, xml=None):
-        """Return a list of comment text values or an empty list."""
+        """Return a list of comment texts or an empty list."""
         if xml is None:
-            xml = self._xml
+            xml = self.pom_data
         comments = [c.text for c in xml.xpath('//comment()')]
         return [c.strip() for c in comments if c and c.strip()]
 
     def _find_licenses(self):
         """Return an iterable of license mappings."""
-        for lic in self._xml.findall('licenses/license'):
-            yield OrderedDict([
+        for lic in self.pom_data.findall('licenses/license'):
+            yield dict([
                 ('name', self._get_attribute('name', lic)),
                 ('url', self._get_attribute('url', lic)),
                 ('comments', self._get_attribute('comments', lic)),
@@ -561,8 +610,8 @@ class MavenPom(pom.Pom):
 
     def _find_parties(self, key='developers/developer'):
         """Return an iterable of party mappings for a given xpath."""
-        for party in self._xml.findall(key):
-            yield OrderedDict([
+        for party in self.pom_data.findall(key):
+            yield dict([
                 ('id', self._get_attribute('id', party)),
                 ('name', self._get_attribute('name', party)),
                 ('email', self._get_attribute('email', party)),
@@ -574,20 +623,20 @@ class MavenPom(pom.Pom):
 
     def _find_mailing_lists(self):
         """Return an iterable of mailing lists mappings."""
-        for ml in self._xml.findall('mailingLists/mailingList'):
+        for ml in self.pom_data.findall('mailingLists/mailingList'):
             archive_url = self._get_attribute('archive', ml)
             # TODO: add 'otherArchives/otherArchive' as lists?
-            yield OrderedDict([
+            yield dict([
                 ('name', self._get_attribute('name', ml)),
                 ('archive_url', archive_url),
             ])
 
     def _find_scm(self):
         """Return a version control/scm mapping."""
-        scm = self._xml.find('scm')
+        scm = self.pom_data.find('scm')
         if scm is None:
             return {}
-        return OrderedDict([
+        return dict([
             ('connection', self._get_attribute('connection', scm)),
             ('developer_connection', self._get_attribute('developer_connection', scm)),
             ('url', self._get_attribute('url', scm)),
@@ -596,20 +645,20 @@ class MavenPom(pom.Pom):
 
     def _find_issue_management(self):
         """Return an issue management mapping."""
-        imgt = self._xml.find('issueManagement')
+        imgt = self.pom_data.find('issueManagement')
         if imgt is None:
             return {}
-        return OrderedDict([
+        return dict([
             ('system', self._get_attribute('system', imgt)),
             ('url', self._get_attribute('url', imgt)),
         ])
 
     def _find_ci_management(self):
         """Return a CI mapping."""
-        cimgt = self._xml.find('ciManagement')
+        cimgt = self.pom_data.find('ciManagement')
         if cimgt is None:
             return {}
-        return OrderedDict([
+        return dict([
             ('system', self._get_attribute('system', cimgt)),
             ('url', self._get_attribute('url', cimgt)),
         ])
@@ -617,11 +666,11 @@ class MavenPom(pom.Pom):
     def _find_repository(self, xpath, xml=None):
         """Return a repository mapping for an xpath."""
         if xml is None:
-            xml = self._xml
+            xml = self.pom_data
         repo = xml.find(xpath)
         if repo is None:
             return {}
-        return OrderedDict([
+        return dict([
             ('id', self._get_attribute('id', repo)),
             ('name', self._get_attribute('name', repo)),
             ('url', self._get_attribute('url', repo)),
@@ -629,10 +678,10 @@ class MavenPom(pom.Pom):
 
     def _find_distribution_management(self):
         """Return a distribution management mapping."""
-        dmgt = self._xml.find('distributionManagement')
+        dmgt = self.pom_data.find('distributionManagement')
         if dmgt is None:
             return {}
-        return OrderedDict([
+        return dict([
             ('download_url', self._get_attribute('distributionManagement/downloadUrl')),
             ('site', self._find_repository('distributionManagement/site')),
             ('repository', self._find_repository('distributionManagement/repository')),
@@ -641,7 +690,7 @@ class MavenPom(pom.Pom):
 
     def _find_repositories(self, key='repositories/repository'):
         """Return an iterable or repository mappings for an xpath."""
-        for repo in self._xml.findall(key):
+        for repo in self.pom_data.findall(key):
             rep = self._find_repository('.', repo)
             if rep:
                 yield rep
@@ -650,10 +699,10 @@ class MavenPom(pom.Pom):
         """
         Return a mapping representing this POM.
         """
-        dependencies = OrderedDict()
+        dependencies = {}
         for scope, deps in self.dependencies.items():
             dependencies[scope] = [
-                OrderedDict([
+                dict([
                     ('group_id', gid),
                     ('artifact_id', aid),
                     ('version', version),
@@ -661,7 +710,7 @@ class MavenPom(pom.Pom):
                 ])
             for ((gid, aid, version), required) in deps]
 
-        return OrderedDict([
+        return dict([
             ('model_version', self.model_version),
             ('group_id', self.group_id),
             ('artifact_id', self.artifact_id),
@@ -802,7 +851,7 @@ def has_basic_pom_attributes(pom):
     return basics
 
 
-def _get_maven_pom(location=None, text=None, check_is_pom=False, extra_properties=None):
+def get_maven_pom(location=None, text=None, check_is_pom=False, extra_properties=None):
     """
     Return a MavenPom object from a POM file at `location` or provided as a
     `text` string.
@@ -847,7 +896,6 @@ SUPPORTED_PACKAGING = set([
     u'xar',
     u'zip',
 ])
-
 
 
 def get_dependencies(pom):
@@ -948,7 +996,7 @@ def parse(location=None, text=None, check_is_pom=True, extra_properties=None):
     When resolving the POM, use an optional `extra_properties` mapping
     of name/value pairs to resolve properties.
     """
-    pom = _get_maven_pom(location, text, check_is_pom, extra_properties)
+    pom = get_maven_pom(location, text, check_is_pom, extra_properties)
     if not pom:
         return
 
@@ -973,12 +1021,7 @@ def parse(location=None, text=None, check_is_pom=True, extra_properties=None):
             # complex defeinition in Maven
             qualifiers['type'] = extension
 
-    # TODO: we join all data in a single text: this may not be right
-    declared_license = []
-    for lic in pom.licenses:
-        lt = (l for l in [lic['name'], lic['url'], lic['comments']] if l)
-        declared_license.extend(lt)
-    declared_license = '\n'.join(declared_license)
+    declared_license = pom.licenses
 
     source_packages = []
     # TODO: what does this mean????

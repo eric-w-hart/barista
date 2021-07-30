@@ -1,62 +1,125 @@
 @echo OFF
+@setlocal
 
-@rem Copyright (c) 2018 nexB Inc. http://www.nexb.com/ - All rights reserved.
+@rem Copyright (c) nexB Inc. and others. All rights reserved.
+@rem SPDX-License-Identifier: Apache-2.0
+@rem See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+@rem ScanCode is a trademark of nexB Inc.
+@rem See https://github.com/nexB/scancode-toolkit for support or download.
+@rem See https://aboutcode.org for more information about nexB OSS projects.
 
 @rem ################################
-@rem # change these variables to customize this script locally
+@rem # A configuration script to set things up: create a virtualenv and install
+@rem # update thirdparty packages
+goto config
+:cli_help
+    echo An initial configuration script
+    echo "  usage: configure [options]"
+    echo.
+    echo The default is to configure for regular use.
+    echo The script will attempt to find a suitable Python executable.
+    echo Set the PYTHON_EXECUTABLE environment variable to provide your own
+    echo Python executable path.
+    echo.
+    echo The options are:
+    echo  "--clean: clean built and installed files and exit."
+    echo  "--dev:   configure the environment for development."
+    echo  "--help:  display these help messages and exit."
+    echo.
+    endlocal
+    exit /b 0
+
+
+:config
 @rem ################################
-@rem # you can define one or more thirdparty dirs, each prefixed with TPP_DIR
-set TPP_DIR=thirdparty
+@rem # Defaults. Change these variables to customize this script locally
+@rem ################################
 
-@rem # default configurations for dev
-set CONF_DEFAULT="etc/conf/dev"
-@rem #################################
+@rem # thirdparty package locations
+set "THIRDPARTY_DIR=thirdparty"
+set "THIRDPARTY_LINKS=https://thirdparty.aboutcode.org/pypi"
 
-set SCANCODE_ROOT_DIR=%~dp0
-@rem !!!!!!!!!!! ATTENTION !!!!!
-@rem there is a space at the end of the set SCANCODE_CLI_ARGS=  line ... 
-@rem NEVER remove this!
-@rem otherwise, this script and scancode do not work.  
-set SCANCODE_CLI_ARGS= 
-@rem Collect/Slurp all command line arguments in a variable
-:collectarg
- if ""%1""=="""" (
-    goto continue
- )
- call set SCANCODE_CLI_ARGS=%SCANCODE_CLI_ARGS% %1
- shift
- goto collectarg
+@rem # requirements used by defaults and with --dev
+set "REQUIREMENTS=--editable . --constraint requirements.txt"
+set "DEV_REQUIREMENTS=--editable .[dev] --constraint requirements.txt --constraint requirements-dev.txt"
 
-:continue
-
-@rem default to dev configuration when no args are passed
-if "%SCANCODE_CLI_ARGS%"==" " (
-    set SCANCODE_CLI_ARGS="%CONF_DEFAULT%"
-    goto configure
+@rem # default supported Python version
+if not defined CONFIGURE_SUPPORTED_PYTHON (
+    set CONFIGURE_SUPPORTED_PYTHON=3.6
 )
 
-:configure
-if not exist "c:\python27\python.exe" (
-    echo(
-    echo On Windows, ScanCode requires Python 2.7.x 32 bits to be installed first.
-    echo(
-    echo Please download and install Python 2.7 ^(Windows x86 MSI installer^) version 2.7.10.
-    echo Install Python on the c: drive and use all default installer options.
-    echo Do NOT install Python v3 or any 64 bits edition.
-    echo Instead download Python from this url and see the README.rst file for more details:
-    echo(
-    echo    https://www.python.org/ftp/python/2.7.15/python-2.7.15.msi
-    echo(
+@rem #################################
+
+@rem Current directory where this script lives
+set PROJECT_ROOT_DIR=%~dp0
+
+
+@rem parse command line options
+set CLI_ARGS="%REQUIREMENTS%"
+set CONFIGURE_DEV_MODE=0
+if "%1" EQU "--help"   (goto cli_help)
+if "%1" EQU "--clean"  (set CLI_ARGS=--clean)
+if "%1" EQU "--dev"    (
+    set CLI_ARGS=%DEV_REQUIREMENTS%
+    set CONFIGURE_DEV_MODE=1
+)
+
+
+@rem find a proper Python to run
+if defined CONFIGURE_PYTHON_EXECUTABLE (
+    if exist "%CONFIGURE_PYTHON_EXECUTABLE%" (
+        goto run
+    )
+)
+
+:find_python
+
+@rem Check the existence of the "py" launcher available in Python 3
+@rem If we have it, check if we have a py -3 installed with the required version
+@rem Try to use a Python in the path if all else fail
+
+where py >nul 2>nul
+if %ERRORLEVEL% == 0 (
+    @rem we have a py launcher, check for the availability of our Python 3 version
+    set CONFIGURE_PYTHON_EXECUTABLE=py -%CONFIGURE_SUPPORTED_PYTHON%%
+    %CONFIGURE_PYTHON_EXECUTABLE% --version >nul 2>nul
+    if %ERRORLEVEL% neq 0 (
+        echo "* Unable to find a suitable installation of Python %CONFIGURE_SUPPORTED_PYTHON%."
+        exit /b 1
+    )
+) else (
+    echo "* Unable to find a suitable installation of Python %CONFIGURE_SUPPORTED_PYTHON%."
     exit /b 1
 )
 
-call c:\python27\python.exe "%SCANCODE_ROOT_DIR%etc\configure.py" %SCANCODE_CLI_ARGS%
-if %errorlevel% neq 0 (
-    exit /b %errorlevel%
-)
-if exist "%SCANCODE_ROOT_DIR%bin\activate" (
-    "%SCANCODE_ROOT_DIR%bin\activate"
-)
-goto EOS
+:run
+@rem ################################
 
-:EOS
+@rem # Setup development mode
+
+if "%CONFIGURE_DEV_MODE%" == 1 (
+    @rem # Add development tag file to auto-regen license index on file changes
+    echo. 2>%%PROJECT_ROOT_DIR%\SCANCODE_DEV_MODE"
+)
+
+@rem # Run configure scripts proper and activate
+
+@rem without this there are some heisenbugs on Windows 10
+@rem but this make scancode run slower
+set PYTHONDONTWRITEBYTECODE=1
+
+
+call %CONFIGURE_PYTHON_EXECUTABLE% "%PROJECT_ROOT_DIR%etc\configure.py" %CLI_ARGS%
+
+@rem Return a proper return code on failure
+if %ERRORLEVEL% neq 0 (
+    exit /b %ERRORLEVEL%
+)
+
+endlocal
+
+@rem # Activate the virtualenv if it exists
+if exist "%PROJECT_ROOT_DIR%Scripts\activate" (
+    "%PROJECT_ROOT_DIR%Scripts\activate"
+)
+exit /b 0

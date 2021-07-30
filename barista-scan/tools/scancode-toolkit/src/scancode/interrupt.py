@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 nexB Inc. and others. All rights reserved.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # http://nexb.com and https://github.com/nexB/scancode-toolkit/
 # The ScanCode software is licensed under the Apache License version 2.0.
 #
@@ -11,36 +11,36 @@
 # specific language governing permissions and limitations under the License.
 #
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from traceback import format_exc as traceback_format_exc
 
 from commoncode.system import on_windows
 
 """
-This modules povides an interruptible() function to run a callable and stop it
-after a timeout with a windows and POSIX implementation.
+This module povides an interruptible() function to run a callable and stop it if
+it does not return after a timeout for both Windows (using threads) and
+POSIX/Linux/macOS (using signals).
 
 interruptible() calls the `func` function with `args` and `kwargs` arguments and
-return a tuple of (error, value). `func` is invoked through an OS- specific
+return a tuple of (error, value). `func` is invoked through an OS-specific
 wrapper and will be interrupted if it does not return within `timeout` seconds.
 
-`func` returned results must be pickable.
-`timeout` in seconds defaults to DEFAULT_TIMEOUT.
-`args` and `kwargs` are passed to `func` as *args and **kwargs.
+- `func` returned `value` MUST BE pickable.
+- `timeout` is an int of seconds defaults to DEFAULT_TIMEOUT.
+- `args` and `kwargs` are passed to `func` as *args and **kwarg.
 
-In the returned tuple of (`error`, `value`), `error` is an error string or None.
-The error message is verbose with a full traceback.
-`value` is the returned value of `func` or None.
+In the returned tuple of (`error`, `value`) we can have these two cases:
 
-If `error` is not None, the call did not complete within `timeout`
-seconds and was interrupted. In this case, the returned `value` is None.
+ - if the function did run correctly and completed within `timeout` seconds then
+   `error` is None and `value` contains the returned value.
+
+ - if the function raised en exception or did not complete within `timeout`
+   seconds then `error` is a verbose error message that contains a full
+   traceback and `value` is None.
 """
 
 
-class TimeoutError(Exception):
+class TimeoutError(Exception):  # NOQA
     pass
 
 
@@ -99,24 +99,22 @@ if not on_windows:
         finally:
             setitimer(ITIMER_REAL, 0)
 
-else:
+elif on_windows:
     """
     Run a function in an interruptible thread with a timeout.
     Based on an idea of dano "Dan O'Reilly"
     http://stackoverflow.com/users/2073595/dano
-    But not code has been reused from this post.
+    But no code has been reused from this post.
     """
 
     from ctypes import c_long
     from ctypes import py_object
     from ctypes import pythonapi
     from multiprocessing import TimeoutError as MpTimeoutError
-    from Queue import Empty as Queue_Empty
-    from Queue import Queue
-    try:
-        from thread import start_new_thread
-    except ImportError:
-        from _thread import start_new_thread
+
+    from queue import Empty as Queue_Empty
+    from queue import Queue
+    from _thread import start_new_thread
 
     def interruptible(func, args=None, kwargs=None, timeout=DEFAULT_TIMEOUT):
         """
@@ -127,6 +125,10 @@ else:
         results = Queue()
 
         def runner():
+            """
+            Run the func and send results back in a queue as a tuple of
+            (`error`, `value`)
+            """
             try:
                 _res = func(*(args or ()), **(kwargs or {}))
                 results.put((NO_ERROR, _res,))
@@ -136,6 +138,7 @@ else:
         tid = start_new_thread(runner, ())
 
         try:
+            # wait for the queue results up to timeout
             err_res = results.get(timeout=timeout)
 
             if not err_res:
@@ -180,9 +183,9 @@ else:
 
 def fake_interruptible(func, args=None, kwargs=None, timeout=DEFAULT_TIMEOUT):
     """
-    Fake, non-interruptible, using no threads and no signals
-    implementation used for debugging. This ignores the timeout and just
-    the function as-is.
+    Fake interruptible that is not interruptible and has no timeout and is using
+    no threads and no signals This implementation is used for debugging. This
+    ignores the timeout and just runs the function as-is.
     """
 
     try:

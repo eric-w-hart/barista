@@ -1,49 +1,49 @@
 #
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
+import csv
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
+import saneyaml
 
-from collections import OrderedDict
-
-import unicodecsv
-
+from commoncode.cliutils import PluggableCommandLineOption
+from commoncode.cliutils import OUTPUT_GROUP
 from plugincode.output import output_impl
 from plugincode.output import OutputPlugin
-from scancode import CommandLineOption
-from scancode import FileOptionType
-from scancode import OUTPUT_GROUP
+
+from formattedcode import FileOptionType
+
+# Tracing flags
+TRACE = False
+
+
+def logger_debug(*args):
+    pass
+
+
+if TRACE:
+    import sys
+    import logging
+
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(stream=sys.stdout)
+    logger.setLevel(logging.DEBUG)
+
+    def logger_debug(*args):
+        return logger.debug(' '.join(isinstance(a, str)
+                                     and a or repr(a) for a in args))
 
 
 @output_impl
 class CsvOutput(OutputPlugin):
 
     options = [
-        CommandLineOption(('--csv',),
-            type=FileOptionType(mode='wb', lazy=True),
+        PluggableCommandLineOption(('--csv',),
+            type=FileOptionType(mode='w', encoding='utf-8', lazy=True),
             metavar='FILE',
             help='Write scan output as CSV to FILE.',
             help_group=OUTPUT_GROUP,
@@ -62,7 +62,7 @@ def write_csv(results, output_file):
     # FIXMe: this is reading all in memory
     results = list(results)
 
-    headers = OrderedDict([
+    headers = dict([
         ('info', []),
         ('license_expression', []),
         ('license', []),
@@ -79,7 +79,7 @@ def write_csv(results, output_file):
     for key_group in headers.values():
         ordered_headers.extend(key_group)
 
-    w = unicodecsv.DictWriter(output_file, ordered_headers)
+    w = csv.DictWriter(output_file, fieldnames=ordered_headers)
     w.writeheader()
 
     for r in rows:
@@ -104,9 +104,8 @@ def flatten_scan(scan, headers):
     for scanned_file in scan:
         path = scanned_file.pop('path')
 
-        # alway use a root slash
-        if not path.startswith('/'):
-            path = '/' + path
+        # removing any slash at the begening of the path
+        path = path.lstrip('/')
 
         # use a trailing slash for directories
         if scanned_file.get('type') == 'directory' and not path.endswith('/'):
@@ -114,7 +113,7 @@ def flatten_scan(scan, headers):
 
         errors = scanned_file.pop('scan_errors', [])
 
-        file_info = OrderedDict(Resource=path)
+        file_info = dict(Resource=path)
         file_info.update(((k, v) for k, v in scanned_file.items()
         # FIXME: info are NOT lists: lists are the actual scans
                           if not isinstance(v, (list, dict))))
@@ -125,12 +124,12 @@ def flatten_scan(scan, headers):
         yield file_info
 
         for lic_exp in scanned_file.get('license_expressions', []):
-            inf = OrderedDict(Resource=path, license_expression=lic_exp)
+            inf = dict(Resource=path, license_expression=lic_exp)
             collect_keys(inf, 'license_expression')
             yield inf
 
         for licensing in scanned_file.get('licenses', []):
-            lic = OrderedDict(Resource=path)
+            lic = dict(Resource=path)
             for k, val in licensing.items():
                 # do not include matched text for now.
                 if k == 'matched_text':
@@ -141,6 +140,8 @@ def flatten_scan(scan, headers):
                         if mrk in ('match_coverage', 'rule_relevance'):
                             # normalize the string representation of this number
                             mrv = '{:.2f}'.format(mrv)
+                        else:
+                            mrv = pretty(mrv)
                         mrk = 'matched_rule__' + mrk
                         lic[mrk] = mrv
                     continue
@@ -158,7 +159,7 @@ def flatten_scan(scan, headers):
             yield lic
 
         for copyr in scanned_file.get('copyrights', []):
-            inf = OrderedDict(Resource=path)
+            inf = dict(Resource=path)
             inf['copyright'] = copyr['value']
             inf['start_line'] = copyr['start_line']
             inf['end_line'] = copyr['start_line']
@@ -166,7 +167,7 @@ def flatten_scan(scan, headers):
             yield inf
 
         for copyr in scanned_file.get('holders', []):
-            inf = OrderedDict(Resource=path)
+            inf = dict(Resource=path)
             inf['copyright_holder'] = copyr['value']
             inf['start_line'] = copyr['start_line']
             inf['end_line'] = copyr['start_line']
@@ -174,7 +175,7 @@ def flatten_scan(scan, headers):
             yield inf
 
         for copyr in scanned_file.get('authors', []):
-            inf = OrderedDict(Resource=path)
+            inf = dict(Resource=path)
             inf['author'] = copyr['value']
             inf['start_line'] = copyr['start_line']
             inf['end_line'] = copyr['start_line']
@@ -182,13 +183,13 @@ def flatten_scan(scan, headers):
             yield inf
 
         for email in scanned_file.get('emails', []):
-            email_info = OrderedDict(Resource=path)
+            email_info = dict(Resource=path)
             email_info.update(email)
             collect_keys(email_info, 'email')
             yield email_info
 
         for url in scanned_file.get('urls', []):
-            url_info = OrderedDict(Resource=path)
+            url_info = dict(Resource=path)
             url_info.update(url)
             collect_keys(url_info, 'url')
             yield url_info
@@ -199,122 +200,125 @@ def flatten_scan(scan, headers):
             yield flat
 
 
-def flatten_package(_package, path, prefix='package__'):
+def pretty(data):
+    """
+    Return a unicode text pretty representation of data (as YAML or else) if
+    data is a sequence or mapping or the data as-is otherwise
+    """
+    if not data:
+        return None
+    seqtypes = list, tuple
+    maptypes = dict, dict
+    coltypes = seqtypes + maptypes
+    if isinstance(data, seqtypes):
+        if len(data) == 1 and isinstance(data[0], str):
+            return data[0].strip()
+    if isinstance(data, coltypes):
+        return saneyaml.dump(
+            data, indent=2, encoding='utf-8').decode('utf-8').strip()
+    return data
+
+
+def get_package_columns(_columns=set()):
+    """
+    Return (and cache in_columns) a set of package column names included in the
+    CSV output.
+    Some columsn are excluded for now such as lists of mappings: these do not
+    serialize well to CSV
+    """
+    if _columns:
+        return _columns
+
+    from packagedcode.models import Package
 
     # exclude some columns for now that contain list of items
-    excluded_package_columns = {
+    excluded_columns = {
         # list of strings
-        'download_checksums',
         'keywords',
         # list of dicts
         'parties',
         'dependencies',
-
-        # comming from a match
-
-        # we have license_expression we do not need more
-        'licenses_summary',
-        'licenses',
-        'license_choices_expression',
-        'license_choices',
-
-        'api_url',
-        'uuid',
-        'sha1',
-        'md5',
-        'owner',
-
-        'reference_notes',
-        'project',
-        'codescan_identifier',
-        'is_license_notice',
-        'is_copyright_notice',
-        'is_notice_in_codebase',
-        # 'notice_filename',
-        # 'notice_url',
-        'website_terms_of_use',
-        'is_active',
-        'curation_level',
-        'completion_level',
-        'guidance',
-        'admin_notes',
-        'ip_sensitivity_approved',
-        'affiliate_obligations',
-        'affiliate_obligation_triggers',
-        'concluded_license',
-        'legal_comments',
-        'legal_reviewed',
-        'approval_reference',
-        'distribution_formats_allowed',
-        'acceptable_linkage',
-        'export_restrictions',
-        'approved_download_location',
-        'approved_community_interaction',
-        'urn',
-        'created_date',
-        'last_modified_date',
-        'dataspace',
-        'external_references',
-        'display_name',
-        'notes',
-        'origin_date',
-        'sublicense_allowed',
+        'source_packages',
     }
 
-    pack = OrderedDict(Resource=path)
+    # some extra columns for components
+    extra_columns = [
+        'components',
+        'owner_name',
+        'reference_notes',
+        'description',
+        'notice_filename',
+        'notice_url',
+    ]
+
+    fields = Package.fields() + extra_columns
+    _columns = set(f for f in fields if f not in excluded_columns)
+    return _columns
+
+
+def flatten_package(_package, path, prefix='package__'):
+
+    # known package columns
+
+    package_columns = get_package_columns()
+
+    pack = dict(Resource=path)
     for k, val in _package.items():
-        # FIXME: we only keep for now some of the value collections
-        if k in excluded_package_columns:
+        if k not in package_columns:
             continue
+
         # prefix columns with "package__"
         nk = prefix + k
 
         if k == 'version':
-            if val:
+            val = val or ''
+            if val and not val.lower().startswith('v'):
                 # prefix versions with a v to avoid spreadsheet tools to mistake
-                # a version for a number or date.
+                # a version for a number or date when reading CSVs (common with
+                # Excel and LibreOffice).
                 val = 'v ' + val
-                pack[nk] = val
-            else:
-                pack[nk] = ''
+            pack[nk] = val
             continue
 
-        # these may come from a match
-
+        # these may come from a component matched
         if k == 'components' and val and isinstance(val, list):
-            for compo in val:
-                for compo_key, compo_val in compo.items():
-                    if compo_key in excluded_package_columns:
+            for component in val:
+                for component_key, component_val in component.items():
+                    if component_key not in package_columns:
                         continue
 
-                    compo_nk = nk + '__' + compo_key
+                    component_new_key = nk + '__' + component_key
 
-                    if compo_val is None:
-                        pack[compo_nk] = ''
+                    if component_val is None:
+                        pack[component_new_key] = ''
                         continue
 
-                    if not isinstance(compo_val, basestring):
-                        compo_val = repr(compo_val)
-                    existing = pack.get(compo_nk) or []
-                    pack[compo_nk] = ' \n'.join(existing + [compo_val])
-            continue
+                    if isinstance(component_val, list):
+                        component_val = '\n'.join(component_val)
 
-        if k == 'match':
-            for mk, mval in val.items():
-                match_nk = nk + '__' + mk
-                pack[match_nk] = mval
+                    if not isinstance(component_val, str):
+                        component_val = repr(component_val)
+
+                    existing = pack.get(component_new_key) or []
+                    if not isinstance(existing, list):
+                        existing = [existing]
+
+                    if TRACE:
+                        logger_debug('component_new_key:', component_new_key, 'existing:', type(existing), repr(existing))
+                        logger_debug('component_key:', component_key, 'component_val:', type(component_val), repr(component_val))
+
+                    pack[component_new_key] = ' \n'.join(existing + [component_val])
             continue
 
         # everything else
-        # collect all the keys
 
         pack[nk] = ''
 
-        if isinstance(val, basestring):
+        if isinstance(val, str):
             pack[nk] = val
         else:
             # Use repr if not a string
             if val:
-                pack[nk] = repr(val)
+                pack[nk] = pretty(val)
 
     return pack

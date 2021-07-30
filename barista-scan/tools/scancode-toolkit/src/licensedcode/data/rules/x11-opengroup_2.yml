@@ -1,4 +1,7 @@
 license_expression: x11-opengroup
 is_license_text: yes
-minimum_coverage: 80
-notes: somehow this has been truncated
+relevance: 90
+minimum_coverage: 90
+notes: truncated text
+ignorable_authors:
+    - authorization from The Open Group

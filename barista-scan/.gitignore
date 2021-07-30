@@ -32,6 +32,8 @@ lerna-debug.log*
 
 tools/dependency-check/data
 tools/scancode-toolkit/bin
+tools/scancode-toolkit/lib
+tools/scancode-toolkit/pyvenv.cfg
 junit.xml
 
 .env.local

@@ -154,12 +154,15 @@ export class LicenseScanResultItemService extends AppServiceBase<LicenseScanResu
       resultItem.licenseScan = licenseScanResult;
       await resultItem.save();
 
-      this.logger.log(
-        `SAVING licenseResultItem.path: ${resultItem.path}\n \
-            licenseResultItem.id: ${resultItem.id}\n \
-            LicenseScanResult.id:${licenseScanResult.id}\n \
-            Scan.id:${licenseScanResult.scan.id}`,
-      );
+      this.logger.log(`SAVING licenseResultItem.path: ${resultItem.path}`);
+      
+
+      // this.logger.log(
+      //   `SAVING licenseResultItem.path: ${resultItem.path}\n \
+      //       licenseResultItem.id: ${resultItem.id}\n \
+      //       LicenseScanResult.id:${licenseScanResult.id}\n \
+      //       Scan.id:${licenseScanResult.scan.id}`,
+      // );
 
       return resultItem;
     } catch (ex) {

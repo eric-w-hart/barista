@@ -10,3 +10,10 @@ text_urls:
     - http://www.nethack.org/common/license.html
 other_urls:
     - http://www.opensource.org/licenses/NGPL
+    - https://opensource.org/licenses/NGPL
+ignorable_copyrights:
+    - Copyright (c) 1989 M. Stephenson
+    - copyright 1988 Richard M. Stallman
+ignorable_holders:
+    - M. Stephenson
+    - Richard M. Stallman

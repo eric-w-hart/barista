@@ -44,13 +44,13 @@ export class LicenseNugetService extends ScannerBaseService {
     const url = nuspec.licenseUrl;
 
     if (nuspec && !_.isEmpty(url)) {
-      this.logger.log(`fetchLicense() found a licenseUrl [${url}] for nuspec: ${nuspec.id}`);
+      //this.logger.log(`fetchLicense() found a licenseUrl [${url}] for nuspec: ${nuspec.id}`);
       const file = tmp.tmpNameSync({
         prefix: 'license-',
         postfix: '.txt',
         dir: nuspec.dir,
       });
-      this.logger.log(`fetchLicense() generated tmp filename: ${file}`);
+      //this.logger.log(`fetchLicense() generated tmp filename: ${file}`);
 
       const BARISTA_OSS_USERNAME = process.env.BARISTA_OSS_USERNAME;
       const BARISTA_OSS_PASSWORD = process.env.BARISTA_OSS_PASSWORD;
@@ -58,20 +58,20 @@ export class LicenseNugetService extends ScannerBaseService {
       const HTTPS_PROXY_PORT = process.env.HTTPS_PROXY_PORT;
 
       let requestFn = () => {
-        this.logger.log('--- NOT Adding proxy information to the NVD fetch.');
+        //this.logger.log('--- NOT Adding proxy information to the NVD fetch.');
         return rp(url);
       };
 
-      this.logger.log(`BARISTA_OSS_USERNAME:${!_.isEmpty(BARISTA_OSS_USERNAME)}\n \
-      BARISTA_OSS_PASSWORD:${!_.isEmpty(BARISTA_OSS_PASSWORD)}\n \
-      HTTPS_PROXY_SERVER: ${HTTPS_PROXY_SERVER}\n \
-      HTTPS_PROXY_PORT: ${HTTPS_PROXY_PORT}`);
+      // this.logger.log(`BARISTA_OSS_USERNAME:${!_.isEmpty(BARISTA_OSS_USERNAME)}\n \
+      // BARISTA_OSS_PASSWORD:${!_.isEmpty(BARISTA_OSS_PASSWORD)}\n \
+      // HTTPS_PROXY_SERVER: ${HTTPS_PROXY_SERVER}\n \
+      // HTTPS_PROXY_PORT: ${HTTPS_PROXY_PORT}`);
 
       if (BARISTA_OSS_USERNAME && BARISTA_OSS_PASSWORD && HTTPS_PROXY_SERVER && HTTPS_PROXY_PORT) {
         const proxy = `http://${BARISTA_OSS_USERNAME}:${BARISTA_OSS_PASSWORD}@${HTTPS_PROXY_SERVER}:${HTTPS_PROXY_PORT}`;
 
         requestFn = () => {
-          this.logger.log('+++ Adding proxy information to the NVD fetch.');
+          //this.logger.log('+++ Adding proxy information to the NVD fetch.');
           return rp({
             url,
             proxy,
@@ -83,10 +83,10 @@ export class LicenseNugetService extends ScannerBaseService {
         this.logger.error(`fetchLicense() error: ${error}`);
       });
 
-      if (response && !_.isEmpty(response.data)) {
-        licenseText = htmlToText.fromString(response.data);
+      if (response && !_.isEmpty(response)) {
+        licenseText = htmlToText.fromString(response);
 
-        this.logger.log(`fetchLicense() writing file...`);
+        this.logger.log(`fetchLicense() writing file ${file}`);
         fs.writeFileSync(file, licenseText);
       } else {
         this.logger.error(`fetchLicense() response.data was empty!`);
@@ -136,6 +136,7 @@ export class LicenseNugetService extends ScannerBaseService {
       try {
         // Get all nNuSpecs from the file system
         const filenames = await this.getPackageSpecFilenames(path.join(jobInfo.tmpDir, 'dependencies'));
+
         // Convert each into json
         const nuspecs = await this.getPackageSpecJson(filenames);
 
@@ -166,22 +167,46 @@ export class LicenseNugetService extends ScannerBaseService {
     });
   }
 
+
+  //  This is probably the code I need to modify - BKM
+
+
   public async postProcess(
     licenseScanResult: LicenseScanResult,
     nuspecs: any[],
     jobInfo?: DefaultScanWorkerJobInfo,
   ): Promise<void> {
+    const that = this;
     return new Promise<void>(async resolve => {
+      const licenseFetchOperations = [];
       const operations = [];
+      const config = await SystemConfiguration.defaultConfiguration();
+
+      let rawScanCodeResult;
+      if (nuspecs.length > 0) {
+        nuspecs.forEach(nuspec => {
+          const licenseFetchOperation = async () => {
+            try {
+              await that.fetchLicense(nuspec);
+            } catch (e) {
+              this.logger.debug(`postProcess:Operation error: ${JSON.stringify(e)}`);
+            }
+          };
+  
+          licenseFetchOperations.push(licenseFetchOperation);
+        });
+
+        const licenseFetchResults = await pAll(licenseFetchOperations, { concurrency: config.maxProcesses });
+
+        rawScanCodeResult = await this.scanForLicenses(nuspecs[0], jobInfo);
+      }
 
       nuspecs.forEach(nuspec => {
         const operation = async () => {
           try {
             const packageName = this.getPackageName(nuspec);
 
-            await this.fetchLicense(nuspec);
-            const rawScanCodeResult = await this.scanForLicenses(nuspec, jobInfo);
-            const scanCodeOutput = await this.scanCodeService.extractLicenseInformation(rawScanCodeResult);
+            const scanCodeOutput = await this.scanCodeService.extractLicenseInformation(rawScanCodeResult, nuspec.dir.substring(nuspec.dir.indexOf("dependencies/") + 13));
 
             return {
               scanCodeOutput,
@@ -196,7 +221,7 @@ export class LicenseNugetService extends ScannerBaseService {
         operations.push(operation);
       });
 
-      const config = await SystemConfiguration.defaultConfiguration();
+      //const config = await SystemConfiguration.defaultConfiguration();
       const results = await pAll(operations, { concurrency: config.maxProcesses });
 
       await pit.forEachSeries(results, async (result: any) => {
@@ -246,23 +271,8 @@ export class LicenseNugetService extends ScannerBaseService {
   }
 
   public async scanForLicenses(nuspec: any, jobInfo?: DefaultScanWorkerJobInfo) {
-    const tmpDir = tmp.dirSync();
 
-    // Get Files
-    const files = getDirFiles(`${nuspec.dir}/`);
-
-    // Copy Files
-    files.forEach(file => {
-      if (file) {
-        try {
-          shelljs.cp(file, tmpDir.name);
-        } catch (e) {
-          this.logger.error(`scanForLicenses() ${nuspec.id} error: ${e}`);
-        }
-      }
-    });
-
-    const scanResults = await this.scanCodeService.scanDir(tmpDir.name, jobInfo);
+    const scanResults = await this.scanCodeService.scanDir(path.join(jobInfo.tmpDir, 'dependencies'), jobInfo);
     return scanResults;
   }
 }

@@ -4,5 +4,8 @@ name: JRunner Software License
 category: Proprietary Free
 owner: Altera Corporation
 homepage_url: https://www.altera.com/download/licensing/lic-jrunner.html
+spdx_license_key: LicenseRef-scancode-jrunner
 text_urls:
+    - https://www.altera.com/download/licensing/lic-jrunner.html
+ignorable_urls:
     - https://www.altera.com/download/licensing/lic-jrunner.html

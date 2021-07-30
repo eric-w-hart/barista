@@ -4,5 +4,12 @@ name: ITU License
 category: Permissive
 owner: ITU - International Telecommunications Union
 homepage_url: http://www.itu.int/
+spdx_license_key: LicenseRef-scancode-itu
 text_urls:
+    - http://www.itu.int/
+ignorable_copyrights:
+    - Copyright, International Telecommunications Union, Geneva
+ignorable_holders:
+    - International Telecommunications Union, Geneva
+ignorable_urls:
     - http://www.itu.int/

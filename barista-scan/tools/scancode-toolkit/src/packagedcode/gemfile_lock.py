@@ -1,39 +1,29 @@
 #
-# Copyright (c) 2017 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from collections import namedtuple
-from collections import OrderedDict
+import functools
 import logging
 import re
 
-from six import string_types
+import attr
 
+from commoncode.datautils import choices
+from commoncode.datautils import Boolean
+from commoncode.datautils import Date
+from commoncode.datautils import Integer
+from commoncode.datautils import List
+from commoncode.datautils import Mapping
+from commoncode.datautils import String
+from commoncode.datautils import TriBoolean
 from textcode import analysis
+
 
 """
 Handle Gemfile.lock Rubygems lockfile.
@@ -112,62 +102,89 @@ if TRACE:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, string_types) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 
-class GemDependency(namedtuple('GemDependency', 'name version')):
+# Section headings: these are also used as switches to track a parsing state
+PATH = u'PATH'
+GIT = u'GIT'
+SVN = u'SVN'
+GEM = u'GEM'
+PLATFORMS = u'PLATFORMS'
+DEPENDENCIES = u'DEPENDENCIES'
+SPECS = u'  specs:'
 
-    def __new__(cls, name, version=None):
-        return super(GemDependency, cls).__new__(cls, name, version)
+# types of Gems, which is really where they are provisioned from
+# RubyGems repo, local path or VCS
+GEM_TYPES = (GEM, PATH, GIT, SVN,)
 
 
+@attr.s()
+class GemDependency(object):
+    name = String()
+    version = String()
+
+
+@attr.s()
 class Gem(object):
     """
-    A Gem can be packaged as .gem, or a source gem either fetched from GIT or
-    SVN or in a local path.
+    A Gem can be packaged as a .gem archive, or it can be a source gem either
+    fetched from GIT or SVN or from a local path.
     """
     supported_opts = 'remote', 'ref', 'revision', 'branch', 'submodules', 'tag',
 
-    def __init__(self, name=None, version=None, platform=None):
-        self.name = name
-        self.version = version
-        self.platform = platform
-        # remote which may be a path, git, svn or Gem repo url
-        # one of GEM, PATH, GIT or SVN
-        self.remote = None
-        self.type = None
-        self.pinned = False
-        self.spec_version = None
-        # relative path
-        self.path = None
+    name = String()
+    version = String()
 
-        self.revision = None
-        self.ref = None
-        self.branch = None
-        self.submodules = None
-        self.tag = None
+    platform = String(
+        help='Gem platform')
 
-        # list of constraints such as '>= 1.1.9'
-        self.requirements = []
+    remote = String(
+        help='remote can be a path, git, svn or Gem repo url. One of GEM, PATH, GIT or SVN')
 
-        # a map of direct dependent Gems, keyed by name
-        self.dependencies = OrderedDict()
+    type = String(
+        # validator=choices(GEM_TYPES),
+        help='the type of this Gem: One of: {}'.format(', '.join(GEM_TYPES))
+    )
+    pinned = Boolean()
+    spec_version = String()
 
-    def __repr__(self):
-        return ('Gem(name=%(name)r, version=%(version)r, type=%(type)r)' % self.__dict__)
+    # relative path
+    path = String()
 
-    __str__ = __repr__
+    revision = String(
+        help='A version control full revision (e.g. a Git commit hash).'
+    )
+
+    ref = String(
+        help='A version control ref (such as a tag, a shortened revision hash, etc.).'
+    )
+
+    branch = String()
+    submodules = String()
+    tag = String()
+
+    requirements = List(
+        item_type=String,
+        help='list of constraints such as ">= 1.1.9"'
+    )
+
+    dependencies = Mapping(
+        help='a map of direct dependent Gems, keyed by name',
+        value_type='Gem',
+    )
 
     def refine(self):
         """
-        Apply some refinements to the Gem based on the type:
+        Apply some refinements to the Gem based on its type:
          - fix version and revisions for Gems checked-out from VCS
         """
         if self.type == PATH:
             self.path = self.remote
 
         if self.type in (GIT, SVN,):
-            # TODO: this may not be correct for SVN
+            # FIXME: this likely WRONG
+            # TODO: this may not be correct for SVN BUT SVN has been abandoned
             self.spec_version = self.version
             if self.revision and not self.ref:
                 self.version = self.revision
@@ -193,22 +210,36 @@ class Gem(object):
 
     def flatten(self):
         """
-        Return a flattened list of parent/child tuples.
+        Return a sorted flattened list of unique parent/child tuples.
         """
         flattened = []
+        seen = set()
         for gem in self.dependencies.values():
-            flattened.append((self, gem,))
-            flattened.extend(gem.flatten())
-        return sorted(set(flattened))
+            snv = self.type, self.name, self.version
+            gnv = gem.type, gem.name, gem.version
+            rel = self, gem
+            rel_key = snv, gnv
+            if rel_key not in seen:
+                flattened.append(rel)
+                seen.add(rel_key)
+            for rel in gem.flatten():
+                parent, child = rel
+                pnv = parent.type, parent.name, parent.version
+                cnv = child.type, child.name, child.version
+                rel_key = pnv, cnv
+                if rel_key not in seen:
+                    flattened.append(rel)
+                    seen.add(rel_key)
+        return sorted(flattened)
 
     def dependency_tree(self):
         """
         Return a tree of dependencies as nested mappings.
         Each key is a "name@version" string and values are dicts.
         """
-        tree = OrderedDict()
+        tree = {}
         root = '{}@{}'.format(self.name or '', self.version or '')
-        tree[root] = OrderedDict()
+        tree[root] = {}
         for _name, gem in self.dependencies.items():
             tree[root].update(gem.dependency_tree())
         return tree
@@ -217,7 +248,7 @@ class Gem(object):
         """
         Return a native mapping for this Gem.
         """
-        return OrderedDict([
+        return dict([
             ('name', self.name),
             ('version', self.version),
             ('platform', self.platform),
@@ -271,18 +302,18 @@ NAME_VERSION = (
     # negative lookahead: not a space
     '(?! )'
     # a Gem name: several chars are not allowed
-    '(?P<name>[^ \(\)\,\!\:]+)?'
+    '(?P<name>[^ \\)\\(,!:]+)?'
     # a space then opening parens (
-    '(?: \('
+    '(?: \\('
     # the version proper which is anything but a dash
     '(?P<version>[^-]*)'
     # and optionally some non-captured dash followed by anything, once
     # pinned version can have this form:
     # version-platform
     # json (1.8.0-java) alpha (1.9.0-x86-mingw32) and may not contain a !
-    '(?:-(?P<platform>[^\!]*))?'
+    '(?:-(?P<platform>[^!]*))?'
     # closing parens )
-    '\)'
+    '\\)'
     # NV is zero or one time
     ')?')
 
@@ -293,7 +324,7 @@ DEPS = re.compile(
     # NV proper
     '%(NAME_VERSION)s'
     # optional bang pinned
-    '(?P<pinned>\!)?'
+    '(?P<pinned>!)?'
     '$' % locals()).match
 
 # parse spec-level dependencies
@@ -311,19 +342,6 @@ SPEC_SUB_DEPS = re.compile(
     '$' % locals()).match
 
 PLATS = re.compile('^  (?P<platform>.*)$').match
-
-# Section headings: these are also used as switches to track a parsing state
-PATH = u'PATH'
-GIT = u'GIT'
-SVN = u'SVN'
-GEM = u'GEM'
-PLATFORMS = u'PLATFORMS'
-DEPENDENCIES = u'DEPENDENCIES'
-SPECS = u'  specs:'
-
-# types of Gems, which is really where they are provisioned from
-# RubyGems repo, local path or VCS
-GEM_TYPES = (GEM, PATH, GIT, SVN,)
 
 
 class GemfileLockParser(object):
@@ -350,10 +368,10 @@ class GemfileLockParser(object):
         }
 
         # the final tree of dependencies, keyed by name
-        self.dependency_tree = OrderedDict()
+        self.dependency_tree = {}
 
         # a flat dict of all gems, keyed by name
-        self.all_gems = OrderedDict()
+        self.all_gems = {}
 
         self.platforms = []
 
@@ -469,7 +487,7 @@ class GemfileLockParser(object):
         # for bundler: not finding one is an error
         try:
             gem = self.all_gems[name]
-        except KeyError, e:
+        except KeyError as e:
             gem = Gem(name)
             self.all_gems[name] = gem
             if name != 'bundler' and TRACE:

@@ -2,7 +2,7 @@ ARG BASETAG=compose
 ARG REPO=""
 ARG DOCKER=""
 
-FROM ${DOCKER}golang:1.15 as go
+FROM ${DOCKER}golang:1.16 as go
 
 FROM ${REPO}barista-scanbase:${BASETAG}
 ADD tools/docker-entrypoint.ksh /docker-entrypoint.ksh
@@ -47,7 +47,7 @@ ENV LANG=C.UTF-8
 
 RUN go version
 
-#RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses
-#RUN chmod -R g+rwx /usr/src/app/go/
+RUN GO111MODULE=on GOBIN=/usr/local/bin/ go get github.com/google/go-licenses
+RUN chmod -R g+rwx /usr/src/app/go/
 
 USER 1011

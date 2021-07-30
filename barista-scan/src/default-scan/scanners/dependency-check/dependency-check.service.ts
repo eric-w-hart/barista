@@ -202,6 +202,7 @@ export class DependencyCheckService extends ScannerBaseService {
           this.logger.error(error, null, 'postProcess');
         });
 
+        securityScanResult.completedAt = new Date();
         await securityScanResult.save();
 
         resolve(jobInfo);

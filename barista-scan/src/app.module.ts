@@ -17,12 +17,16 @@ import { join } from 'path';
         port: Number(process.env.REDIS_PORT) || 6379,
       },
     }),
-    BullModule.registerQueue({
-      name: 'scan-queue',
-      processors: [
-        { path: join(__dirname, 'default-scan/default-scan-process.js'), concurrency: 5, name: 'default-scan' },
-      ],
-    }),
+    BullModule.registerQueue(
+      {},
+      {
+        name: 'scan-queue',
+        processors: [
+          { path: join(__dirname, 'default-scan/default-scan-process.js'), concurrency: 5, name: 'default-scan' },
+        ],
+      },
+      { name: 'scan-completed' },
+    ),
   ],
   controllers: [AppController],
   providers: [QueueFeedback, AppService],

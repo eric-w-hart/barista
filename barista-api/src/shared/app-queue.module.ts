@@ -2,9 +2,13 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { join } from 'path';
 
-const AppQueueModuleDefinitionQueue = BullModule.registerQueue({
-  name: 'scan-queue',
-});
+const AppQueueModuleDefinitionQueue = BullModule.registerQueue(
+  {},
+  {
+    name: 'scan-queue',
+  },
+  { name: 'scan-completed' },
+);
 
 const AppQueueModuleDefinition = BullModule.forRoot({
   redis: {

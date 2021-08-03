@@ -387,6 +387,7 @@ export class DefaultScanWorkerService {
           scanLog.scan = scan;
           scanLog.log = fs.readFileSync(this.jobInfo.dataDir + '/output.txt').toString();
           await scanLog.save();
+          await this.sendToCompletedQueue(scan);
 
           this.cleanup(this.jobInfo, null, resolve, reject);
         };
@@ -467,5 +468,12 @@ export class DefaultScanWorkerService {
         this.cleanup(this.jobInfo, error, resolve, reject);
       }
     });
+  }
+
+  async sendToCompletedQueue(scan: Scan) {
+    const licenseScan = await this.scanService.latestCompletedLicenseScan(scan);
+    const licenseScanResults = await this.scanService.highestLicenseStatus(licenseScan, scan.project);
+    const securityScanResults = await this.scanService.highestSecurityStatus(scan, scan.project);
+    await this.scanService.addToCompletedQueue(scan.id, scan.project, licenseScanResults, securityScanResults);
   }
 }

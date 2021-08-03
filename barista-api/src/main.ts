@@ -79,6 +79,12 @@ async function bootstrap() {
           host: process.env.REDIS_HOST || 'localhost',
           port: Number(process.env.REDIS_PORT) || 6379,
         },
+        {
+          name: 'scan-completed',
+          hostId: 'barista-queue',
+          host: process.env.REDIS_HOST || 'localhost',
+          port: Number(process.env.REDIS_PORT) || 6379,
+        },
       ],
     },
     {

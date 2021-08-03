@@ -48,6 +48,7 @@ export class ScanService extends AppServiceBase<Scan> {
     private readonly projectService: ProjectService,
     @InjectRepository(Scan) repo,
     @InjectQueue('scan-queue') readonly queue: Queue,
+    @InjectQueue('scan-completed') readonly queueCompleted: Queue,
   ) {
     super(repo);
   }
@@ -121,10 +122,9 @@ export class ScanService extends AppServiceBase<Scan> {
       let scanCodes = [];
 
       if (licenseScanResult) {
-        const licenseItems = await (await this.licenseScanResultItemService.bomLicenseResultItemQuery(
-          licenseScanResult.scan,
-          '',
-        )).getMany();
+        const licenseItems = await (
+          await this.licenseScanResultItemService.bomLicenseResultItemQuery(licenseScanResult.scan, '')
+        ).getMany();
 
         const licenseCodes = _.map(licenseItems, (item: any) => {
           return item.projectScanStatus.code;
@@ -173,10 +173,9 @@ export class ScanService extends AppServiceBase<Scan> {
       let scanCodes = [];
 
       if (securityScanResult) {
-        const securityItems = await (await this.securityScanResultItemService.bomSecurityResultItemQuery(
-          securityScanResult.scan,
-          '',
-        )).getMany();
+        const securityItems = await (
+          await this.securityScanResultItemService.bomSecurityResultItemQuery(securityScanResult.scan, '')
+        ).getMany();
 
         const codes = _.map(securityItems, (item: any) => {
           return item.projectScanStatus.code;
@@ -311,5 +310,18 @@ export class ScanService extends AppServiceBase<Scan> {
       .andWhere(`(scan.created_at > (Now() - interval '8 hour') and completed_at is null)`)
       .limit(1)
       .getOne();
+  }
+
+  async addToCompletedQueue(scanId, project, licenseScanResults, securityScanResults) {
+    const completed = this.queueCompleted.add(
+      'scan-completed',
+      {
+        scanId: scanId,
+        project: project,
+        licenseResults: licenseScanResults.code,
+        securityResults: securityScanResults.code,
+      },
+      { attempts: 1 },
+    );
   }
 }

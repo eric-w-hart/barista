@@ -16,8 +16,6 @@ import { ParsedRequestParams } from '@nestjsx/crud-request';
 import { logger } from 'elastic-apm-node';
 import { SelectQueryBuilder } from 'typeorm';
 import * as url from 'url';
-import { debug } from 'winston';
-import { git } from 'faker';
 
 @Injectable()
 export class ProjectService extends AppServiceBase<Project> {

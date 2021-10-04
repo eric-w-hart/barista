@@ -17,6 +17,7 @@ import { logger } from 'elastic-apm-node';
 import { SelectQueryBuilder } from 'typeorm';
 import * as url from 'url';
 import { debug } from 'winston';
+import { git } from 'faker';
 
 @Injectable()
 export class ProjectService extends AppServiceBase<Project> {
@@ -141,81 +142,99 @@ export class ProjectService extends AppServiceBase<Project> {
     let gitUrl = project.gitUrl;
 
     log.log(`gitUrl: ${gitUrl}`);
+    const gitServerURLS = JSON.parse(process.env['barista_git_servers']);
 
-    if (gitUrl) {
+    if (gitServerURLS) {
+      const gitServer = gitServerURLS.find((item) => {
+        return url.parse(gitUrl).hostname.toLowerCase() == url.parse(item.url).hostname.toLowerCase();
+      });
+
       const urlParts = url.parse(gitUrl);
-
-      const config = await SystemConfiguration.defaultConfiguration();
-
-      let username = null;
-      let password = null;
-
-      // If it is a GutHub.com URL, add the Github credentials
-      const isGitHubCom = urlParts.hostname.toLowerCase() === 'github.com';
-
-      if (isGitHubCom) {
-        log.log(`isGitHubCom: ${isGitHubCom}`);
-
-        if (config.githubComUsernameEnvVar && config.githubComPasswordEnvVar) {
-          if (process.env[config.githubComUsernameEnvVar]) {
-            username = process.env[config.githubComUsernameEnvVar];
-            log.log(`Setting username: process.env['${config.githubComUsernameEnvVar}']`);
-          }
-
-          if (process.env[config.githubComPasswordEnvVar]) {
-            password = process.env[config.githubComPasswordEnvVar];
-            log.log(`Setting password: process.env['${config.githubComPasswordEnvVar}']`);
-          }
-        }
-      } else {
-        // If it is a GutHub Enterprise URL, add GHE credentials
-        let isGitHubEnterprise = false;
-
-        if (process.env[config.githubEnterpriseUrlEnvVar]) {
-          const gheUrl = process.env[config.githubEnterpriseUrlEnvVar];
-
-          log.log(`gheUrl: ${gheUrl}`);
-
-          if (gheUrl) {
-            isGitHubEnterprise = urlParts.hostname.toLowerCase() === gheUrl.toLowerCase();
-
-            if (isGitHubEnterprise) {
-              log.log(`isGitHubEnterprise: ${isGitHubEnterprise}`);
-            }
-          }
-        }
-
-        if (isGitHubEnterprise) {
-          if (config.githubEnterpriseUsernameEnvVar && config.githubEnterprisePasswordEnvVar) {
-            username = process.env[config.githubEnterpriseUsernameEnvVar];
-            password = process.env[config.githubEnterprisePasswordEnvVar];
-
-            log.log(`Setting username: process.env['${config.githubEnterpriseUsernameEnvVar}']`);
-            log.log(`Setting password: process.env['${config.githubEnterprisePasswordEnvVar}']`);
-
-            if (process.env[config.githubEnterpriseUsernameEnvVar]) {
-              username = process.env[config.githubEnterpriseUsernameEnvVar];
-              log.log(`Setting username: process.env['${config.githubEnterpriseUsernameEnvVar}']`);
-            }
-
-            if (process.env[config.githubEnterprisePasswordEnvVar]) {
-              password = process.env[config.githubEnterprisePasswordEnvVar];
-              log.log(`Setting password: process.env['${config.githubEnterprisePasswordEnvVar}']`);
-            }
-          }
-        }
-      }
-
-      if (username && password) {
-        urlParts.auth = `${username}:${password}`;
+      if (gitServer.username && gitServer.password) {
+        urlParts.auth = `${gitServer.username}:${gitServer.password}`;
 
         gitUrl = url.format(urlParts);
 
-        urlParts.auth = `${username}:********`;
+        urlParts.auth = `${gitServer.username}:********`;
 
         log.log(`gitUrl: ${url.format(urlParts)}`);
       }
     }
+
+    // if (gitUrl) {
+    //   const urlParts = url.parse(gitUrl);
+
+    //   const config = await SystemConfiguration.defaultConfiguration();
+
+    //   let username = null;
+    //   let password = null;
+
+    //   // If it is a GutHub.com URL, add the Github credentials
+    //   const isGitHubCom = urlParts.hostname.toLowerCase() === 'github.com';
+
+    //   if (isGitHubCom) {
+    //     log.log(`isGitHubCom: ${isGitHubCom}`);
+
+    //     if (config.githubComUsernameEnvVar && config.githubComPasswordEnvVar) {
+    //       if (process.env[config.githubComUsernameEnvVar]) {
+    //         username = process.env[config.githubComUsernameEnvVar];
+    //         log.log(`Setting username: process.env['${config.githubComUsernameEnvVar}']`);
+    //       }
+
+    //       if (process.env[config.githubComPasswordEnvVar]) {
+    //         password = process.env[config.githubComPasswordEnvVar];
+    //         log.log(`Setting password: process.env['${config.githubComPasswordEnvVar}']`);
+    //       }
+    //     }
+    //   } else {
+    //     // If it is a GutHub Enterprise URL, add GHE credentials
+    //     let isGitHubEnterprise = false;
+
+    //     if (process.env[config.githubEnterpriseUrlEnvVar]) {
+    //       const gheUrl = process.env[config.githubEnterpriseUrlEnvVar];
+
+    //       log.log(`gheUrl: ${gheUrl}`);
+
+    //       if (gheUrl) {
+    //         isGitHubEnterprise = urlParts.hostname.toLowerCase() === gheUrl.toLowerCase();
+
+    //         if (isGitHubEnterprise) {
+    //           log.log(`isGitHubEnterprise: ${isGitHubEnterprise}`);
+    //         }
+    //       }
+    //     }
+
+    //     if (isGitHubEnterprise) {
+    //       if (config.githubEnterpriseUsernameEnvVar && config.githubEnterprisePasswordEnvVar) {
+    //         username = process.env[config.githubEnterpriseUsernameEnvVar];
+    //         password = process.env[config.githubEnterprisePasswordEnvVar];
+
+    //         log.log(`Setting username: process.env['${config.githubEnterpriseUsernameEnvVar}']`);
+    //         log.log(`Setting password: process.env['${config.githubEnterprisePasswordEnvVar}']`);
+
+    //         if (process.env[config.githubEnterpriseUsernameEnvVar]) {
+    //           username = process.env[config.githubEnterpriseUsernameEnvVar];
+    //           log.log(`Setting username: process.env['${config.githubEnterpriseUsernameEnvVar}']`);
+    //         }
+
+    //         if (process.env[config.githubEnterprisePasswordEnvVar]) {
+    //           password = process.env[config.githubEnterprisePasswordEnvVar];
+    //           log.log(`Setting password: process.env['${config.githubEnterprisePasswordEnvVar}']`);
+    //         }
+    //       }
+    //     }
+    //   }
+
+    //   if (username && password) {
+    //     urlParts.auth = `${username}:${password}`;
+
+    //     gitUrl = url.format(urlParts);
+
+    //     urlParts.auth = `${username}:********`;
+
+    //     log.log(`gitUrl: ${url.format(urlParts)}`);
+    //   }
+    // }
 
     return gitUrl;
   }

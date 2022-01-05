@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkbarista_docs=self.webpackChunkbarista_docs||[]).push([[610],{8911:function(s){s.exports={blogPosts:[]}}}]);

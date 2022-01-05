@@ -6,7 +6,7 @@ import { LicenseScanResultService } from '@app/services/license-scan-result/lice
 import { LicenseService } from '@app/services/license/license.service';
 import { ScanService } from '@app/services/scan/scan.service';
 import { getFileContentsSync } from '@app/shared/util/get-file-contents-sync';
-import { shellExecuteSync } from '@app/shared/util/shell-execute';
+import { shellExecute } from '@app/shared/util/shell-execute';
 import { Injectable, Logger } from '@nestjs/common';
 import * as execa from 'execa';
 import { cloneDeep } from 'lodash';
@@ -45,7 +45,7 @@ export class ScanCodeService extends ScannerBaseService {
     return this.licenseService.db.save(newLicense as License);
   }
 
-  async extractLicenseInformation(json: any) {
+  async extractLicenseInformation(json: any, pathToMatch: string) {
     return new Promise<any>((resolve, reject) => {
       const fileKey = 'files';
 
@@ -55,16 +55,24 @@ export class ScanCodeService extends ScannerBaseService {
           map((items: any[]) => {
             return items
               .map((item: any) => {
+                if (item.path.indexOf(pathToMatch)===-1) {
+                  return [];
+                }
+
+                let licenses=[];
                 if (item.licenses) {
                   // Let's invert the license/file so that each license will have a reference to it's file
                   // so we can report it later
-                  item.licenses.forEach(license => {
+
+                  licenses = item.licenses.filter((license:any) => {return license.key !== "unknown-license-reference" && license.key !== "proprietary-license";});
+
+                  licenses.forEach(license => {
                     const file = cloneDeep(item);
                     delete file.licenses;
                     license.file = file;
                   });
                 }
-                return item.licenses;
+                return licenses;
               })
               .reduce((previousValue: any[], currentValue: any[], currentIndex: number, array: any[]) => {
                 if (currentValue.length > 0) {
@@ -144,7 +152,7 @@ export class ScanCodeService extends ScannerBaseService {
   public async postProcess(licenseScanResult: LicenseScanResult): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       // Extract licenses
-      const rawLicenses = await this.extractLicenseInformation(licenseScanResult.jsonResults);
+      const rawLicenses = await this.extractLicenseInformation(licenseScanResult.jsonResults, null);
 
       await pit.forEachSeries(rawLicenses, async (item: any) => {
         const license = await this.upsertLicense(item);
@@ -174,9 +182,9 @@ export class ScanCodeService extends ScannerBaseService {
     const config = await SystemConfiguration.defaultConfiguration();
     const dataDir = tmp.dirSync();
     // tslint:disable-next-line:max-line-length
-    const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --verbose --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
+    const command = `${ScanCodeService.toolsDir}/scancode-toolkit/scancode -l --ignore "/*/*/*/*.*"  --strip-root --max-in-memory 100000 -n ${config.maxProcesses} --timing --json ${dataDir.name}/scancode-results.json ${targetDir}`;
 
-    shellExecuteSync(
+    await shellExecute(
       command,
       {
         shell: true,

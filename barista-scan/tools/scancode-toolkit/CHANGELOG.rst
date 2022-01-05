@@ -1,6 +1,381 @@
 Changelog
 =========
 
+v21.4.x (next)
+--------------
+
+Breaking API changes:
+~~~~~~~~~~~~~~~~~~~~~
+
+ - The data structure of the JSON output has changed for copyrights, authors
+   and holders: we now use proper name for attributes and not a generic "value".
+
+ - The data structure of the JSON output has changed for licenses: we now
+   return match details once for each matched license expression rather than
+   once for each license in a matched expression. There is a new top-level
+   "licenses" attributes that contains the data details for each detected
+   licenses only once. This data can contain the reference license text
+   as an option.
+
+ - The data structure of the JSON output has changed for packages: we now
+   return "package_manifests" package information at the manifest file-level
+   rather than "packages". There is a a new top-level "packages" attribute
+   that contains each package instace that can be aggregating data from
+   multiple manifests for a single package instance.
+
+
+Ouputs:
+~~~~~~~
+
+ - Add new YAML-formatted output. This is exactly the same data structure as for
+   the JSON output
+
+
+License scanning:
+~~~~~~~~~~~~~~~~~
+
+ - Add new command line option to filter ignorable copyrights when included
+   in licenses.
+
+
+
+v21.3.31
+--------
+
+This is a major version with no breaking API changes. Heads-up: the next version
+will bring up some significant API changes summarized above.
+
+
+Security:
+~~~~~~~~~
+
+ - Update dependency versions for security fixes.
+
+
+License scanning:
+~~~~~~~~~~~~~~~~~
+
+ - Add 22 new licenses and update 71 existing licenses
+
+ - Update licenses to include the SPDX license list 3.12
+
+ - Improve license detection accuracy with over 2,300 new and updated license
+   detection rules
+
+ - Undeprecate the regexp license and deprecate the hs-regexp-orig license
+
+ - Improve license db initial load time with caching for faster scancode
+   start time
+
+ - Add experimental SCANCODE_LICENSE_INDEX_CACHE environment variable to point
+   to an alternative directory where the license index cache is stored (as
+   opposed to store this as package data.)
+
+ - Ensure that license short names are not more than 50 characters long
+
+ - Thank you to:
+    - Dennis Clark @DennisClark
+    - Chin-Yeung Li @chinyeungli
+    - Armijn Hemmel @armijnhemel
+    - Sarita Singh @itssingh
+    - Akanksha Garg @akugarg
+    - Sebastian Thomas @sebathomas
+    - Till Jaeger @LeChasseur 
+
+
+Copyright scanning:
+~~~~~~~~~~~~~~~~~~~
+
+ - Detect SPDX-FileCopyrightText as defined by the FSFE Reuse project
+   Thank you to Daniel Eder @daniel-eder
+
+ - Fix bug when using the --filter-clues command line option
+   Thank you to Van Lindberg @VanL
+
+ - Allow calling copyright detection from text lines to ease integration
+   Thank you to Jelmer Vernooĳ @jelmer
+
+ - Fixed copyright truncation bug
+   Thank you to Akanksha Garg @akugarg
+
+
+Package scanning:
+~~~~~~~~~~~~~~~~~
+
+ - Add support for installed RPMs detection internally (not wired to scans)
+   Thank you to Chin-Yeung Li @chinyeungli
+
+ - Improve handling of Debian copyright files with faster and more
+   accurate license detection
+   Thank you to Thomas Druez @tdruez 
+   
+ - Add new built-in support for installed_files report. Only available when
+   used as a library.
+
+ - Improve support for RPM, npm, Debian, build scripts (Bazel) and Go packages
+   Thank you to:
+   - Divyansh Sharma @Divyansh2512
+   - Jonothan Yang @JonoYang
+   - Steven Esser @majurg
+
+ - Add new support to collect information from semi-structured Readme files
+   and related metadata files. 
+   Thank you to Jonothan Yang @JonoYang and Steven Esser @majurg
+
+
+Ouputs:
+~~~~~~~
+
+ - Add new Debian copyright-formatted output.
+   Thank you to Jelmer Vernooĳ @jelmer
+   
+ - Fix bug in --include where directories where not skipped correctly
+   Thank you to Pierre Tardy @tardyp
+
+
+Misc. and documentation improvements:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ - Update the way tests assertions are made
+   Thank you to Aditya Viki @adityaviki
+
+ - Thank you to Aryan Kenchappagol @aryanxk02
+
+
+v21.2.25
+--------
+
+Installation:
+~~~~~~~~~~~~~
+
+ - Resolve reported installation issues on macOS, Windows and Linux
+ - Stop using extras for a default wheel installation
+ - Build new scancode-toolkit-mini package with limited dependencies for use
+   when packaging in distros and similar
+ - The new Dockerfile will create smaller images and containers.
+   Thank you to Viktor Tiulpin @tiulpin
+
+License scanning:
+~~~~~~~~~~~~~~~~~
+
+ - Over 150 new and updated licenses
+ - Support the latest SPDX license list v3.11
+ - Improve license detection accuracy with over 740 new and improved license
+   detection rules
+ - Fix license cache handling issues
+
+Misc.:
+~~~~~~
+ - Update extractcode, typecode and their native dependencies for better support
+   of latests versions of macOS.
+
+
+v21.2.9
+-------
+
+Security:
+~~~~~~~~~
+
+ - Update vulnerable LXML to version 4.6.2 to fix
+   https://nvd.nist.gov/vuln/detail/CVE-2020-27783
+   This was detected thanks to https://github.com/nexb/vulnerablecode
+
+Operating system support:
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ - Drop support for Python 2  #295
+ - Drop support for 32 bits on Windows #335
+ - Add support for Python 64 bits on Windows 64 bits #335
+ - Add support for Python 3.6, 37, 3.8 and 3.9 on Linux, Windows and macOS.
+   These are now tested on Azure.
+ - Add deprecation message for native Windows support #2366
+
+License scanning:
+~~~~~~~~~~~~~~~~~
+
+ - Improve license detection accuracy with over 8400 new license detection rules
+   added or updated
+ - Remove the previously deprecated --license-diag option
+ - Include pre-built license index in release archives to speed up start #988
+ - Use SPDX LicenseRef-scancode namespace for all licenses keys not in SPDX
+ - Replace DEJACODE_LICENSE_URL with SCANCODE_LICENSEDB_URL at
+   https://scancode-licensedb.aboutcode.org #2165
+ - Add new license flag in license detection results "is_license_intro" that
+   is used to indicate that a license rule is a short license introduction
+   statement (that typically may be reported as some unknown license)
+
+Package scanning:
+~~~~~~~~~~~~~~~~~
+
+ - Add detection of package-installed files
+ - Add analysis of system package installed databases for Debian, OpenWRT and
+   Alpine Linux packages
+ - Add support for Alpine Linux, Debian, OpenWRT.
+
+Copyright scanning:
+~~~~~~~~~~~~~~~~~~~
+
+ - Improve detection with minor grammar fixes
+
+Misc.:
+~~~~~~
+
+ - Adopt a new calendar date-based versioning for scancode-toolkit version numbers
+ - Update thirdparty dependencies and built-in plugins
+ - Allow installation without extractcode and typecode native plugins. Instead
+   one can elect to install these or not to have a lighter footprint if needed.
+ - Update configuration and bootstrap scripts to support a new PyPI-like
+   repository at https://thirdparty.aboutcode.org/pypi/
+ - Create new release scripts to populate released archives with just the
+   required wheels of a given OS and Python version.
+ - Updated scancode.bat to handle % signs in the arguments #1876
+
+
+v3.2.3 (2020-10-27)
+-------------------
+
+Notable changes:
+~~~~~~~~~~~~~~~~
+
+ - Collect Windows executable metadata #652
+ - Fix minor bugs
+ - Add Dockerfile to build docker image from ScanCode sources #2265
+
+
+v3.2.2rc3 (2020-09-21)
+----------------------
+
+Notable changes:
+~~~~~~~~~~~~~~~~
+
+ - Use commoncode, typecode and extractcode as external standalone packages #2233
+
+
+v3.2.1rc2 (2020-09-11)
+----------------------
+
+Minor bug fixes:
+~~~~~~~~~~~~~~~~
+
+ - Do not fail if Debian status is missing #2224
+ - Report correct detected license text in binary #2226 #2227
+
+
+v3.2.0rc1 (2020-09-08)
+----------------------
+
+ - Improve copyright detection #2140
+ - Add new license rules for "bad" licenses #1899 @viragumathe5
+ - Improve copyright detection @WizardOhio24
+ - Improve tests @hanif-ali
+ - Add and improve support for package manifest for #2080 Go, Ruby gem gemspec, Cocoapod podspec, opam, Python PKG-INFO - Rohit Potter @rpotter12
+ - Add and improve support for package lockfiles for Pipfile.lock, requirements.tx, Cargo.lock - Rohit Potter @rpotter12
+ - Add new --max-depth option to limit sca depth - Hanif Ali @hanif-ali
+ - Add initial Debian packaging - @aj4ayushjain
+ - Add new documentation web site and documentation generation system 
+ - The "headers" attribute in JSON outputs now contains a 'duration' field. #1942
+ - Rework packaging and third-party support handling: Create new scripts and
+   process to provision, install and manage third-party dependencies - Abhishek Kumar @Abhishek-Dev09
+ - Improve CSV output and fix manifest path bug #1718 Aditya Viki8 
+ - Add new documentation, as well as tools and process. Ayan Sinha Mahapatra
+ - Add new license detection rules - Ayan Sinha Mahapatra
+ - Improve license detection #1999 - Bryan Sutula
+ - Correct CC0 license #1984 - Carmen Bianca Bakker
+ - Add documentation for the usage of `cpp_includes` plugin - Chin Yeung Li
+ - Improve andling of npm package-lock.json #1993 - Chin Yeung Li
+ - Add new license detection rules - Gaupeng
+ - Improve documentation - Issei Horie
+ - Improve consolidation plugin - Jono Yang @JonoYang
+ - Improve Python wheels detection #1749 - Jono Yang @JonoYang
+ - Add support for BUCK and Bazel build scripts #1678 - Jono Yang @JonoYang
+ - Improve handing of ignores #1748 - Jono Yang @JonoYang
+ - Improved package models #1773 #1532 #1678 #1771 #1791 #1220 - Jono Yang @JonoYang
+ - Parse package lock files for Composer #1850, Yarn #1220, Gemfile.lock #1885 - Jono Yang @JonoYang
+ - Add parser for Alpine 'installed' file #2061 - Jono Yang @JonoYang
+ - Add support for Debian packagesinstalled files  #2058 - Jono Yang @JonoYang
+ - Add new licenses -@Pratikrocks
+ - Improve support for DWARF, ELF and C++ include plugins #1712 #1752#1762 - Li Ha @licodeli
+ - Add support for parsing java class files #1712 #1726- Li Ha @licodeli
+ - Add new license detection rules - @MankaranSingh
+ - Add new duration field to JSON output #1937 - @MankaranSingh
+ - Add new rule for GPL historical note #1794 - Martin Petkov
+ - Add --replace-originals flag to extractcode -Maximilian Huber
+ - Improve Documentation - Michael Herzog
+ - Add new checksum type for sha256 - Nitish @nitish81299
+ - Improve documentation - Philippe Ombredanne
+ - Add new license detection rules and improve detection #1777 #1720 #1734 #1486 #1757 #1749 #1283 #1795 #2214 #1978
+ - Add new license detection rules and improve detection #2187 #2188 #2189 #1904 #2207 #1905 #419 #2190 #1910 #1911 
+ - Add new license detection rules and improve detection #1841 #1913 #1795 #2124 #2145 #1800 #2200 #2206 #2186
+ - Allow to call "run_scan" as a function #1780 
+ - Update license data to SPDX 3.7 #1789
+ - Collect matched license text correctly including with Turkish diacritics #1872
+ - Detect SPDX license identifiers #2007
+ - Add Windows 64 as supported platform #616
+ - Add and improve support for archive with lzip, lz4 and zstd #245 #2044 #2045
+ - Detect licenses in debian copyright files #2058
+ - Improve copyright detections #2140
+ - Improve FSF, unicode and Perl license detection - Qingmin Duanmu
+ - Add COSLi and ethical licenses - Ravi @JRavi2
+ - Add tests for extract.py and extract_cli.py - Ravi @JRavi2
+ - Add a new copyright to grammar - Richard Menzies
+ - Fix external URLs in documentation - Ritiek Malhotra
+ - Improve doc - Rohit Potter
+ - Correct configure on Windows and improve doc - Sebastian Schuberth
+ - Improve license detection. Add tests for #1758 and #1691- Shankhadeep Dey
+ - Improve tests of utility code - Shivam Chauhan
+ - Improve tests and documentation - Shivam Sandbhor @sbs2001
+ - Add new hippocratic license #1739 - Shivam Sandbhor
+ - Add new and improved licenses - Steven Esser @majurg
+ - Improve test suite - Steven Esser @majurg
+ - Improve fingerprint plugin #1690 - Steven Esser @majurg
+ - Add support for Debian packages #2058  - Steven Esser @majurg
+ - Improve FreeBSD support - @aj4ayushjain
+ - Add new plugins to get native code from install packages - @aj4ayushjain
+ - Fix license name and data - Thomas Steenbergen
+ - Improve runtime support for FreeBSD #1695  @knobix
+ - Update macOS image on azure pipeline @TG1999
+ - Improve documentation - @Vinay0001     
+
+
+v3.1.1 (2019-09-04)
+-------------------
+
+Major new feature:
+
+ - Complete port to Python 3.6+ #295 @Abhishek-Dev09
+
+New features:
+
+ - Improve package manifest support for #1643 RPMs, #1628 Cran, Python #1600, Maven #1649 Chef #1600 @licodeli @JonoYang
+ - Add plugin to collect ELF and LKM clues #1685 @licodeli
+ - Add runtime support for FreeBSD #1695  @knobix
+ - Add support to extract lzip archives #245 #989
+ - Add new consolidation plugin #1686 @JonoYang
+
+Other features and fixes:
+
+ - Improve license detection #1700 #1704 #1701
+ - Improve copyright detection #1672
+ - Improve handling of plugins for native binaries @aj4ayushjain
+ - Add CODE OF CONDUCT @inishchith
+ - Fix extractcode error #749
+ - Add new version notification #111 #1688 @jdaguil 
+
+
+v3.1.0 (2019-08-12)
+-------------------
+
+ - Add partial suport for Python 3.6+ #295 @Abhishek-Dev09
+ - Add plugin to collect dwarf references #1167 @licodeli
+ - Add fingerprint plugin #1651 @arnav-mandal1234
+ - Add summary and consolidation plugin #1673
+ - Improve license detection #1606 #1659 #1675 
+ - Improve copyright detection #1672
+ - Add owned files to package manifests #1554 @JonoYang
+ - Improve package manifest support for Conda #1147, Bower and Python @licodeli
+ - Add an option to include the original matched license text #1668 #260 @LemoShi
+
+
 v3.0.2 (2019-02-15)
 -------------------
 

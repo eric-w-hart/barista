@@ -4,7 +4,11 @@ name: Open Directory License
 category: Permissive
 owner: Open Directory
 homepage_url: http://www.dmoz.org/license.html
+spdx_license_key: LicenseRef-scancode-odl
 text_urls:
     - http://www.dmoz.org/license.html
 other_urls:
+    - http://dmoz.org/become_an_editor
+ignorable_urls:
+    - http://dmoz.org/
     - http://dmoz.org/become_an_editor

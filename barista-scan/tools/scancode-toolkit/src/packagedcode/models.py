@@ -1,40 +1,20 @@
 #
-# Copyright (c) 2017 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from collections import OrderedDict
 import logging
 import sys
 
 import attr
-from attr.validators import in_ as choices
 from packageurl import normalize_qualifiers
 from packageurl import PackageURL
 
+from commoncode.datautils import choices
 from commoncode.datautils import Boolean
 from commoncode.datautils import Date
 from commoncode.datautils import Integer
@@ -42,18 +22,6 @@ from commoncode.datautils import List
 from commoncode.datautils import Mapping
 from commoncode.datautils import String
 from commoncode.datautils import TriBoolean
-
-
-# Python 2 and 3 support
-try:
-    # Python 2
-    unicode
-    str_orig = str
-    bytes = str  # NOQA
-    str = unicode  # NOQA
-except NameError:
-    # Python 3
-    unicode = str  # NOQA
 
 
 """
@@ -99,8 +67,7 @@ if TRACE:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, (bytes, str)) and a or repr(a) for a in args))
-
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 
 class BaseModel(object):
@@ -110,20 +77,27 @@ class BaseModel(object):
 
     def to_dict(self, **kwargs):
         """
-        Return an OrderedDict of primitive Python types.
+        Return an dict of primitive Python types.
         """
-        return attr.asdict(self, dict_factory=OrderedDict)
+        return attr.asdict(self, dict_factory=dict)
 
     @classmethod
     def create(cls, ignore_unknown=True, **kwargs):
         """
-        Return a object built from kwargs.
+        Return an object built from kwargs.
         Optionally `ignore_unknown` attributes provided in `kwargs`.
         """
         if ignore_unknown:
             known_attr = set(attr.fields_dict(cls).keys())
             kwargs = {k: v for k, v in kwargs.items() if k in known_attr}
         return cls(**kwargs)
+
+    @classmethod
+    def fields(cls):
+        """
+        Return a list of field names defined on this model.
+        """
+        return [a.name for a in attr.fields(cls)]
 
 
 party_person = 'person'
@@ -228,6 +202,7 @@ class BasePackage(BaseModel):
     qualifiers = Mapping(
         default=None,
         value_type=str,
+        converter=lambda v: normalize_qualifiers(v, encode=False),
         label='package qualifiers',
         help='Optional mapping of key=value pairs qualifiers for this package')
 
@@ -245,6 +220,8 @@ class BasePackage(BaseModel):
         """
         Return a compact purl package URL string.
         """
+        if not self.name:
+            return
         return PackageURL(
             self.type, self.namespace, self.name, self.version,
             self.qualifiers, self.subpath).to_string()
@@ -295,17 +272,16 @@ class BasePackage(BaseModel):
 
     def to_dict(self, **kwargs):
         """
-        Return an OrderedDict of primitive Python types.
+        Return an dict of primitive Python types.
         """
-        mapping = attr.asdict(self, dict_factory=OrderedDict)
-        if self.qualifiers:
-            mapping['qualifiers'] = normalize_qualifiers(self.qualifiers, encode=True)
-
+        mapping = attr.asdict(self, dict_factory=dict)
         if not kwargs.get('exclude_properties'):
             mapping['purl'] = self.purl
             mapping['repository_homepage_url'] = self.repository_homepage_url()
             mapping['repository_download_url'] = self.repository_download_url()
             mapping['api_data_url'] = self.api_data_url()
+        if self.qualifiers:
+            mapping['qualifiers'] = normalize_qualifiers(self.qualifiers, encode=False)
         return mapping
 
     @classmethod
@@ -328,7 +304,8 @@ class DependentPackage(BaseModel):
     purl = String(
         repr=True,
         label='Dependent package URL',
-        help='A compact purl package URL')
+        help='A compact purl package URL. Typically when there is an unresolved requirement, there is no version. '
+             'If the dependency is resolved, the version should be added to the purl')
 
     requirement = String(
         repr=True,
@@ -357,6 +334,41 @@ class DependentPackage(BaseModel):
         help='True if this dependency version requirement has '
              'been resolved and this dependency url points to an '
              'exact version.')
+
+
+@attr.s()
+class PackageFile(BaseModel):
+    """
+    A file that belongs to a package.
+    """
+
+    path = String(
+        label='Path of this installed file',
+        help='The path of this installed file either relative to a rootfs '
+            '(typical for system packages) or a path in this scan (typical for '
+             'application packages).',
+        repr=True,
+    )
+
+    size = Integer(
+        label='file size',
+        help='size of the file in bytes')
+
+    sha1 = String(
+        label='SHA1 checksum',
+        help='SHA1 checksum for this file in hexadecimal')
+
+    md5 = String(
+        label='MD5 checksum',
+        help='MD5 checksum for this file in hexadecimal')
+
+    sha256 = String(
+        label='SHA256 checksum',
+        help='SHA256 checksum for this file in hexadecimal')
+
+    sha512 = String(
+        label='SHA512 checksum',
+        help='SHA512 checksum for this file in hexadecimal')
 
 
 @attr.s()
@@ -452,10 +464,10 @@ class Package(BasePackage):
         label='notice text',
         help='A notice text for this package.')
 
-    manifest_path = String(
-        label='manifest path',
-        help='A relative path to the manifest file if any, such as a '
-             'Maven .pom or a npm package.json.')
+    root_path = String(
+        label='package root path',
+        help='The path to the root of the package documented in this manifest '
+             'if any, such as a Maven .pom or a npm package.json parent directory.')
 
     dependencies = List(
         item_type=DependentPackage,
@@ -474,6 +486,11 @@ class Package(BasePackage):
              'this package. For instance an SRPM is the "source package" for a '
              'binary RPM.')
 
+    installed_files = List(
+        item_type=PackageFile,
+        label='installed files',
+        help='List of files installed by this package.')
+
     def __attrs_post_init__(self, *args, **kwargs):
         if not self.type and hasattr(self, 'default_type'):
             self.type = self.default_type
@@ -484,7 +501,7 @@ class Package(BasePackage):
     @classmethod
     def recognize(cls, location):
         """
-        Return a Package object or None given a file location pointing to a
+        Yield one or more Package objects given a file location pointing to a
         package archive, manifest or similar.
 
         Sub-classes should override to implement their own package recognition.
@@ -505,10 +522,32 @@ class Package(BasePackage):
         of a "xyz.pom" file found inside a JAR META-INF/ directory, the root is
         the JAR itself which may not be the direct parent
 
-        Each package type should subclass as needed. This deafult to return the
+        Each package type should subclass as needed. This default to return the
         same path.
         """
         return manifest_resource
+
+    @classmethod
+    def get_package_resources(cls, package_root, codebase):
+        """
+        Yield the Resources of a Package starting from `package_root`
+        """
+        if not Package.is_ignored_package_resource(package_root, codebase):
+            yield package_root
+        for resource in package_root.walk(codebase, topdown=True, ignored=Package.is_ignored_package_resource):
+            yield resource
+
+    @classmethod
+    def ignore_resource(cls, resource, codebase):
+        """
+        Return True if `resource` should be ignored.
+        """
+        return False
+
+    @staticmethod
+    def is_ignored_package_resource(resource, codebase):
+        from packagedcode import PACKAGE_TYPES
+        return any(pt.ignore_resource(resource, codebase) for pt in PACKAGE_TYPES)
 
     def compute_normalized_license(self):
         """
@@ -553,6 +592,14 @@ class Package(BasePackage):
         """
         return []
 
+    def to_dict(self, _detailed=False, **kwargs):
+        data = super().to_dict(**kwargs)
+        if _detailed:
+            data['installed_files'] = [istf.to_dict() for istf in (self.installed_files or [])]
+        else:
+            data.pop('installed_files', None)
+        return data
+
 
 def compute_normalized_license(declared_license):
     """
@@ -578,14 +625,6 @@ def compute_normalized_license(declared_license):
 # NOTE: this is somewhat redundant with extractcode archive handlers
 # yet the purpose and semantics are rather different here
 
-
-@attr.s()
-class DebianPackage(Package):
-    metafiles = ('*.control',)
-    extensions = ('.deb',)
-    filetypes = ('debian binary package',)
-    mimetypes = ('application/x-archive', 'application/vnd.debian.binary-package',)
-    default_type = 'deb'
 
 
 @attr.s()
@@ -645,7 +684,7 @@ class IvyJar(JavaJar):
     default_type = 'ivy'
     default_primary_language = 'Java'
 
-
+# FIXME: move to bower.py
 @attr.s()
 class BowerPackage(Package):
     metafiles = ('bower.json',)
@@ -698,6 +737,7 @@ class Godep(Package):
         return manifest_resource.parent(codebase)
 
 
+# TODO: enable me
 # @attr.s()
 # class AlpinePackage(Package):
 #     metafiles = ('*.control',)

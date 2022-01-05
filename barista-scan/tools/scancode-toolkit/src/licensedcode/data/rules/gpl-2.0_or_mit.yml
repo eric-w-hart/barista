@@ -1,3 +1,4 @@
 license_expression: gpl-2.0 OR mit
 is_license_notice: yes
-notes: Xen dual mit or GPL 2 only
+relevance: 99
+minimum_coverage: 90

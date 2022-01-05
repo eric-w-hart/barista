@@ -4,7 +4,8 @@ name: Far Manager exception to BSD-3-Clause
 category: Permissive
 owner: Far Group
 is_exception: yes
-standard_notice: |-
+spdx_license_key: LicenseRef-scancode-far-manager-exception
+standard_notice: |
     Copyright (c) 1996 Eugene Roshal
     Copyright (c) 2000 Far Group
     All rights reserved.

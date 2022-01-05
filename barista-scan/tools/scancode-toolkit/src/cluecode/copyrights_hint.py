@@ -1,29 +1,12 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import absolute_import
 
 from datetime import datetime
 import re
@@ -34,38 +17,59 @@ import re
 
 all_years = tuple(str(year) for year in range(1960, datetime.today().year))
 years = r'[\(\.,\-\)\s]+(' + '|'.join(all_years) + r')([\(\.,\-\)\s]+|$)'
-# TODO: rename me since this is used as a function
+
 years = re.compile(years).findall
 
-statement_markers = u'''
-©
-copyr
-copyl
-copr
-&#169
-&#xA9
-&#xa9
-00A9
-00a9
-\251
-(c)
-(C)
-right
-reserv
-left
-auth
-devel
-'''.split() + [u' by ', u'by ']
+# Various copyright/copyleft signs tm, r etc: http://en.wikipedia.org/wiki/Copyright_symbol
+# © U+00A9 COPYRIGHT SIGN
+#  decimal: 169
+#  HTML: &#169;
+#  UTF-8: 0xC2 0xA9
+#  block: Latin-1 Supplement
+#  U+00A9 (169)
+# visually similar: Ⓒ ⓒ
+# 🄯 COPYLEFT SYMBOL
+#  U+1F12F
+# ℗ Sound recording copyright
+#  HTML &#8471;
+#  U+2117
+# ® registered trademark
+#  U+00AE (174)
+# 🅪 Marque de commerce
+#  U+1F16A
+# ™ U+2122 TRADE MARK SIGN
+#  decimal: 8482
+#  HTML: &#8482;
+#  UTF-8: 0xE2 0x84 0xA2
+#  block: Letterlike Symbols
+#  decomposition: <super> U+0054 U+004D
+# Ⓜ  mask work
 
-# (various copyright/copyleft signs tm, r etc) http://en.wikipedia.org/wiki/Copyright_symbol
 
-# ™ U+2122 TRADE MARK SIGN, decimal: 8482, HTML: &#8482;, UTF-8: 0xE2 0x84 0xA2, block: Letterlike Symbols, decomposition: <super> U+0054 U+004D
-# © U+00A9 COPYRIGHT SIGN, decimal: 169, HTML: &#169;, UTF-8: 0xC2 0xA9, block: Latin-1 Supplement
-# �  U+00A9 (169)
-#      �     U+00AE (174)
-#     �     U+2122 (8482)
-
-'''HTML Entity (decimal)     &#169;
+statement_markers = (
+    u'©',
+    u'(c)',
+    u'&#169',
+    u'&#xa9',
+    u'169',
+    u'xa9',
+    u'u00a9',
+    u'00a9',
+    u'\251',
+    u'copyr',
+    u'copyl',
+    u'copr',
+    u'right',
+    u'reserv',
+    u'auth',
+    u'devel',
+    u'<s>',
+    u'</s>',
+    u'<s/>',
+    u'by ',  # note the trailing space
+)
+'''
+HTML Entity (decimal)     &#169;
 HTML Entity (hex)     &#xa9;
 HTML Entity (named)     &copy;
 How to type in Microsoft Windows     Alt +00A9
@@ -80,12 +84,13 @@ C/C++/Java source code     "\u00A9"
 Python source code     u"\u00A9"
 '''
 
-end_of_statement = '''
-rights reserve
-right reserve
-rights reserved
-right reserved
-'''.split()
+end_of_statement = (
+    u'rights reserve',
+    u'right reserve',
+    u'rights reserved',
+    u'right reserved',
+    u'right reserved.',
+)
 
 # others stuffs
 '''
@@ -131,8 +136,6 @@ pack
 perm
 proj
 research
-reserve
-right
 sa
 team
 tech

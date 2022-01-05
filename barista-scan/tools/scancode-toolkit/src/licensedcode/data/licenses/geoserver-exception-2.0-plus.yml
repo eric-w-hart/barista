@@ -5,13 +5,14 @@ category: Copyleft Limited
 owner: Open Source Geospatial Foundation
 homepage_url: http://geoserver.org/
 is_exception: yes
+spdx_license_key: LicenseRef-scancode-geoserver-exception-2.0-plus
 text_urls:
     - https://master.dl.sourceforge.net/project/geoserver/GeoServer/2.5/geoserver-2.5-src.zip
 other_urls:
     - http://geoserver.org/
     - http://openplans.org
     - http://www.gnu.org/licenses/gpl-2.0.txt
-standard_notice: |-
+standard_notice: |
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or

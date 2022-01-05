@@ -1,31 +1,11 @@
 #
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from collections import defaultdict
 import re
@@ -39,6 +19,7 @@ from commoncode.text import toascii
 from summarycode.utils import sorted_counter
 from summarycode.utils import get_resource_summary
 from summarycode.utils import set_resource_summary
+
 
 # Tracing flags
 TRACE = False
@@ -61,7 +42,7 @@ if TRACE or TRACE_CANO:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, unicode) and a or repr(a) for a in args))
+        return logger.debug(' '.join(isinstance(a, str) and a or repr(a) for a in args))
 
 # TODO: keep the original order of statements as much as possible
 
@@ -160,12 +141,16 @@ class Text(object):
         self.key = toascii(self.key, translit=True)
 
     def fingerprint(self):
+        key = self.key
+        if not isinstance(key, str):
+            key = unidecode(key)
+        fp = fingerprints.generate(key)
+
         if TRACE_TEXT or TRACE_FP:
-            logger_debug('Text.fingerprint:key: ', unidecode(self.key))
+            logger_debug('Text.fingerprint:key: ', repr(self.key))
             logger_debug('Text.fingerprint:fp :    ', fingerprints.generate(unidecode(self.key)))
 
-        self.key = fingerprints.generate(unidecode(self.key))
-
+        self.key = fp
 
 def summarize_copyrights(texts, _detector=CopyrightDetector()):
     """
@@ -355,9 +340,9 @@ def strip_prefixes(s, prefixes=prefixes):
     striped from the left. Normalize and strip spaces.
 
     For example:
-    >>> s = u'by AND for the Free Software Foundation'
-    >>> strip_prefixes(s)
-    u'the Free Software Foundation'
+    >>> s = 'by AND for the Free Software Foundation'
+    >>> strip_prefixes(s) == 'the Free Software Foundation'
+    True
     """
     s = s.split()
     while s and s[0].lower().strip().strip('.,') in prefixes:
@@ -377,9 +362,9 @@ def strip_suffixes(s, suffixes=suffixes):
     striped from the right. Normalize and strip spaces.
 
     For example:
-    >>> s = u'RedHat Inc corp'
-    >>> strip_suffixes(s, set(['corp']))
-    u'RedHat Inc'
+    >>> s = 'RedHat Inc corp'
+    >>> strip_suffixes(s, set(['corp'])) == 'RedHat Inc'
+    True
     """
     s = s.split()
     while s and s[-1].lower().strip().strip('.,') in suffixes:
@@ -520,7 +505,7 @@ COMMON_NAMES = {
 }
 
 # Remove everything except letters and numbers
-_keep_only_chars = re.compile('[_\W]+', re.UNICODE).sub
+_keep_only_chars = re.compile('[_\\W]+', re.UNICODE).sub # NOQA
 
 
 def keep_only_chars(s):

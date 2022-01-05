@@ -1,37 +1,22 @@
 #
-# Copyright (c) 2018 nexB Inc. and others. All rights reserved.
-# http://nexb.com and https://github.com/nexB/scancode-toolkit/
-# The ScanCode software is licensed under the Apache License version 2.0.
-# Data generated with ScanCode require an acknowledgment.
+# Copyright (c) nexB Inc. and others. All rights reserved.
 # ScanCode is a trademark of nexB Inc.
+# SPDX-License-Identifier: Apache-2.0
+# See http://www.apache.org/licenses/LICENSE-2.0 for the license text.
+# See https://github.com/nexB/scancode-toolkit for support or download.
+# See https://aboutcode.org for more information about nexB OSS projects.
 #
-# You may not use this software except in compliance with the License.
-# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software distributed
-# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-# CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-#
-# When you publish or redistribute any data created with ScanCode or any ScanCode
-# derivative work, you must accompany this data with the following acknowledgment:
-#
-#  Generated with ScanCode and provided on an "AS IS" BASIS, WITHOUT WARRANTIES
-#  OR CONDITIONS OF ANY KIND, either express or implied. No content created from
-#  ScanCode should be considered or used as legal advice. Consult an Attorney
-#  for any legal advice.
-#  ScanCode is a free software code scanning tool from nexB Inc. and others.
-#  Visit https://github.com/nexB/scancode-toolkit/ for support and download.
-
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
 from os.path import isdir
 import sys
+
+from io import BytesIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from spdx.checksum import Algorithm
 from spdx.creationinfo import Tool
@@ -44,22 +29,11 @@ from spdx.utils import NoAssert
 from spdx.utils import SPDXNone
 from spdx.version import Version
 
+from formattedcode import FileOptionType
+from commoncode.cliutils import OUTPUT_GROUP
+from commoncode.cliutils import PluggableCommandLineOption
 from plugincode.output import output_impl
 from plugincode.output import OutputPlugin
-from scancode import CommandLineOption
-from scancode import FileOptionType
-from scancode import OUTPUT_GROUP
-
-# Python 2 and 3 support
-try:
-    # Python 2
-    unicode
-    str_orig = str
-    bytes = str  # NOQA
-    str = unicode  # NOQA
-except NameError:
-    # Python 3
-    unicode = str  # NOQA
 
 # Tracing flags
 TRACE = False
@@ -78,7 +52,7 @@ if TRACE or TRACE_DEEP:
     logger.setLevel(logging.DEBUG)
 
     def logger_debug(*args):
-        return logger.debug(' '.join(isinstance(a, unicode)
+        return logger.debug(' '.join(isinstance(a, str)
                                      and a or repr(a) for a in args))
 
 """
@@ -133,8 +107,8 @@ def get_licenses_by_spdx_key(licenses):
 class SpdxTvOutput(OutputPlugin):
 
     options = [
-        CommandLineOption(('--spdx-tv',),
-            type=FileOptionType(mode='wb', lazy=True),
+        PluggableCommandLineOption(('--spdx-tv',),
+            type=FileOptionType(mode='w', encoding='utf-8', lazy=True),
             metavar='FILE',
             help='Write scan output as SPDX Tag/Value to FILE.',
             help_group=OUTPUT_GROUP)
@@ -160,8 +134,8 @@ class SpdxTvOutput(OutputPlugin):
 class SpdxRdfOutput(OutputPlugin):
 
     options = [
-        CommandLineOption(('--spdx-rdf',),
-            type=FileOptionType(mode='wb', lazy=True),
+        PluggableCommandLineOption(('--spdx-rdf',),
+            type=FileOptionType(mode='w', encoding='utf-8', lazy=True),
             metavar='FILE',
             help='Write scan output as SPDX RDF to FILE.',
             help_group=OUTPUT_GROUP)
@@ -199,8 +173,8 @@ def write_spdx(output_file, files, tool_name, tool_version, notice, input_file, 
     """
     Write scan output as SPDX Tag/value or RDF.
     """
+    as_rdf = not as_tagvalue
     _patch_license_list()
-
     absinput = abspath(input_file)
 
     if isdir(absinput):
@@ -244,13 +218,17 @@ def write_spdx(output_file, files, tool_name, tool_version, notice, input_file, 
         if file_licenses:
             all_files_have_no_license = False
             for file_license in file_licenses:
+                license_key = file_license.get('key')
+
                 spdx_id = file_license.get('spdx_license_key')
-                if spdx_id:
+                if not spdx_id:
+                    spdx_id = 'LicenseRef-scancode-' + license_key
+                is_license_ref = spdx_id.lower().startswith('licenseref-')
+
+                if not is_license_ref:
                     spdx_license = License.from_identifier(spdx_id)
                 else:
-                    license_key = file_license.get('key')
-                    licenseref_id = 'LicenseRef-scancode-' + license_key
-                    spdx_license = ExtractedLicense(licenseref_id)
+                    spdx_license = ExtractedLicense(spdx_id)
                     spdx_license.name = file_license.get('short_name')
                     comment = ('See details at https://github.com/nexB/scancode-toolkit'
                                '/blob/develop/src/licensedcode/data/licenses/%s.yml\n' % license_key)
@@ -300,12 +278,15 @@ def write_spdx(output_file, files, tool_name, tool_version, notice, input_file, 
 
     if len(package.files) == 0:
         if as_tagvalue:
-            output_file.write("# No results for package '{}'.\n".format(package.name))
+            msg = "# No results for package '{}'.\n".format(package.name)
         else:
-            output_file.write("<!-- No results for package '{}'. -->\n".format(package.name))
+            # rdf
+            msg = "<!-- No results for package '{}'. -->\n".format(package.name)
+        output_file.write(msg)
 
     # Remove duplicate licenses from the list for the package.
-    unique_licenses = set(package.licenses_from_files)
+    unique_licenses = {(l.identifier, l.full_name): l for l in package.licenses_from_files}
+    unique_licenses = list(unique_licenses.values())
     if not len(package.licenses_from_files):
         if all_files_have_no_license:
             package.licenses_from_files = [SPDXNone()]
@@ -329,25 +310,32 @@ def write_spdx(output_file, files, tool_name, tool_version, notice, input_file, 
     package.license_declared = NoAssert()
     package.conc_lics = NoAssert()
 
-    if as_tagvalue:
-        from spdx.writers.tagvalue import write_document  # NOQA
-    else:
-        from spdx.writers.rdf import write_document  # NOQA
-
     # The spdx-tools write_document returns either:
     # - unicode for tag values
     # - UTF8-encoded bytes for rdf because somehow the rdf and xml
-    #   libraries do the encoding
-    # The file passed by ScanCode for output is always opened in binary
-    # mode and needs to receive UTF8-encoded bytes.
-    # Therefore in one case we do nothing (rdf) and in the other case we
-    # encode to UTF8 bytes.
+    #   libraries do the encoding and do not return text but bytes
+    # The file passed by ScanCode for output is opened in text mode Therefore in
+    # one case we do need to deal with bytes and decode before writing (rdf) and
+    # in the other case we deal with text all the way.
 
     if package.files:
-        from StringIO import StringIO
-        spdx_output = StringIO()
+
+        if as_tagvalue:
+            from spdx.writers.tagvalue import write_document  # NOQA
+        elif as_rdf:
+            from spdx.writers.rdf import write_document  # NOQA
+
+        if as_tagvalue:
+            spdx_output = StringIO()
+        elif as_rdf:
+            # rdf is utf-encoded bytes
+            spdx_output = BytesIO()
+
         write_document(doc, spdx_output, validate=False)
         result = spdx_output.getvalue()
-        if as_tagvalue:
-            result = result.encode('utf-8')
+
+        if as_rdf:
+            # rdf is utf-encoded bytes
+            result = result.decode('utf-8')
+
         output_file.write(result)

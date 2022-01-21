@@ -105,7 +105,7 @@ export class ProjectService extends AppServiceBase<Project> {
     const log = new Logger('distinctUserIds');
     let v;
     try {
-      v = this.db.createQueryBuilder('project').select('project.userId').addGroupBy('project.userId').getRawMany();
+      v = this.db.createQueryBuilder('project').select('project.userId').distinct(true).getRawMany();
     } catch (e) {
       log.log(`error ${e}`);
     }

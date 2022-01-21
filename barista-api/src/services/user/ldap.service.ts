@@ -37,9 +37,9 @@ export class LdapService {
     try {
       l = ldapClient
         .bind(searchUser, pass)
-        .then(() => {
+        .then(async () => {
           this.logger.log(`Ben - inside 1 then`);
-          return ldapClient
+          return await ldapClient
             .search(searchUser, {
               scope: 'sub',
               filter: `(&(objectClass=user)(sAMAccountName=${userName}))`,

@@ -102,7 +102,14 @@ export class ProjectService extends AppServiceBase<Project> {
   }
 
   async distinctUserIds(): Promise<any> {
-    return this.db.createQueryBuilder('project').select('project.userId').addGroupBy('project.userId').getRawMany();
+    const log = new Logger('distinctUserIds');
+    let v;
+    try {
+      v = this.db.createQueryBuilder('project').select('project.userId').addGroupBy('project.userId').getRawMany();
+    } catch (e) {
+      log.log(`error ${e}`);
+    }
+    return v;
   }
 
   /**

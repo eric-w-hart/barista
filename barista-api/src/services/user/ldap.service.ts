@@ -36,6 +36,7 @@ export class LdapService {
     return ldapClient
       .bind(searchUser, pass)
       .then(() => {
+        this.logger.log(`Ben - inside 1 then`);
         return ldapClient
           .search(searchUser, {
             scope: 'sub',
@@ -43,6 +44,7 @@ export class LdapService {
             attributes: ['cn', 'displayName', 'givenName', 'sn', 'mail', 'group', 'gn', 'memberOf'],
           })
           .then(async (result) => {
+            this.logger.log(`Ben - inside 2 then`);
             try {
               if (_.isEmpty(result.entries)) {
                 // not a primary account
@@ -53,17 +55,23 @@ export class LdapService {
               const memberOf = result.entries[0].object.memberOf;
 
               if (memberOf) {
+                this.logger.log(`Ben - inside memberof if`);
                 const groups = memberOf
                   .map((g) => g.split(',')[0])
                   .map((s) => s.replace(/(.*)=(.*)/, '$2'))
                   .map((group) => group.toLowerCase());
-
+                this.logger.log(`Ben - before distinctuserides`);
                 const baristaGroups = await this.projectService.distinctUserIds();
+                this.logger.log(`Ben - after distinctuserides`);
 
+                this.logger.log(`Ben - before ba`);
                 const ba = baristaGroups.map((g) => g.project_userId);
+                this.logger.log(`Ben - after ba`);
+                this.logger.log(`Ben - before intersection`);
                 const intersection = groups.filter((element) =>
                   baristaGroups.map((g) => g.project_userId).includes(element),
                 );
+                this.logger.log(`Ben - after intersection`);
                 this.logger.log(`User ${userName} is member of the following barista groups: ${intersection}`);
                 return intersection;
 

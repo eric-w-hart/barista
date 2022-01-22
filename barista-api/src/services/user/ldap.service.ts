@@ -25,15 +25,13 @@ export class LdapService {
     return new LdapClient({
       url: this.ldapConfig.url,
       tlsOptions: { rejectUnauthorized: false },
+      connectionTimeout: 10000,
     });
   }
 
   async getUserGroups(userName: string, pass: string): Promise<string[]> {
     this.logger.log(`Ben - Starting get groups`);
     const ldapClient = this.createLdapClient();
-    ldapClient.on('error', (err) => {
-      this.logger.error(`Ben - error ${err}`);
-    });
     const searchUser = `cn=${userName},${this.ldapConfig.base}`;
     this.logger.log(`Ben - After createldapclient`);
     let l;

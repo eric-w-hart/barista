@@ -82,7 +82,7 @@ export class LdapService {
                 }
                 return [];
               } finally {
-                ldapClient.unbind();
+                //ldapClient.unbind();
               }
             });
         })

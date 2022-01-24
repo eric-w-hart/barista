@@ -25,18 +25,18 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       };
     } else if (process.env.AUTH_TYPE === 'ldap') {
       this.logger.log(`Ben - Before first validateuser`);
-      user = await this.ldapService.validateUser(username, password, false);
+      user = await this.ldapService.validateUser(username, password, true);
       this.logger.log(`Ben - After first validateuser`);
-      if (!user) {
-        this.logger.log(`Ben - Before 2 validateuser`);
-        user = await this.ldapService.validateUser(username, password, true);
-        this.logger.log(`Ben - After f2 validateuser`);
-      }
-      if (user) {
-        this.logger.log(`Ben - Before getgroups`);
-        user.groups = await this.ldapService.getUserGroups(username, password);
-        this.logger.log(`Ben - After getgroups`);
-      }
+      // if (!user) {
+      //   this.logger.log(`Ben - Before 2 validateuser`);
+      //   user = await this.ldapService.validateUser(username, password, true);
+      //   this.logger.log(`Ben - After f2 validateuser`);
+      // }
+      // if (user) {
+      //   this.logger.log(`Ben - Before getgroups`);
+      //   user.groups = await this.ldapService.getUserGroups(username, password);
+      //   this.logger.log(`Ben - After getgroups`);
+      // }
     } else {
       this.logger.log(`Ben - Before 3 validateuser`);
       user = await this.userService.validateUser(username, password);

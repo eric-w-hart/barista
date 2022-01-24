@@ -1,8 +1,9 @@
-import { LdapService } from '@app/services/user/ldap.service';
-import { UserService } from '@app/services/user/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+
+import { LdapService } from '@app/services/user/ldap.service';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
+import { UserService } from '@app/services/user/user.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -28,9 +29,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       if (!user) {
         user = await this.ldapService.validateUser(username, password, true);
       }
-      if (user) {
-        user.groups = await this.ldapService.getUserGroups(username, password);
-      }
+      // if (user) {
+      //   user.groups = await this.ldapService.getUserGroups(username, password);
+      // }
     } else {
       user = await this.userService.validateUser(username, password);
     }

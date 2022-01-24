@@ -26,6 +26,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     } else if (process.env.AUTH_TYPE === 'ldap') {
       this.logger.log(`Ben - Before first validateuser`);
       user = await this.ldapService.validateUser(username, password, true);
+      this.logger.log(`user = ${user}`);
       this.logger.log(`Ben - After first validateuser`);
       // if (!user) {
       //   this.logger.log(`Ben - Before 2 validateuser`);

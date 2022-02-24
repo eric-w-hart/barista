@@ -2,9 +2,9 @@
 # for Barista.  Much of the functionality is common, so the three images
 # will inherit this dockerfile in order to reduce build time and reduce errors.
 ARG REPO=""
-ARG TAG="12.16.1"
+ARG TAG="14.16.0"
 FROM ${REPO}node:${TAG}
-LABEL maintainer=randy.olinger@optum.com
+LABEL maintainer=benjamin.woodring@optum.com
 
 # Create app directory
 WORKDIR /usr/src/app

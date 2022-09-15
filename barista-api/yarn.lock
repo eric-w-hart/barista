@@ -2583,9 +2583,9 @@ esquery@^1.0.1:
     estraverse "^5.1.0"
 
 estraverse@^5.1.0, estraverse@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-5.2.0.tgz#307df42547e6cc7324d3cf03c155d5cdb8c53880"
-  integrity sha1-MH30JUfmzHMk088DwVXVzbjFOIA=
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-5.3.0.tgz#2eea5290702f26ab8fe5370370ff86c965d21123"
+  integrity sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==
 
 esutils@^2.0.2:
   version "2.0.3"
